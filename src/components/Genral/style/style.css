@@ -1,0 +1,122 @@
+.navbar {
+    background-color: #F5F5F5;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    height: 80px;
+}
+
+.container-fluid {
+    max-width: 100%;
+    width: 100%;
+}
+
+.navbar-brand {
+    font-size: 1.6rem;
+    font-weight: bold;
+    color: #50C878;
+}
+
+.navbar-brand:hover {
+    font-size: 1.6rem;
+    font-weight: bold;
+    color: #50C878;
+}
+
+.btn-signup {
+    background-color: #50C878;
+    border: #F5F5F5;
+    color: #F5F5F5;
+    font-weight: bold;
+    width: 1in;
+    height: 0.5in;
+}
+
+.btn-signup:hover {
+    background-color: #50C878;
+    border: #F5F5F5;
+    color: #F5F5F5;
+    font-weight: bold;
+}
+
+.btn-signin {
+    background: none;
+    border: none;
+    color: #50C878;
+    font-weight: bold;
+    font-size: large;
+    width: 1in;
+}
+
+.btn-signin:hover {
+    background: none;
+    border: none;
+    color: #50C878;
+    font-weight: bold;
+    width: 1in;
+}
+
+.nav-link {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    color: #333333;
+    transition: color 0.3s ease, font-family 0.3s ease;
+    /* Adding transition */
+}
+
+.nav-link:hover {
+    font-family: 'Russo One', sans-serif;
+    font-weight: bold;
+    color: #50C878;
+}
+
+.btn-search {
+    background: transparent;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: color 0.3s ease, font-family 0.3s ease;
+}
+
+.btn-search:hover {
+    color: #50C878;
+}
+
+.vr {
+    color: gray;
+    width: 2px;
+}
+
+footer {
+    font-family: Arial, Helvetica, sans-serif;
+    color: #333;
+    box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
+    background-color: #F5F5F5;
+}
+
+footer h5 {
+    font-weight: bold;
+    color: #50C878;
+}
+
+footer a:hover {
+    color: #50C878;
+    text-decoration: underline;
+}
+
+footer i {
+    font-size: 1.5rem;
+    transition: color 0.3s;
+}
+
+footer i:hover {
+    color: #50C878;
+}
+
+hr {
+    border: 0;
+    height: 1px;
+    background-color: #ccc;
+    /* Adjust color */
+    opacity: 0.7;
+    /* Adjust transparency */
+}

@@ -1,0 +1,61 @@
+/* General Styles */
+body {
+    font-family: "Arial", sans-serif;
+    background-color: #f8f9fa;
+    /* Light gray background for better contrast */
+    margin: 0;
+    padding: 0;
+}
+
+.card-lg {
+    width: 5in;
+}
+
+optgroup {
+    font-weight: bold;
+    color: #333;
+    /* Adjust color */
+}
+
+.btn-primary,
+.btn-primary:hover {
+    background-color: #50C878;
+    border: none;
+    color: #F5F5F5;
+    font-weight: bold;
+    width: 1in;
+}
+
+h2 {
+    color: #50C878;
+    font-weight: bold;
+}
+
+/* Style for the card */
+.card-lg {
+    background: linear-gradient(145deg, #ffffff, #e6e6e6);
+    /* Subtle gradient */
+    border-radius: 15px;
+    box-shadow: 4px 4px 10px #d1d1d1, -4px -4px 10px #ffffff;
+    /* 3D effect */
+    padding: 30px;
+    border: none;
+}
+
+/* Heading inside the card */
+.card-lg h2 {
+    text-align: center;
+    color: #50C878;
+    font-weight: bold;
+}
+
+/* Input fields */
+.form-floating .form-control {
+    border-radius: 10px;
+}
+
+/* Labels */
+.form-floating label {
+    color: #777777;
+    font-weight: bold;
+}

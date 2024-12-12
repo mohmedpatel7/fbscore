@@ -1,0 +1,208 @@
+/* General Styles */
+body {
+    font-family: "Arial", sans-serif;
+    background-color: #f8f9fa;
+    /* Light gray background for better contrast */
+    margin: 0;
+    padding: 0;
+}
+
+/* Card Styles */
+.card {
+    border: none;
+    /* Removes default border for a clean look */
+    border-radius: 12px;
+    /* Rounded corners for a modern feel */
+    overflow: hidden;
+    /* Ensures child elements stay inside */
+    background-color: #fff;
+    transition: transform 0.2s, box-shadow 0.2s;
+    /* Adds hover effect */
+}
+
+.card:hover {
+    transform: scale(1.02);
+    /* Subtle zoom effect on hover */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    /* Shadow for depth */
+}
+
+.card-head {
+    background-color: #f0f0f0;
+    /* Light background for header */
+    border-bottom: 1px solid #ddd;
+    /* Separator between header and body */
+    border-radius: 12px 12px 0 0;
+    /* Matches card rounding */
+}
+
+/* User Pic Styles */
+.post-user-pic {
+    border: 2px solid #50C878;
+    /* Blue border for better visibility */
+}
+
+/* User Name */
+.post-user-name {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #333;
+    /* Dark text for better readability */
+}
+
+/* Description Styles */
+.post-description {
+    font-size: 0.95rem;
+    color: #555;
+    /* Slightly muted text color */
+    line-height: 1.5;
+    /* Improves readability */
+}
+
+.btn-seemore {
+    font-size: 0.9rem;
+    color: #50C878;
+    /* Matches primary theme */
+    border: none;
+    background: none;
+    cursor: pointer;
+
+}
+
+.btn-seemore:hover {
+    color: #50C878;
+    /* Darker blue on hover */
+}
+
+/* Post Image */
+.post-img {
+    margin-top: 10px;
+    border-radius: 8px;
+    /* Soft edges */
+    max-height: 300px;
+    /* Keeps images consistent */
+    object-fit: cover;
+    /* Ensures aspect ratio is maintained */
+}
+
+/* Footer Styles */
+.card-footer {
+    background-color: #f9f9f9;
+    /* Light footer background */
+    font-size: 0.85rem;
+    color: #888;
+}
+
+/* Like and Comment Buttons */
+.post-like-btn {
+    font-size: 1.2rem;
+    color: #888;
+    /* Muted color for inactive state */
+    cursor: pointer;
+}
+
+.post-like-btn:hover {
+    color: #50C878;
+    /* Blue on hover */
+}
+
+.post-like-btn:active {
+    transform: scale(0.9);
+    /* Slight shrink effect on click */
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 576px) {
+    .card {
+        margin-bottom: 20px;
+    }
+
+    .post-user-pic {
+        width: 40px;
+        height: 40px;
+    }
+
+    .post-user-name {
+        font-size: 0.9rem;
+    }
+
+    .post-description {
+        font-size: 0.85rem;
+    }
+
+    .post-img {
+        max-height: 200px;
+        /* Reduce image size for smaller screens */
+    }
+
+    .card-footer {
+        flex-direction: column;
+        /* Stack items for narrow screens */
+        align-items: flex-start;
+    }
+}
+
+/* Style.css */
+
+/* General Modal Styles */
+.modal-backdrop {
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-dialog {
+    max-width: 800px;
+    margin: 1.75rem auto;
+}
+
+.modal-content {
+    border-radius: 0.3rem;
+    box-shadow: 0 1.5rem 3rem rgba(0, 0, 0, 0.15);
+}
+
+.modal-title {
+    font-size: 1.5rem;
+}
+
+.btn-close {
+    color: white;
+    background-color: transparent;
+    border: none;
+    outline: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.modal-header {
+    background-color: #f0f0f0;
+}
+
+.modal-body {
+    padding: 1.5rem;
+}
+
+.comment {
+    margin-bottom: 1rem;
+}
+
+.comment img {
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.comment strong {
+    font-size: 1rem;
+}
+
+.comment p {
+    margin: 0.5rem 0;
+}
+
+.comment .text-muted {
+    font-size: 0.875rem;
+}
+
+.btn-addcomment,
+.btn-addcomment:hover {
+    background-color: #4CAF50;
+    color: #f8f9fa
+}
