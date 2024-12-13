@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./style/style.css";
+import { useToast } from "../Genral/ToastContext";
 
 export default function Signup() {
   const [validated, setValidated] = useState(false);
@@ -14,6 +15,8 @@ export default function Signup() {
     setValidated(true);
   };
 
+  const { showToast } = useToast();
+  
   return (
     <>
       <div className="container">
@@ -62,6 +65,8 @@ export default function Signup() {
                   Submit
                 </button>
               </form>
+
+              <button className="btn btn-link mt-3">Forgot Password</button>
             </div>
           </div>
           <div className="col-md-3"></div>

@@ -37,7 +37,9 @@ export default function Signup() {
                     placeholder="otp"
                     required
                   />
-                  <label htmlFor="floatingOtp">Verify otp</label>
+                  <label htmlFor="floatingOtp">
+                    Enter otp for Verify Your Email(Cheak your email)
+                  </label>
                   <div className="invalid-feedback">otp is required.</div>
                 </div>
 

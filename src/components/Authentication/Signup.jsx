@@ -2,16 +2,35 @@ import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./style/style.css";
 import { useNavigate } from "react-router-dom";
+import { useToast } from "../Genral/ToastContext";
 
 export default function Signup() {
   const [validated, setValidated] = useState(false);
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [passwordError, setPasswordError] = useState(false);
+
+  const { showToast } = useToast();
 
   const handleSubmit = (event) => {
     event.preventDefault();
     const form = event.currentTarget;
-    if (form.checkValidity() === false) {
-      event.stopPropagation();
+
+    // Check if passwords match
+    if (password !== confirmPassword) {
+      setPasswordError(true);
+    } else {
+      setPasswordError(false);
     }
+
+    // Validate the form
+    if (form.checkValidity() === false || password !== confirmPassword) {
+      event.stopPropagation();
+    } else {
+      showToast("Verify your email", "success");
+      navigate("/Otppage");
+    }
+
     setValidated(true);
   };
 
@@ -49,14 +68,10 @@ export default function Signup() {
                     className="form-control"
                     id="floatingProfile"
                     placeholder="Profile Picture"
-                    required
                   />
                   <label htmlFor="floatingProfile">
                     Select Profile Picture
                   </label>
-                  <div className="invalid-feedback">
-                    Please upload your profile picture.
-                  </div>
                 </div>
                 <div className="form-floating mb-3">
                   <input
@@ -169,6 +184,8 @@ export default function Signup() {
                     className="form-control"
                     id="floatingPassword"
                     placeholder="Password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                     required
                   />
                   <label htmlFor="floatingPassword">Password</label>
@@ -177,29 +194,29 @@ export default function Signup() {
                 <div className="form-floating mb-3">
                   <input
                     type="password"
-                    className="form-control"
+                    className={`form-control ${
+                      passwordError ? "is-invalid" : ""
+                    }`}
                     id="floatingConfirmPassword"
                     placeholder="Confirm Password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
                     required
                   />
                   <label htmlFor="floatingConfirmPassword">
                     Confirm Password
                   </label>
                   <div className="invalid-feedback">
-                    Confirming your password is required.
+                    {passwordError
+                      ? "Passwords do not match."
+                      : "Confirming your password is required."}
                   </div>
                 </div>
 
                 <button type="reset" className="btn btn-primary">
                   Clear
                 </button>
-                <button
-                  type="submit"
-                  className="btn btn-primary ms-2"
-                  onClick={() => {
-                    () => navigate("/Otppage");
-                  }}
-                >
+                <button type="submit" className="btn btn-primary ms-2">
                   Submit
                 </button>
               </form>
