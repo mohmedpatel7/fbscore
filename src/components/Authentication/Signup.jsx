@@ -7,34 +7,26 @@ import { useDispatch } from "react-redux"; // Dispatch hook for Redux actions.
 import { sendOtp } from "../../Redux/fetures/authentication"; // Redux action for sending OTP.
 
 export default function Signup() {
-  // State for form validation.
   const [validated, setValidated] = useState(false);
-
-  // States for password and password confirmation, along with error handling.
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordError, setPasswordError] = useState(false);
-
-  // State to store user inputs.
   const [formData, setFormData] = useState({
     name: "",
     email: "",
+    password: "",
     dob: "",
     gender: "",
     country: "",
     position: "",
-    strongFoot: "",
+    foot: "",
     pic: null,
   });
-
-  // File input error state.
   const [fileError, setFileError] = useState("");
+  const { showToast } = useToast();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const { showToast } = useToast(); // To display toast notifications.
-  const dispatch = useDispatch(); // For dispatching Redux actions.
-  const navigate = useNavigate(); // For programmatic navigation.
-
-  // **Handle input change:** Updates the corresponding field in the `formData` state.
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -43,7 +35,6 @@ export default function Signup() {
     }));
   };
 
-  // **Handle file input change:** Validates the file type and stores the selected file in `formData`.
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     const validTypes = ["image/jpeg", "image/jpg", "image/png"];
@@ -52,45 +43,37 @@ export default function Signup() {
         ...prevData,
         pic: file,
       }));
-      setFileError(""); // Clear any previous file error.
+      setFileError("");
     } else {
       setFileError("Please upload a valid image file (jpeg, jpg, png).");
     }
   };
 
-  // **Handle form submission:**
   const handleSubmit = (event) => {
-    event.preventDefault(); // Prevents the default form submission behavior.
+    event.preventDefault();
 
     const form = event.currentTarget;
 
-    // **Password Validation:**
     if (password !== confirmPassword) {
-      setPasswordError(true); // Set error if passwords do not match.
+      setPasswordError(true);
     } else {
       setPasswordError(false);
     }
 
-    // **Form Validation:**
-    if (
-      form.checkValidity() === false ||
-      password !== confirmPassword ||
-      fileError
-    ) {
-      event.stopPropagation(); // Stops further event propagation if validation fails.
+    if (form.checkValidity() === false || passwordError || fileError) {
+      event.stopPropagation();
     } else {
-      // Dispatching Redux action to send OTP to the provided email.
       dispatch(sendOtp({ email: formData.email }))
         .then(() => {
-          showToast("Verify your email", "success"); // Show success toast.
-          navigate("/Otppage"); // Redirect to OTP verification page.
+          showToast("Verify your email", "success");
+          navigate("/Otppage", { state: { formData } });
         })
         .catch(() => {
-          showToast("Error sending OTP", "error"); // Show error toast.
+          showToast("Error sending OTP", "error");
         });
     }
 
-    setValidated(true); // Sets form validation state to true.
+    setValidated(true);
   };
 
   return (
@@ -100,14 +83,11 @@ export default function Signup() {
         <div className="col-md-6">
           <div className="card-lg mt-5 mb-4 p-4 shadow rounded-3">
             <h2 className="mb-3 text-center">Sign Up</h2>
-
-            {/* Form */}
             <form
               className={`needs-validation ${validated ? "was-validated" : ""}`}
               noValidate
               onSubmit={handleSubmit}
             >
-              {/* Name Input */}
               <div className="form-floating mb-3">
                 <input
                   type="text"
@@ -122,7 +102,6 @@ export default function Signup() {
                 <div className="invalid-feedback">Name is required.</div>
               </div>
 
-              {/* Profile Picture Input */}
               <div className="form-floating mb-3">
                 <input
                   type="file"
@@ -132,9 +111,11 @@ export default function Signup() {
                   onChange={handleFileChange}
                 />
                 <label htmlFor="floatingProfile">Select Profile Picture</label>
+                {fileError && (
+                  <div className="invalid-feedback">{fileError}</div>
+                )}
               </div>
 
-              {/* Email Input */}
               <div className="form-floating mb-3">
                 <input
                   type="email"
@@ -151,7 +132,6 @@ export default function Signup() {
                 </div>
               </div>
 
-              {/* Date of Birth Input */}
               <div className="form-floating mb-3">
                 <input
                   type="date"
@@ -168,7 +148,6 @@ export default function Signup() {
                 </div>
               </div>
 
-              {/* Gender Input */}
               <div className="form-floating mb-3">
                 <select
                   className="form-control"
@@ -188,7 +167,6 @@ export default function Signup() {
                 </div>
               </div>
 
-              {/* Country Input */}
               <div className="form-floating mb-3">
                 <select
                   className="form-control"
@@ -198,29 +176,84 @@ export default function Signup() {
                   onChange={handleChange}
                   required
                 >
-                  <option>Select</option>
+                  <option value="">Select</option>
                   <option>India</option>
                 </select>
                 <label htmlFor="floatingCountry">Country</label>
                 <div className="invalid-feedback">Country is required.</div>
               </div>
 
-              {/* Password Input */}
+              <div className="form-floating mb-3">
+                <select
+                  className="form-control"
+                  name="position"
+                  placeholder="Position"
+                  value={formData.position}
+                  onChange={handleChange}
+                  required
+                >
+                  <option value="">Select</option>
+                  <optgroup label="Attack">
+                    <option>ST</option>
+                    <option>CF</option>
+                    <option>RW</option>
+                    <option>LW</option>
+                  </optgroup>
+                  <optgroup label="Midfield">
+                    <option>CAM</option>
+                    <option>CM</option>
+                    <option>RM</option>
+                    <option>LM</option>
+                  </optgroup>
+                  <optgroup label="Defense">
+                    <option>RB</option>
+                    <option>LB</option>
+                    <option>CB</option>
+                  </optgroup>
+                  <optgroup label="Goalkeeper">
+                    <option>GK</option>
+                  </optgroup>
+                </select>
+                <label htmlFor="floatingPosition">
+                  Favorite Playing Position
+                </label>
+                <div className="invalid-feedback">
+                  Please select your favorite playing position.
+                </div>
+              </div>
+
+              {/* Strong Foot Input */}
+              <div className="form-floating mb-3">
+                <select
+                  className="form-control"
+                  name="foot"
+                  placeholder="Strong Foot"
+                  value={formData.foot}
+                  onChange={handleChange}
+                  required
+                >
+                  <option value="">Select</option>
+                  <option>Right</option>
+                  <option>Left</option>
+                </select>
+                <label htmlFor="floatingCountry">Strong Foot</label>
+                <div className="invalid-feedback">Strong foot is required.</div>
+              </div>
+
               <div className="form-floating mb-3 mt-5">
                 <input
                   type="password"
                   className="form-control"
-                  name="floatingPassword"
+                  name="password"
                   placeholder="Password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  value={formData.password}
+                  onChange={handleChange}
                   required
                 />
                 <label htmlFor="floatingPassword">Password</label>
                 <div className="invalid-feedback">Password is required.</div>
               </div>
 
-              {/* Confirm Password Input */}
               <div className="form-floating mb-3">
                 <input
                   type="password"
@@ -243,7 +276,6 @@ export default function Signup() {
                 </div>
               </div>
 
-              {/* Buttons */}
               <button type="reset" className="btn btn-primary">
                 Clear
               </button>

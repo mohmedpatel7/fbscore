@@ -1,15 +1,52 @@
 import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./style/style.css";
+import { useDispatch } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useToast } from "../Genral/ToastContext";
+import { SignUp } from "../../Redux/fetures/authentication";
 
 export default function Signup() {
   const [validated, setValidated] = useState(false);
+  const [Otp, SetOtp] = useState("");
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { formData } = location.state || {}; // geting data from signup component
+  const dispatch = useDispatch();
+  const { showToast } = useToast();
 
+  //Handle change function..
+  const handleChange = (e) => {
+    SetOtp(e.target.value); // Update state with the value typed in the input
+  };
+
+  //Handle submit function..
   const handleSubmit = (event) => {
+    event.preventDefault();
+
+    if (!formData) {
+      showToast("Invalid request. Please signup again.", "error");
+      navigate("/Signup");
+      return;
+    }
     const form = event.currentTarget;
     if (form.checkValidity() === false) {
-      event.preventDefault();
       event.stopPropagation();
+    } else {
+      dispatch(SignUp({ email: formData.email, Otp }))
+        .then(() => {
+          dispatch(SignUp(formData))
+            .then(() => {
+              showToast("Signup succesful", "success");
+              navigate("/");
+            })
+            .catch(() => {
+              showToast("Invalid request. Please signup again.", "error");
+            });
+        })
+        .catch(() => {
+          showToast("Invalid OTP. Please try again.", "error");
+        });
     }
     setValidated(true);
   };
@@ -33,8 +70,9 @@ export default function Signup() {
                   <input
                     type="text"
                     className="form-control"
-                    id="floatingOtp"
+                    value={Otp}
                     placeholder="otp"
+                    onChange={handleChange}
                     required
                   />
                   <label htmlFor="floatingOtp">
