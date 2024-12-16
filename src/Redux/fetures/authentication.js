@@ -36,45 +36,27 @@ export const SignUp = createAsyncThunk(
   "auth/SignUp",
   async (payload, { rejectWithValue }) => {
     try {
-      console.log("Payload received:", payload); // Log the payload received
-
       // Construct FormData
       const formData = new FormData();
       Object.keys(payload).forEach((key) => {
         formData.append(key, payload[key]);
-        console.log(`FormData entry added: ${key} = ${payload[key]}`); // Log each field added to FormData
       });
 
-      // Log all FormData entries for verification
-      console.log("Final FormData:");
-      for (let [key, value] of formData.entries()) {
-        console.log(`${key}: ${value}`);
-      }
-
       // Make the API call
-      console.log("Sending POST request to:", `${url}api/auth/signup`);
       const response = await fetch(`${url}api/auth/signup`, {
         method: "POST",
         body: formData, // Pass FormData as the request body
       });
 
-      // Check response status
-      console.log("Response status:", response.status);
-
-      // If response is not OK, log the error details
+      // Handle non-OK responses
       if (!response.ok) {
         const errorData = await response.json();
-        console.error("Error response data:", errorData);
         return rejectWithValue(errorData);
       }
 
-      // Log the success response
-      const successData = await response.json();
-      console.log("Success response data:", successData);
-      return successData;
+      // Return the success response
+      return await response.json();
     } catch (error) {
-      // Log any error caught during the process
-      console.error("Sign Up Error:", error);
       return rejectWithValue({
         message: "Failed to sign up. Please try again.",
       });

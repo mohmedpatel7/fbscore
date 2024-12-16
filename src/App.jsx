@@ -5,7 +5,7 @@ import Footer from "./components/Genral/Footer";
 import Posts from "./components/Post/Posts";
 import Signup from "./components/Authentication/Signup";
 import Signin from "./components/Authentication/Signin";
-import Otpverify from "./components/Authentication/Otpverify";
+// import Otpverify from "./components/Authentication/Otpverify";
 
 function App() {
   return (
@@ -16,7 +16,7 @@ function App() {
         <Route exact path="/" element={<Posts />} />
         <Route exact path="/Signup" element={<Signup />} />
         <Route exact path="/Signin" element={<Signin />} />
-        <Route exact path="/Otppage" element={<Otpverify />} />
+        {/* <Route exact path="/Otppage" element={<Otpverify />} /> */}
       </Routes>
 
       <Footer />

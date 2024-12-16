@@ -4,13 +4,10 @@ import "./style/style.css";
 import { useNavigate } from "react-router-dom"; // Navigation hook for routing.
 import { useToast } from "../Genral/ToastContext"; // Custom Toast Context for notifications.
 import { useDispatch } from "react-redux"; // Dispatch hook for Redux actions.
-import { sendOtp } from "../../Redux/fetures/authentication"; // Redux action for sending OTP.
+import { SignUp } from "../../Redux/fetures/authentication"; // Redux action for signup.
 
 export default function Signup() {
   const [validated, setValidated] = useState(false);
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [passwordError, setPasswordError] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -49,28 +46,21 @@ export default function Signup() {
     }
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
     const form = event.currentTarget;
 
-    if (password !== confirmPassword) {
-      setPasswordError(true);
-    } else {
-      setPasswordError(false);
-    }
-
-    if (form.checkValidity() === false || passwordError || fileError) {
+    if (form.checkValidity() === false || fileError) {
       event.stopPropagation();
     } else {
-      dispatch(sendOtp({ email: formData.email }))
-        .then(() => {
-          showToast("Verify your email", "success");
-          navigate("/Otppage", { state: { formData } });
-        })
-        .catch(() => {
-          showToast("Error sending OTP", "error");
-        });
+      try {
+        const result = await dispatch(SignUp(formData)).unwrap();
+        showToast(result.message || "Signup successful!", "success");
+        navigate("/");
+      } catch (error) {
+        showToast(error.message || "Signup failed. Please try again.", "error");
+      }
     }
 
     setValidated(true);
@@ -222,7 +212,6 @@ export default function Signup() {
                 </div>
               </div>
 
-              {/* Strong Foot Input */}
               <div className="form-floating mb-3">
                 <select
                   className="form-control"
@@ -236,7 +225,7 @@ export default function Signup() {
                   <option>Right</option>
                   <option>Left</option>
                 </select>
-                <label htmlFor="floatingCountry">Strong Foot</label>
+                <label htmlFor="floatingFoot">Strong Foot</label>
                 <div className="invalid-feedback">Strong foot is required.</div>
               </div>
 
@@ -252,28 +241,6 @@ export default function Signup() {
                 />
                 <label htmlFor="floatingPassword">Password</label>
                 <div className="invalid-feedback">Password is required.</div>
-              </div>
-
-              <div className="form-floating mb-3">
-                <input
-                  type="password"
-                  className={`form-control ${
-                    passwordError ? "is-invalid" : ""
-                  }`}
-                  name="floatingConfirmPassword"
-                  placeholder="Confirm Password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  required
-                />
-                <label htmlFor="floatingConfirmPassword">
-                  Confirm Password
-                </label>
-                <div className="invalid-feedback">
-                  {passwordError
-                    ? "Passwords do not match."
-                    : "Confirming your password is required."}
-                </div>
               </div>
 
               <button type="reset" className="btn btn-primary">

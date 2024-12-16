@@ -1,98 +1,87 @@
 import React, { useState } from "react";
-import "bootstrap/dist/css/bootstrap.min.css";
-import "./style/style.css";
-import { useDispatch } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useToast } from "../Genral/ToastContext";
-import { SignUp } from "../../Redux/fetures/authentication";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "./style/style.css";
 
-export default function Signup() {
-  const [validated, setValidated] = useState(false);
+export default function Otpverify() {
   const [Otp, SetOtp] = useState("");
   const navigate = useNavigate();
   const location = useLocation();
-  const { formData } = location.state || {}; // geting data from signup component
-  const dispatch = useDispatch();
+  const { formData } = location.state || {};
   const { showToast } = useToast();
 
-  //Handle change function..
   const handleChange = (e) => {
-    SetOtp(e.target.value); // Update state with the value typed in the input
+    SetOtp(e.target.value);
   };
 
-  //Handle submit function..
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
-    if (!formData) {
-      showToast("Invalid request. Please signup again.", "error");
-      navigate("/Signup");
+    if (!Otp) {
+      showToast("Please enter the OTP sent to your email.", "danger");
       return;
     }
-    const form = event.currentTarget;
-    if (form.checkValidity() === false) {
-      event.stopPropagation();
-    } else {
-      dispatch(SignUp({ email: formData.email, Otp }))
-        .then(() => {
-          dispatch(SignUp(formData))
-            .then(() => {
-              showToast("Signup succesful", "success");
-              navigate("/");
-            })
-            .catch(() => {
-              showToast("Invalid request. Please signup again.", "error");
-            });
+
+    // Assuming `getOtpFromEmail` retrieves the OTP from the backend
+    const expectedOtpFromEmail = await getOtpFromEmail(email);
+
+    console.log("Entered OTP:", Otp);
+    console.log("Expected OTP from email:", expectedOtpFromEmail);
+
+    if (Otp === expectedOtpFromEmail) {
+      const payload = {
+        ...formData,
+        otp: Otp,
+      };
+
+      dispatch(SignUp(payload))
+        .then((response) => {
+          if (response.meta.requestStatus === "fulfilled") {
+            showToast("Signup successful", "success");
+            navigate("/");
+          } else {
+            showToast("Signup failed. Please try again.", "danger");
+          }
         })
-        .catch(() => {
-          showToast("Invalid OTP. Please try again.", "error");
+        .catch((err) => {
+          console.error("Signup error:", err);
+          showToast("Something went wrong. Please try again.", "danger");
         });
+    } else {
+      showToast("Invalid OTP. Please try again.", "danger");
     }
-    setValidated(true);
   };
 
   return (
-    <>
-      <div className="container">
-        <div className="row">
-          <div className="col-md-3"></div>
-          <div className="col-md-6">
-            <div className="card-lg mt-5 mb-4 p-4 shadow rounded-3">
-              <h2 className="mb-3 text-center">Verify Otp</h2>
-              <form
-                className={`needs-validation ${
-                  validated ? "was-validated" : ""
-                }`}
-                noValidate
-                onSubmit={handleSubmit}
-              >
-                <div className="form-floating mb-3">
-                  <input
-                    type="text"
-                    className="form-control"
-                    value={Otp}
-                    placeholder="otp"
-                    onChange={handleChange}
-                    required
-                  />
-                  <label htmlFor="floatingOtp">
-                    Enter otp for Verify Your Email(Cheak your email)
-                  </label>
-                  <div className="invalid-feedback">otp is required.</div>
-                </div>
-
-                <button type="reset" className="btn btn-primary">
-                  Clear
-                </button>
-                <button type="submit" className="btn btn-primary ms-2">
-                  Submit
-                </button>
-              </form>
-            </div>
+    <div className="container ">
+      <div className="row">
+        <div className="col-md-3"></div>
+        <div className="col-md-6">
+          <div className="card-lg mt-5 mb-4 p-4 shadow rounded-3">
+            <h2 className="mb-3 text-center">Verify Otp</h2>
+            <form onSubmit={handleSubmit}>
+              <div className="form-floating mb-3">
+                <input
+                  type="text"
+                  className="form-control"
+                  name="Otp"
+                  placeholder="Name"
+                  value={Otp}
+                  onChange={handleChange}
+                  required
+                />
+                <label htmlFor="floatingName">otp</label>
+                <div className="invalid-feedback">otp is required.</div>
+              </div>
+              <button type="submit" className="btn btn-primary">
+                Verify
+              </button>
+            </form>
           </div>
-          <div className="col-md-3"></div>
         </div>
+        <div className="col-md-3"></div>
       </div>
-    </>
+    </div>
   );
 }
