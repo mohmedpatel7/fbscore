@@ -64,6 +64,36 @@ export const SignUp = createAsyncThunk(
   }
 );
 
+//Sign In Api call..
+export const Signin = createAsyncThunk(
+  "Signin",
+  async (payload, { rejectWithValue }) => {
+    try {
+      const response = await fetch(`${url}api/auth/signin`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      // Handle non-OK responses
+      if (!response.ok) {
+        const errorData = await response.json();
+
+        return rejectWithValue(errorData);
+      }
+
+      // Return the success response
+      return await response.json();
+    } catch (error) {
+      return rejectWithValue({
+        message: "Failed to sign up. Please try again.",
+      });
+    }
+  }
+);
+
 // Auth Slice
 const authSlice = createSlice({
   name: "auth",
@@ -101,6 +131,21 @@ const authSlice = createSlice({
     builder.addCase(SignUp.rejected, (state, action) => {
       state.isLoading = false;
       state.error = action.payload?.message || "Unknown error occurred."; // Use backend error or fallback
+    });
+
+    //Handle Sign in cases.
+    builder.addCase(Signin.pending, (state) => {
+      state.isLoading = true;
+      state.error = null;
+    });
+    builder.addCase(Signin.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.data = action.payload;
+      state.error = null;
+    });
+    builder.addCase(Signin.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload?.message;
     });
   },
 });

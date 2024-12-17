@@ -59,7 +59,10 @@ export default function Signup() {
         showToast(result.message || "Signup successful!", "success");
         navigate("/");
       } catch (error) {
-        showToast(error.message || "Signup failed. Please try again.", "error");
+        showToast(
+          error.message || "Signup failed. Please try again.",
+          "danger"
+        );
       }
     }
 
