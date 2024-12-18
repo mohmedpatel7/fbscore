@@ -88,7 +88,7 @@ export const Signin = createAsyncThunk(
       return await response.json();
     } catch (error) {
       return rejectWithValue({
-        message: "Failed to sign up. Please try again.",
+        message: "Failed to sign in. Please try again.",
       });
     }
   }

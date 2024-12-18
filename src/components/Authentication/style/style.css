@@ -59,3 +59,35 @@ h2 {
     color: #777777;
     font-weight: bold;
 }
+
+/* Info section styling */
+.info-section {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.info-section h4 {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #50C878;
+}
+
+.info-section p {
+    font-size: 1rem;
+    color: #495057;
+    margin-bottom: 15px;
+}
+
+.info-section ul {
+    list-style-type: disc;
+    margin-left: 20px;
+    padding-left: 10px;
+    color: #495057;
+}
+
+.info-section ul li {
+    font-size: 0.95rem;
+    margin-bottom: 10px;
+}
