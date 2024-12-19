@@ -2,9 +2,13 @@ import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./style/style.css";
+import { Dropdown } from "react-bootstrap";
+import Default_Pic from "./style/pic.jpg";
 
 export default function Navbar() {
   const navigate = useNavigate(); // naviagate object..
+
+  const isUser = localStorage.getItem("token");
 
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light ">
@@ -56,20 +60,57 @@ export default function Navbar() {
                 <i className="fa-solid fa-magnifying-glass"></i>
               </button>
               <div className="vr me-3"></div> {/* Vertical line */}
-              <button
-                className="btn btn-signin me-2"
-                type="button"
-                onClick={() => navigate("/Signin")}
-              >
-                Sign In
-              </button>
-              <button
-                className="btn btn-signup"
-                type="button"
-                onClick={() => navigate("/Signup")}
-              >
-                Sign Up
-              </button>
+              {!isUser && (
+                <>
+                  <button
+                    className="btn btn-signin me-2"
+                    type="button"
+                    onClick={() => navigate("/Signin")}
+                  >
+                    Sign In
+                  </button>
+                  <button
+                    className="btn btn-signup"
+                    type="button"
+                    onClick={() => navigate("/Signup")}
+                  >
+                    Sign Up
+                  </button>
+                </>
+              )}
+              {isUser && (
+                <>
+                  <button
+                    className="btn btn-primary me-2 ms-2"
+                    onClick={() => navigate("/")}
+                  >
+                    Post
+                  </button>
+
+                  {/* Profile part*/}
+                  <Dropdown>
+                    <Dropdown.Toggle variant="light">
+                      <img src={Default_Pic} alt="Profile" />
+                    </Dropdown.Toggle>
+                    <Dropdown.Menu>
+                      <Dropdown.Item>
+                        <button className="btn">Profile</button>
+                      </Dropdown.Item>
+                      <Dropdown.Item>
+                        <button
+                          className="btn"
+                          onClick={() => {
+                            localStorage.removeItem("token");
+                            navigate("/");
+                          }}
+                        >
+                          Sign Out
+                        </button>
+                      </Dropdown.Item>
+                    </Dropdown.Menu>
+                  </Dropdown>
+                </>
+              )}
             </div>
           </ul>
         </div>

@@ -127,6 +127,9 @@ const authSlice = createSlice({
       state.isLoading = false;
       state.data = action.payload;
       state.error = null;
+
+      // Store token in localStorage
+      localStorage.setItem("token", action.payload.token);
     });
     builder.addCase(SignUp.rejected, (state, action) => {
       state.isLoading = false;
@@ -142,6 +145,9 @@ const authSlice = createSlice({
       state.isLoading = false;
       state.data = action.payload;
       state.error = null;
+
+      // Store token in localStorage
+      localStorage.setItem("token", action.payload.token);
     });
     builder.addCase(Signin.rejected, (state, action) => {
       state.isLoading = false;

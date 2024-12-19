@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import Pic from "./pic.jpg";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./style/style.css";
 import CommentsModel from "./CommentsModel";
@@ -7,86 +6,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchPosts } from "../../Redux/fetures/postslice";
 
 export default function Posts() {
-  // Initial list of posts
-  // const [post, setPost] = useState([
-  //   {
-  //     id: 1,
-  //     description:
-  //       "This is description for post 1... This description is long enough to show the see more functionality in action. This is just to test the description length functionality for the 'See More' button.",
-  //     pic: Pic,
-  //     uploadedBy: "Mohmed",
-  //     uploadedByPic: Pic,
-  //     date: "2024-12-25",
-  //     likes: 5,
-  //     comments: [
-  //       {
-  //         id: 1,
-  //         username: "Jack",
-  //         userpic: Pic,
-  //         text: "Great post!",
-  //         date: "2024-12-15",
-  //       },
-  //       {
-  //         id: 2,
-  //         username: "alen",
-  //         userpic: Pic,
-  //         text: "Interesting thoughts!",
-  //         date: "2024-12-15",
-  //       },
-  //     ],
-  //   },
-  //   {
-  //     id: 2,
-  //     description: "This is description for post 2...",
-  //     pic: Pic,
-  //     uploadedBy: "Zaid",
-  //     uploadedByPic: Pic,
-  //     date: "2024-12-27",
-  //     likes: 4,
-  //     comments: [],
-  //   },
-  //   {
-  //     id: 3,
-  //     description: "This is description for post 3...",
-  //     pic: Pic,
-  //     uploadedBy: "jack",
-  //     uploadedByPic: Pic,
-  //     date: "2024-12-26",
-  //     likes: 5,
-  //     comments: [],
-  //   },
-  //   {
-  //     id: 4,
-  //     description: "This is description for post 4...",
-  //     pic: Pic,
-  //     uploadedBy: "John",
-  //     uploadedByPic: Pic,
-  //     date: "2024-12-28",
-  //     likes: 6,
-  //     comments: [],
-  //   },
-  //   {
-  //     id: 5,
-  //     description: "This is description for post 5...",
-  //     pic: Pic,
-  //     uploadedBy: "Jane",
-  //     uploadedByPic: Pic,
-  //     date: "2024-12-29",
-  //     likes: 7,
-  //     comments: [],
-  //   },
-  //   {
-  //     id: 6,
-  //     description: "This is description for post 6...",
-  //     pic: Pic,
-  //     uploadedBy: "Emily",
-  //     uploadedByPic: Pic,
-  //     date: "2024-12-30",
-  //     likes: 8,
-  //     comments: [],
-  //   },
-  // ]);
-
   const dispatch = useDispatch();
   const { posts } = useSelector((state) => state.postSlice);
 
@@ -118,7 +37,6 @@ export default function Posts() {
   // Add a scroll event listener when the component mounts and clean it up when it unmounts
   useEffect(() => {
     dispatch(fetchPosts());
-    console.log(fetchPosts());
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, [dispatch]);
@@ -196,16 +114,16 @@ export default function Posts() {
                         className="fa-regular fa-heart post-like-btn"
                         title="Like"
                       ></i>
-                      <span className="ms-1">{posts.likes}</span>
+                      <span className="ms-1">{post.likes}</span>
 
                       <i
                         className="fa-regular fa-comment post-like-btn ms-3"
                         title="Comment"
-                        onClick={() => openCommetns(post.comments)}
+                        onClick={() => openCommetns(post.comment)}
                         style={{ border: "none", background: "none" }}
                       ></i>
 
-                      <span className="ms-1">{post.comments.length}</span>
+                      <span className="ms-1">{post.comment.length}</span>
                     </div>
                     {/* Display the post upload date */}
                     <div className="text-end">
