@@ -4,9 +4,11 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./style/style.css";
 import { Dropdown } from "react-bootstrap";
 import Default_Pic from "./style/pic.jpg";
+import { useToast } from "./ToastContext";
 
 export default function Navbar() {
   const navigate = useNavigate(); // naviagate object..
+  const { showToast } = useToast();
 
   const isUser = localStorage.getItem("token");
 
@@ -102,6 +104,7 @@ export default function Navbar() {
                           onClick={() => {
                             localStorage.removeItem("token");
                             navigate("/");
+                            showToast("Singout Successfuly", "success");
                           }}
                         >
                           Sign Out

@@ -1,13 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useTransition } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useToast } from "../Genral/ToastContext";
+import { useDispatch } from "react-redux";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./style/style.css";
+import { SignUp } from "../../Redux/fetures/authentication";
 
 export default function Otpverify() {
   const [Otp, SetOtp] = useState("");
+  const [isPending, startTransition] = useTransition();
+  const [validated, setValidated] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+  const dispatch = useDispatch();
   const { formData } = location.state || {};
   const { showToast } = useToast();
 
@@ -15,66 +20,77 @@ export default function Otpverify() {
     SetOtp(e.target.value);
   };
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = (event) => {
+    const form = event.currentTarget;
     event.preventDefault();
 
-    if (!Otp) {
-      showToast("Please enter the OTP sent to your email.", "danger");
+    if (form.checkValidity() === false) {
+      event.stopPropagation();
+      setValidated(true);
       return;
     }
 
-    // Assuming `getOtpFromEmail` retrieves the OTP from the backend
-    const expectedOtpFromEmail = await getOtpFromEmail(email);
+    setValidated(true);
+    startTransition(async () => {
+      if (!Otp) {
+        showToast("Please enter the OTP sent to your email.", "danger");
+        return;
+      }
 
-    console.log("Entered OTP:", Otp);
-    console.log("Expected OTP from email:", expectedOtpFromEmail);
-
-    if (Otp === expectedOtpFromEmail) {
       const payload = {
         ...formData,
         otp: Otp,
       };
 
-      dispatch(SignUp(payload))
-        .then((response) => {
-          if (response.meta.requestStatus === "fulfilled") {
-            showToast("Signup successful", "success");
-            navigate("/");
-          } else {
-            showToast("Signup failed. Please try again.", "danger");
-          }
-        })
-        .catch((err) => {
-          console.error("Signup error:", err);
-          showToast("Something went wrong. Please try again.", "danger");
-        });
-    } else {
-      showToast("Invalid OTP. Please try again.", "danger");
-    }
+      try {
+        const response = await dispatch(SignUp(payload));
+        if (response.meta.requestStatus === "fulfilled") {
+          showToast("Signup successful", "success");
+          navigate("/");
+        } else {
+          showToast(
+            response.payload?.message || "Signup failed. Please try again.",
+            "danger"
+          );
+        }
+      } catch (err) {
+        console.error("Signup error:", err);
+        showToast("Something went wrong. Please try again.", "danger");
+      }
+    });
   };
 
   return (
-    <div className="container ">
+    <div className="container">
       <div className="row">
         <div className="col-md-3"></div>
         <div className="col-md-6">
           <div className="card-lg mt-5 mb-4 p-4 shadow rounded-3">
-            <h2 className="mb-3 text-center">Verify Otp</h2>
-            <form onSubmit={handleSubmit}>
+            <h2 className="mb-3 text-center">Verify OTP</h2>
+            <form
+              className={`needs-validation ${validated ? "was-validated" : ""}`}
+              noValidate
+              onSubmit={handleSubmit}
+            >
               <div className="form-floating mb-3">
                 <input
                   type="text"
                   className="form-control"
+                  id="floatingOtp"
                   name="Otp"
-                  placeholder="Name"
+                  placeholder="Enter OTP"
                   value={Otp}
                   onChange={handleChange}
                   required
                 />
-                <label htmlFor="floatingName">otp</label>
-                <div className="invalid-feedback">otp is required.</div>
+                <label htmlFor="floatingOtp">Enter OTP</label>
+                <div className="invalid-feedback">OTP is required.</div>
               </div>
-              <button type="submit" className="btn btn-primary">
+              <button
+                type="submit"
+                className="btn btn-primary"
+                disabled={isPending}
+              >
                 Verify
               </button>
             </form>

@@ -18,6 +18,7 @@ export const sendOtp = createAsyncThunk(
       // Check if the response is not OK
       if (!response.ok) {
         const errorData = await response.json();
+        console.log(errorData);
         return rejectWithValue(errorData); // Send backend error to the reducer
       }
 

@@ -1,13 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useTransition } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./style/style.css";
 import { useNavigate } from "react-router-dom"; // Navigation hook for routing.
 import { useToast } from "../Genral/ToastContext"; // Custom Toast Context for notifications.
 import { useDispatch } from "react-redux"; // Dispatch hook for Redux actions.
-import { SignUp } from "../../Redux/fetures/authentication"; // Redux action for signup.
+import { sendOtp } from "../../Redux/fetures/authentication"; // Redux action for signup.
 
 export default function Signup() {
   const [validated, setValidated] = useState(false);
+  const [isPending, startTransition] = useTransition();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -19,6 +20,7 @@ export default function Signup() {
     foot: "",
     pic: null,
   });
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [fileError, setFileError] = useState("");
   const { showToast } = useToast();
   const dispatch = useDispatch();
@@ -46,27 +48,56 @@ export default function Signup() {
     }
   };
 
+  const handleConfirmPassword = (e) => {
+    setConfirmPassword(e.target.value);
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const form = event.currentTarget;
+    startTransition(async () => {
+      const form = event.currentTarget;
 
-    if (form.checkValidity() === false || fileError) {
-      event.stopPropagation();
-    } else {
-      try {
-        const result = await dispatch(SignUp(formData)).unwrap();
-        showToast(result.message || "Signup successful!", "success");
-        navigate("/");
-      } catch (error) {
-        showToast(
-          error.message || "Signup failed. Please try again.",
-          "danger"
-        );
+      if (form.checkValidity() === false || fileError) {
+        event.stopPropagation();
+      } else if (formData.password !== confirmPassword) {
+        showToast("Passwords do not match", "danger");
+        return;
+      } else {
+        try {
+          // Prepare the data for dispatch as JSON
+          const result = await dispatch(sendOtp(formData)).unwrap(); // Directly use formData
+          showToast(result.message || "OTP sent successfully!", "success");
+
+          // Navigate to the OTP verification page
+          navigate("/OtpVerify", { state: { formData } });
+        } catch (error) {
+          showToast(
+            error.message || "Failed to send OTP. Please try again.",
+            "danger"
+          );
+        }
       }
-    }
+      setValidated(true);
+    });
+  };
 
-    setValidated(true);
+  const handleClear = () => {
+    // Reset form data to initial state
+    setFormData({
+      name: "",
+      email: "",
+      password: "",
+      dob: "",
+      gender: "",
+      country: "",
+      position: "",
+      foot: "",
+      pic: null,
+    });
+    setConfirmPassword("");
+    setFileError("");
+    setValidated(false); // Reset validation state if needed
   };
 
   return (
@@ -273,10 +304,36 @@ export default function Signup() {
                 <div className="invalid-feedback">Password is required.</div>
               </div>
 
-              <button type="reset" className="btn btn-primary">
+              <div className="form-floating mb-3 mt-3">
+                <input
+                  type="password"
+                  className="form-control"
+                  name="confirmPassword"
+                  placeholder="Confirm Password"
+                  value={confirmPassword}
+                  onChange={handleConfirmPassword}
+                  required
+                />
+                <label htmlFor="floatingConfirmPassword">
+                  Confirm Password
+                </label>
+                <div className="invalid-feedback">
+                  Please confirm your password.
+                </div>
+              </div>
+
+              <button
+                type="reset"
+                className="btn btn-primary"
+                onClick={handleClear}
+              >
                 Clear
               </button>
-              <button type="submit" className="btn btn-primary ms-2">
+              <button
+                type="submit"
+                className="btn btn-primary ms-2"
+                disabled={isPending}
+              >
                 Submit
               </button>
             </form>
