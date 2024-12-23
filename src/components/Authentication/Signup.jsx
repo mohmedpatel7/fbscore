@@ -5,11 +5,13 @@ import { useNavigate } from "react-router-dom"; // Navigation hook for routing.
 import { useToast } from "../Genral/ToastContext"; // Custom Toast Context for notifications.
 import { useDispatch } from "react-redux"; // Dispatch hook for Redux actions.
 import { sendOtp } from "../../Redux/fetures/authentication"; // Redux action for signup.
+import { FaEye, FaEyeSlash } from "react-icons/fa"; // FontAwesome icons for password visibility
 
 export default function Signup() {
-  const [validated, setValidated] = useState(false);
-  const [isPending, startTransition] = useTransition();
+  const [validated, setValidated] = useState(false); // State to track form validation.
+  const [isPending, startTransition] = useTransition(); // Hook for managing transitions
   const [formData, setFormData] = useState({
+    // State for form data.
     name: "",
     email: "",
     password: "",
@@ -20,12 +22,16 @@ export default function Signup() {
     foot: "",
     pic: null,
   });
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [fileError, setFileError] = useState("");
-  const { showToast } = useToast();
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const [confirmPassword, setConfirmPassword] = useState(""); // State for confirm password field.
+  const [fileError, setFileError] = useState(""); // State to track file upload errors.
+  const [passwordVisable, setPasswordVisable] = useState(false); // Toggle for password visibility.
+  const [confirmPasswordVisable, setConfirmPasswordVisable] = useState(false); // Toggle for confirm password visibility.
 
+  const { showToast } = useToast(); // Toast notifications for feedback.
+  const dispatch = useDispatch(); // Redux dispatch for triggering actions.
+  const navigate = useNavigate(); // Hook for navigation.
+
+  // Handle input field changes for text inputs.
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -34,6 +40,7 @@ export default function Signup() {
     }));
   };
 
+  // Handle profile picture file selection with validation for file type.
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     const validTypes = ["image/jpeg", "image/jpg", "image/png"];
@@ -48,16 +55,19 @@ export default function Signup() {
     }
   };
 
+  // Update confirm password state.
   const handleConfirmPassword = (e) => {
     setConfirmPassword(e.target.value);
   };
 
+  // Handle form submission logic, including validation and API call.
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     startTransition(async () => {
       const form = event.currentTarget;
 
+      // Validate form fields and ensure passwords match.
       if (form.checkValidity() === false || fileError) {
         event.stopPropagation();
       } else if (formData.password !== confirmPassword) {
@@ -65,11 +75,11 @@ export default function Signup() {
         return;
       } else {
         try {
-          // Prepare the data for dispatch as JSON
-          const result = await dispatch(sendOtp(formData)).unwrap(); // Directly use formData
+          // Dispatch Redux action to send OTP with formData.
+          const result = await dispatch(sendOtp(formData)).unwrap();
           showToast(result.message || "OTP sent successfully!", "success");
 
-          // Navigate to the OTP verification page
+          // Navigate to OTP verification page with form data.
           navigate("/OtpVerify", { state: { formData } });
         } catch (error) {
           showToast(
@@ -82,6 +92,7 @@ export default function Signup() {
     });
   };
 
+  // Clear all form inputs and reset state.
   const handleClear = () => {
     // Reset form data to initial state
     setFormData({
@@ -98,6 +109,16 @@ export default function Signup() {
     setConfirmPassword("");
     setFileError("");
     setValidated(false); // Reset validation state if needed
+  };
+
+  // Toggle visibility of the password field.
+  const handlePasswordVisability = () => {
+    setPasswordVisable((prev) => !prev);
+  };
+
+  // Toggle visibility of the confirm password field.
+  const handleConfirmPasswordVisability = () => {
+    setConfirmPasswordVisable((prev) => !prev);
   };
 
   return (
@@ -292,7 +313,7 @@ export default function Signup() {
 
               <div className="form-floating mb-3 mt-5">
                 <input
-                  type="password"
+                  type={passwordVisable ? "text" : "password"}
                   className="form-control"
                   name="password"
                   placeholder="Password"
@@ -302,11 +323,25 @@ export default function Signup() {
                 />
                 <label htmlFor="floatingPassword">Password</label>
                 <div className="invalid-feedback">Password is required.</div>
+
+                <span
+                  onClick={handlePasswordVisability}
+                  style={{
+                    position: "absolute",
+                    top: "50%",
+                    right: "10px",
+                    transform: "translateY(-50%)",
+                    cursor: "pointer",
+                    zIndex: 10,
+                  }}
+                >
+                  {passwordVisable ? <FaEye /> : <FaEyeSlash />}
+                </span>
               </div>
 
               <div className="form-floating mb-3 mt-3">
                 <input
-                  type="password"
+                  type={confirmPasswordVisable ? "text" : "password"}
                   className="form-control"
                   name="confirmPassword"
                   placeholder="Confirm Password"
@@ -320,6 +355,20 @@ export default function Signup() {
                 <div className="invalid-feedback">
                   Please confirm your password.
                 </div>
+
+                <span
+                  onClick={handleConfirmPasswordVisability}
+                  style={{
+                    position: "absolute",
+                    top: "50%",
+                    right: "10px",
+                    transform: "translateY(-50%)",
+                    cursor: "pointer",
+                    zIndex: 10,
+                  }}
+                >
+                  {confirmPasswordVisable ? <FaEye /> : <FaEyeSlash />}
+                </span>
               </div>
 
               <button

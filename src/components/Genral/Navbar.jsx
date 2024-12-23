@@ -5,6 +5,7 @@ import "./style/style.css";
 import { Dropdown } from "react-bootstrap";
 import Default_Pic from "./style/pic.jpg";
 import { useToast } from "./ToastContext";
+import { BsPlus } from "react-icons/bs"; // Import the plus icon
 
 export default function Navbar() {
   const navigate = useNavigate(); // naviagate object..
@@ -83,10 +84,16 @@ export default function Navbar() {
               {isUser && (
                 <>
                   <button
-                    className="btn btn-primary me-2 ms-2"
+                    className="btn  rounded-circle p-3 d-flex align-items-center justify-content-center ms-3"
                     onClick={() => navigate("/")}
+                    style={{
+                      width: "43px",
+                      height: "43px",
+                      fontSize: "50px",
+                      backgroundColor: "#h3h3h3",
+                    }}
                   >
-                    Post
+                    <BsPlus />
                   </button>
 
                   {/* Profile part*/}
@@ -102,9 +109,14 @@ export default function Navbar() {
                         <button
                           className="btn"
                           onClick={() => {
-                            localStorage.removeItem("token");
-                            navigate("/");
-                            showToast("Singout Successfuly", "success");
+                            let ask = window.confirm("Are you sure ?");
+                            if (ask) {
+                              localStorage.removeItem("token");
+                              navigate("/");
+                              showToast("Singout Successfuly", "success");
+                            } else {
+                              return;
+                            }
                           }}
                         >
                           Sign Out

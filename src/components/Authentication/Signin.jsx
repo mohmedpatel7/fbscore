@@ -1,57 +1,66 @@
 import React, { useState, useTransition } from "react";
-import "bootstrap/dist/css/bootstrap.min.css";
-import "./style/style.css";
-import { useToast } from "../Genral/ToastContext";
-import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { Signin } from "../../Redux/fetures/authentication";
+import "bootstrap/dist/css/bootstrap.min.css"; // Importing Bootstrap CSS for styling
+import "./style/style.css"; // Importing custom CSS
+import { useToast } from "../Genral/ToastContext"; // Custom toast context for notifications
+import { useNavigate } from "react-router-dom"; // For navigation between routes
+import { useDispatch } from "react-redux"; // Redux dispatch to send actions
+import { Signin } from "../../Redux/fetures/authentication"; // Redux action for sign-in
+import { FaEye, FaEyeSlash } from "react-icons/fa"; // FontAwesome icons for password visibility
 
 export default function SignIn() {
-  const [validated, setValidated] = useState(false);
+  const [validated, setValidated] = useState(false); // State to manage form validation status
   const [formData, setFormData] = useState({
     email: "",
     password: "",
-  });
-  const [isPending, startTransition] = useTransition();
+  }); // State to hold form input data
+  const [isPending, startTransition] = useTransition(); // Manage pending state for async transitions
+  const [passwordVisable, setPasswordVisable] = useState(false); // State to toggle password visibility
 
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const { showToast } = useToast();
+  const dispatch = useDispatch(); // Redux dispatch function
+  const navigate = useNavigate(); // React Router navigation function
+  const { showToast } = useToast(); // Custom toast for notifications
 
+  // Handles form submission
   const handleSubmit = async (event) => {
-    event.preventDefault();
+    event.preventDefault(); // Prevent default form submission behavior
+
     startTransition(async () => {
       const form = event.currentTarget;
       if (form.checkValidity() === false) {
+        // If form is invalid, stop further propagation
         event.stopPropagation();
       } else {
         try {
+          // Dispatch sign-in action and handle response
           const result = await dispatch(Signin(formData));
           if (Signin.fulfilled.match(result)) {
+            // If sign-in is successful
             showToast(
               result.payload.message || "Sign in successfully.",
               "success"
             );
             setFormData({ email: "", password: "" }); // Reset form data
-            navigate("/");
+            navigate("/"); // Navigate to home page
           } else {
-            // Handle rejected action
+            // Handle unsuccessful sign-in
             showToast(
               result.payload.message || "Invalid email or password.",
               "danger"
             );
           }
         } catch (error) {
+          // Handle errors during sign-in process
           showToast(
             error.message || "Sign in failed. Please try again after few time.",
             "danger"
           );
         }
       }
-      setValidated(true);
+      setValidated(true); // Set form as validated
     });
   };
 
+  // Handles input changes and updates formData state
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -60,9 +69,15 @@ export default function SignIn() {
     }));
   };
 
+  // Resets the form data and validation state
   const handleReset = () => {
     setFormData({ email: "", password: "" });
     setValidated(false);
+  };
+
+  // Toggles password visibility state
+  const handlePasswordVisability = () => {
+    setPasswordVisable((prev) => !prev);
   };
 
   return (
@@ -92,6 +107,8 @@ export default function SignIn() {
             to get started!
           </p>
         </div>
+
+        {/* Sign-In Form Section */}
         <div className="col-md-6">
           <div className="card-lg mt-5 mb-4 p-4 shadow rounded-3">
             <h2 className="mb-3 text-center">Sign In</h2>
@@ -100,6 +117,7 @@ export default function SignIn() {
               noValidate
               onSubmit={handleSubmit}
             >
+              {/* Email Input Field */}
               <div className="form-floating mb-3">
                 <input
                   type="email"
@@ -116,9 +134,10 @@ export default function SignIn() {
                 </div>
               </div>
 
+              {/* Password Input Field */}
               <div className="form-floating mb-3">
                 <input
-                  type="password"
+                  type={passwordVisable ? "text" : "password"} // Toggle between text and password
                   className="form-control"
                   name="password"
                   value={formData.password}
@@ -128,8 +147,24 @@ export default function SignIn() {
                 />
                 <label htmlFor="floatingPassword">Password</label>
                 <div className="invalid-feedback">Password is required.</div>
+
+                {/* Eye Icon for Password Visibility */}
+                <span
+                  onClick={handlePasswordVisability}
+                  style={{
+                    position: "absolute",
+                    top: "50%",
+                    right: "10px",
+                    transform: "translateY(-50%)",
+                    cursor: "pointer",
+                    zIndex: 10,
+                  }}
+                >
+                  {passwordVisable ? <FaEye /> : <FaEyeSlash />}
+                </span>
               </div>
 
+              {/* Buttons for Form Actions */}
               <button
                 type="button"
                 className="btn btn-primary"
@@ -140,12 +175,13 @@ export default function SignIn() {
               <button
                 type="submit"
                 className="btn btn-primary ms-2"
-                disabled={isPending}
+                disabled={isPending} // Disable button when pending
               >
                 Submit
               </button>
             </form>
 
+            {/* Forgot Password Link */}
             <button className="btn btn-link mt-3">Forgot Password</button>
           </div>
         </div>
