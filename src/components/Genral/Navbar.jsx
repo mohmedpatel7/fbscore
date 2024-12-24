@@ -84,16 +84,17 @@ export default function Navbar() {
               {isUser && (
                 <>
                   <button
-                    className="btn  rounded-circle p-3 d-flex align-items-center justify-content-center ms-3"
-                    onClick={() => navigate("/")}
+                    className="btn btn-ps p-3 d-flex align-items-center justify-content-center ms-3 mt-1 me-1 ms-3" // Added 'me-3' for right margin
+                    onClick={() => navigate("/Upload")}
                     style={{
-                      width: "43px",
-                      height: "43px",
-                      fontSize: "50px",
-                      backgroundColor: "#h3h3h3",
+                      width: "57px", // Button width
+                      height: "43px", // Button height
+                      backgroundColor: "#eee", // Background color
+                      borderRadius: "5px", // Optional: adjust border radius
                     }}
                   >
-                    <BsPlus />
+                    <BsPlus style={{ fontSize: "30px", color: "#000" }} />{" "}
+                    {/* Adjust icon size */}
                   </button>
 
                   {/* Profile part*/}

@@ -26,6 +26,7 @@ export default function Signup() {
   const [fileError, setFileError] = useState(""); // State to track file upload errors.
   const [passwordVisable, setPasswordVisable] = useState(false); // Toggle for password visibility.
   const [confirmPasswordVisable, setConfirmPasswordVisable] = useState(false); // Toggle for confirm password visibility.
+  const [preview, setPreview] = useState(null);
 
   const { showToast } = useToast(); // Toast notifications for feedback.
   const dispatch = useDispatch(); // Redux dispatch for triggering actions.
@@ -50,6 +51,13 @@ export default function Signup() {
         pic: file,
       }));
       setFileError("");
+
+      // Generate image preview
+      const render = new FileReader();
+      render.onloadend = () => {
+        setPreview(render.result);
+      };
+      render.readAsDataURL(file);
     } else {
       setFileError("Please upload a valid image file (jpeg, jpg, png).");
     }
@@ -174,17 +182,40 @@ export default function Signup() {
                 <div className="invalid-feedback">Name is required.</div>
               </div>
 
-              <div className="form-floating mb-3">
-                <input
-                  type="file"
-                  className={`form-control ${fileError ? "is-invalid" : ""}`}
-                  name="floatingProfile"
-                  placeholder="Profile Picture"
-                  onChange={handleFileChange}
-                />
-                <label htmlFor="floatingProfile">Select Profile Picture</label>
-                {fileError && (
-                  <div className="invalid-feedback">{fileError}</div>
+              <div className="form-floating mb-3 d-flex align-items-center">
+                {/* File Input */}
+                <div style={{ flex: "1" }}>
+                  <input
+                    type="file"
+                    className={`form-control ${fileError ? "is-invalid" : ""}`}
+                    name="floatingProfile"
+                    placeholder="Profile Picture"
+                    onChange={handleFileChange}
+                    style={{ width: "60%" }} // Reduce the input width
+                  />
+                  <label htmlFor="floatingProfile">
+                    Select Profile Picture
+                  </label>
+                  {fileError && (
+                    <div className="invalid-feedback">{fileError}</div>
+                  )}
+                </div>
+
+                {/* Preview Image */}
+                {preview && (
+                  <div className="text-center ms-3">
+                    <img
+                      src={preview}
+                      className="rounded-circle shadow"
+                      alt="Profile Preview"
+                      style={{
+                        height: "100px",
+                        width: "100px",
+                        border: "2px solid #50C878",
+                        padding: "5px",
+                      }}
+                    />
+                  </div>
                 )}
               </div>
 

@@ -206,3 +206,14 @@ body {
     background-color: #4CAF50;
     color: #f8f9fa
 }
+
+/* Input fields */
+.form-floating .form-control {
+    border-radius: 10px;
+}
+
+/* Labels */
+.form-floating label {
+    color: #777777;
+    font-weight: bold;
+}

@@ -6,6 +6,7 @@ import Posts from "./components/Post/Posts";
 import Signup from "./components/Authentication/Signup";
 import Signin from "./components/Authentication/Signin";
 import Otpverify from "./components/Authentication/Otpverify";
+import UploadPost from "./components/Post/UploadPost";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route exact path="/Signup" element={<Signup />} />
         <Route exact path="/Signin" element={<Signin />} />
         <Route exact path="/OtpVerify" element={<Otpverify />} />
+        <Route exact path="/Upload" element={<UploadPost />} />
       </Routes>
 
       <Footer />
