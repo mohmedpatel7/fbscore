@@ -114,6 +114,7 @@ export default function Signup() {
       foot: "",
       pic: null,
     });
+    setPreview("");
     setConfirmPassword("");
     setFileError("");
     setValidated(false); // Reset validation state if needed

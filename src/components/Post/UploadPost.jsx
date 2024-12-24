@@ -2,6 +2,8 @@ import React, { useState, useTransition } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./style/style.css";
 import { useToast } from "../Genral/ToastContext";
+import { useDispatch } from "react-redux";
+import { uploadPost } from "../../Redux/fetures/postslice";
 
 export default function UploadPost() {
   const [validated, setValidated] = useState(false); // State to manage form validation status
@@ -13,9 +15,9 @@ export default function UploadPost() {
   const [isPending, startTransition] = useTransition(); // Manage pending state for async transitions
   const [preview, setPreview] = useState(null); // State to manage image preview
 
-  const isUser = localStorage.getItem("token");
-
-  const { showToast } = useToast();
+  const isUser = localStorage.getItem("token"); //getting token
+  const { showToast } = useToast(); //notification toast..
+  const dispatch = useDispatch();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -57,6 +59,26 @@ export default function UploadPost() {
       if (form.checkValidity() === false) {
         // If form is invalid, stop further propagation
         event.stopPropagation();
+      } else {
+        // If form is valid, proceed with submission
+        try {
+          // Dispatch sign-in action and handle response
+          const result = dispatch(uploadPost(formData)).unwrap();
+          if (uploadPost.fulfilled.match(result)) {
+            showToast("Posted successfully.", "success");
+            // Clear form data and file error
+            setFileError("");
+            setFormData({
+              description: "",
+              image: "",
+            });
+            setPreview("");
+          } else {
+            showToast("Error while posting", "danger");
+          }
+        } catch (error) {
+          showToast(error.message || "Internal server error..!", "danger");
+        }
       }
       setValidated(true);
     });

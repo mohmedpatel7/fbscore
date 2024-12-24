@@ -33,6 +33,37 @@ export const fetchPosts = createAsyncThunk(
   }
 );
 
+//Api call for uploading post.
+export const uploadPost = createAsyncThunk(
+  "uploadPost",
+  async (payload, { rejectWithValue }) => {
+    try {
+      const response = await fetch(`${url}api/posts/uploadPost`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "auth-token": localStorage.getItem("token"),
+        },
+        body: JSON.stringify(payload),
+      });
+
+      // Handle non-OK responses
+      if (!response.ok) {
+        const errorData = await response
+          .json()
+          .catch(() => ({ message: "Unknown error occurred" }));
+        return rejectWithValue(errorData);
+      }
+
+      await response.json();
+    } catch (error) {
+      return rejectWithValue({
+        message: "Internal server error..!",
+      });
+    }
+  }
+);
+
 const postSlice = createSlice({
   name: "postSlice",
   initialState: {
@@ -55,6 +86,20 @@ const postSlice = createSlice({
     builder.addCase(fetchPosts.rejected, (state, action) => {
       state.loading = false;
       state.error = action.payload.message;
+    });
+
+    //Handle upload post cases
+    builder.addCase(uploadPost.pending, (state) => {
+      state.loading = true;
+      state.error = null;
+    });
+    builder.addCase(uploadPost.fulfilled, (state, action) => {
+      state.loading = false;
+      state.posts = action.payload;
+    });
+    builder.addCase(uploadPost.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload?.message || "Unknown error occurred."; // Use backend error or fallback
     });
   },
 });
