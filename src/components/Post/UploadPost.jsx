@@ -6,17 +6,17 @@ import { useDispatch } from "react-redux";
 import { uploadPost } from "../../Redux/fetures/postslice";
 
 export default function UploadPost() {
-  const [validated, setValidated] = useState(false); // State to manage form validation status
+  const [validated, setValidated] = useState(false);
   const [formData, setFormData] = useState({
     description: "",
-    image: "",
+    image: null,
   });
-  const [fileError, setFileError] = useState(""); // State to track file upload errors.
-  const [isPending, startTransition] = useTransition(); // Manage pending state for async transitions
-  const [preview, setPreview] = useState(null); // State to manage image preview
+  const [fileError, setFileError] = useState("");
+  const [isPending, startTransition] = useTransition();
+  const [preview, setPreview] = useState(null);
 
-  const isUser = localStorage.getItem("token"); //getting token
-  const { showToast } = useToast(); //notification toast..
+  const isUser = localStorage.getItem("token");
+  const { showToast } = useToast();
   const dispatch = useDispatch();
 
   const handleChange = (e) => {
@@ -27,7 +27,6 @@ export default function UploadPost() {
     }));
   };
 
-  // Handle profile picture file selection with validation for file type.
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     const validTypes = ["image/jpeg", "image/jpg", "image/png"];
@@ -38,7 +37,6 @@ export default function UploadPost() {
       }));
       setFileError("");
 
-      // Generate image preview
       const reader = new FileReader();
       reader.onloadend = () => {
         setPreview(reader.result);
@@ -46,51 +44,45 @@ export default function UploadPost() {
       reader.readAsDataURL(file);
     } else {
       setFileError("Please upload a valid image file (jpeg, jpg, png).");
-      setPreview(null); // Clear preview on invalid file
+      setPreview(null);
     }
   };
 
-  //Handle submit form.
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     startTransition(async () => {
       const form = event.currentTarget;
       if (form.checkValidity() === false) {
-        // If form is invalid, stop further propagation
         event.stopPropagation();
       } else {
-        // If form is valid, proceed with submission
         try {
-          // Dispatch sign-in action and handle response
-          const result = dispatch(uploadPost(formData)).unwrap();
-          if (uploadPost.fulfilled.match(result)) {
+          const submissionData = new FormData();
+          submissionData.append("description", formData.description);
+          if (formData.image) {
+            submissionData.append("image", formData.image);
+          }
+
+          const result = await dispatch(uploadPost(submissionData)).unwrap();
+
+          if (result.success) {
             showToast("Posted successfully.", "success");
-            // Clear form data and file error
-            setFileError("");
-            setFormData({
-              description: "",
-              image: "",
-            });
-            setPreview("");
+            setFormData({ description: "", image: null });
+            setPreview(null);
           } else {
             showToast("Error while posting", "danger");
           }
         } catch (error) {
-          showToast(error.message || "Internal server error..!", "danger");
+          showToast(error.message || "Internal server error!", "danger");
         }
       }
       setValidated(true);
     });
   };
 
-  //Handle reset form..
   const handleReset = () => {
-    setFormData({
-      description: "",
-      image: "",
-    });
-    setPreview(null); // Clear preview on reset
+    setFormData({ description: "", image: null });
+    setPreview(null);
   };
 
   return (
@@ -141,7 +133,6 @@ export default function UploadPost() {
                     )}
                   </div>
 
-                  {/* Image Preview */}
                   {preview && (
                     <div className="mb-3">
                       <img
@@ -156,7 +147,6 @@ export default function UploadPost() {
                     </div>
                   )}
 
-                  {/* Buttons for Form Actions */}
                   <button
                     type="button"
                     className="btn btn-primary"
@@ -167,7 +157,7 @@ export default function UploadPost() {
                   <button
                     type="submit"
                     className="btn btn-primary ms-2"
-                    disabled={isPending} // Disable button when pending
+                    disabled={isPending}
                   >
                     Submit
                   </button>

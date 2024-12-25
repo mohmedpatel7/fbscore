@@ -41,10 +41,9 @@ export const uploadPost = createAsyncThunk(
       const response = await fetch(`${url}api/posts/uploadPost`, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
-          "auth-token": localStorage.getItem("token"),
+          "auth-token": localStorage.getItem("token"), // Keep only the auth-token header
         },
-        body: JSON.stringify(payload),
+        body: payload, // Directly pass the FormData object
       });
 
       // Handle non-OK responses
@@ -55,10 +54,10 @@ export const uploadPost = createAsyncThunk(
         return rejectWithValue(errorData);
       }
 
-      await response.json();
+      return await response.json(); // Return the response data
     } catch (error) {
       return rejectWithValue({
-        message: "Internal server error..!",
+        message: "Internal server error..! ",
       });
     }
   }
