@@ -193,10 +193,14 @@ export default function Signup() {
                     placeholder="Profile Picture"
                     onChange={handleFileChange}
                     style={{ width: "60%" }} // Reduce the input width
+                    required
                   />
                   <label htmlFor="floatingProfile">
                     Select Profile Picture
                   </label>
+                  <div className="invalid-feedback">
+                    Profile picture required.
+                  </div>
                   {fileError && (
                     <div className="invalid-feedback">{fileError}</div>
                   )}

@@ -18,7 +18,6 @@ export const sendOtp = createAsyncThunk(
       // Check if the response is not OK
       if (!response.ok) {
         const errorData = await response.json();
-        console.log(errorData);
         return rejectWithValue(errorData); // Send backend error to the reducer
       }
 
@@ -81,7 +80,6 @@ export const Signin = createAsyncThunk(
       // Handle non-OK responses
       if (!response.ok) {
         const errorData = await response.json();
-
         return rejectWithValue(errorData);
       }
 
@@ -90,6 +88,41 @@ export const Signin = createAsyncThunk(
     } catch (error) {
       return rejectWithValue({
         message: "Failed to sign in. Please try again.",
+      });
+    }
+  }
+);
+
+//Fetching sign in user details Async thunk.
+export const fetchUserDetails = createAsyncThunk(
+  "fetchUserDetails",
+  async (_, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        return rejectWithValue({
+          message: "Authentication token is missing. Please log in again.",
+        });
+      }
+
+      const response = await fetch(`${url}api/auth/getuser`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "auth-token": token,
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData);
+      }
+
+      const data = await response.json();
+      return data.response; // Return only the `response` field
+    } catch (error) {
+      return rejectWithValue({
+        message: "Failed to fetch user details. Please try again later.",
       });
     }
   }
@@ -153,6 +186,21 @@ const authSlice = createSlice({
     builder.addCase(Signin.rejected, (state, action) => {
       state.isLoading = false;
       state.error = action.payload?.message;
+    });
+
+    //Handle fetch userdetails cases.
+    builder.addCase(fetchUserDetails.pending, (state) => {
+      state.isLoading = true;
+      state.error = null;
+    });
+    builder.addCase(fetchUserDetails.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.data = action.payload;
+      state.error = null;
+    });
+    builder.addCase(fetchUserDetails.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload?.message || "Unknown error occurred.";
     });
   },
 });

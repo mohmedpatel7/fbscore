@@ -64,16 +64,11 @@ export default function UploadPost() {
           }
 
           const result = await dispatch(uploadPost(submissionData)).unwrap();
-
-          if (result.success) {
-            showToast("Posted successfully.", "success");
-            setFormData({ description: "", image: null });
-            setPreview(null);
-          } else {
-            showToast("Error while posting", "danger");
-          }
+          showToast("Posted successfully.", "success");
+          setFormData({ description: "", image: null });
+          setPreview(null);
         } catch (error) {
-          showToast(error.message || "Internal server error!", "danger");
+          showToast(error.message || "Error while posting", "danger");
         }
       }
       setValidated(true);

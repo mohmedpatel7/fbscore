@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./style/style.css";
@@ -6,12 +6,23 @@ import { Dropdown } from "react-bootstrap";
 import Default_Pic from "./style/pic.jpg";
 import { useToast } from "./ToastContext";
 import { BsPlus } from "react-icons/bs"; // Import the plus icon
+import { useSelector, useDispatch } from "react-redux";
+import { fetchUserDetails } from "../../Redux/fetures/authentication";
 
 export default function Navbar() {
   const navigate = useNavigate(); // naviagate object..
   const { showToast } = useToast();
 
   const isUser = localStorage.getItem("token");
+
+  const { data } = useSelector((state) => state.authSlice);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (isUser) {
+      dispatch(fetchUserDetails());
+    }
+  }, [dispatch]);
 
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light ">
@@ -100,7 +111,7 @@ export default function Navbar() {
                   {/* Profile part*/}
                   <Dropdown>
                     <Dropdown.Toggle variant="light">
-                      <img src={Default_Pic} alt="Profile" />
+                      <img src={data?.pic || Default_Pic} alt="Profile" />
                     </Dropdown.Toggle>
                     <Dropdown.Menu>
                       <Dropdown.Item>
