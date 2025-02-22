@@ -18,7 +18,7 @@ const SigninLandPage = () => {
         {[
           {
             role: "Team Owner",
-            path: "/signin/teamowner",
+            path: "/TeamSignin",
             icon: "fa-solid fa-user-tie fa-roles",
             description: [
               "Manage your team and players.",

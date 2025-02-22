@@ -18,7 +18,7 @@ const SignupLandPage = () => {
         {[
           {
             role: "Team Owner",
-            path: "/signup/teamowner",
+            path: "/Teamsignup",
             icon: "fa-solid fa-user-tie fa-roles",
             description: [
               "Create and manage your own team.",
