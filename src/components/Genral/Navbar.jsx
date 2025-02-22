@@ -5,13 +5,13 @@ import "./style/style.css";
 import { Dropdown } from "react-bootstrap";
 import Default_Pic from "./style/pic.jpg";
 import { useToast } from "./ToastContext";
-import { BsPlus } from "react-icons/bs"; // Import the plus icon
+import { BsPlus } from "react-icons/bs";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchUserDetails } from "../../Redux/fetures/authentication";
 import { fetchTeamDetails } from "../../Redux/fetures/Teamslice";
 
 export default function Navbar() {
-  const navigate = useNavigate(); // naviagate object..
+  const navigate = useNavigate();
   const { showToast } = useToast();
 
   const isUser = localStorage.getItem("usertoken");
@@ -23,21 +23,36 @@ export default function Navbar() {
 
   useEffect(() => {
     if (isUser) {
-      dispatch(fetchUserDetails());
-    } else if (isTeamOwner) {
-      dispatch(fetchTeamDetails());
+      dispatch(fetchUserDetails()).catch((error) => {
+        console.error("Error fetching user details:", error);
+      });
     }
-  }, [dispatch]);
+
+    if (isTeamOwner && localStorage.getItem("teamtoken")) {
+      dispatch(fetchTeamDetails()).catch((error) => {
+        console.error("Error fetching team details:", error);
+      });
+    }
+  }, [dispatch, isUser, isTeamOwner]);
+
+  const handleSignOut = () => {
+    const ask = window.confirm("Are you sure?");
+    if (ask) {
+      // Clear both tokens
+      localStorage.removeItem("usertoken");
+      localStorage.removeItem("teamtoken");
+      navigate("/");
+      showToast("Signout Successful", "success");
+    }
+  };
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-light bg-light ">
+    <nav className="navbar navbar-expand-lg navbar-light bg-light">
       <div className="container-fluid">
-        {/* Brand */}
         <Link className="navbar-brand me-4" to="/">
           FbScore
         </Link>
 
-        {/* Toggler */}
         <button
           className="navbar-toggler"
           type="button"
@@ -50,13 +65,11 @@ export default function Navbar() {
           <span className="navbar-toggler-icon"></span>
         </button>
 
-        {/* Navbar Content */}
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul className="navbar-nav w-100 d-flex justify-content-between align-items-center">
             <div className="d-flex">
-              {/* Links Section */}
               <li className="nav-item me-3 mt-2 ms-1">
-                <Link className="nav-link " to="/">
+                <Link className="nav-link" to="/">
                   Post
                 </Link>
               </li>
@@ -72,121 +85,122 @@ export default function Navbar() {
               </li>
             </div>
 
-            {/* Vertical Line and Buttons */}
             <div className="d-flex align-items-center">
-              {/* Search Button */}
               <button className="btn-search me-2">
                 <i className="fa-solid fa-magnifying-glass"></i>
               </button>
-              <div className="vr me-3"></div> {/* Vertical line */}
-              {!isUser && (
+              <div className="vr me-3"></div>
+
+              {/* Conditional Rendering */}
+              {isUser ? (
                 <>
+                  {/* Upload Button for User */}
+                  <button
+                    className="btn btn-ps p-3 d-flex align-items-center justify-content-center ms-3 mt-1 me-1"
+                    onClick={() => navigate("/Upload")}
+                    style={{
+                      width: "57px",
+                      height: "43px",
+                      backgroundColor: "#eee",
+                      borderRadius: "5px",
+                    }}
+                  >
+                    <BsPlus style={{ fontSize: "30px", color: "#000" }} />
+                  </button>
+
+                  {/* Profile Dropdown for User */}
+                  <Dropdown>
+                    <Dropdown.Toggle variant="light">
+                      <img
+                        src={data?.pic || Default_Pic}
+                        alt="Profile"
+                        style={{
+                          width: "40px",
+                          height: "40px",
+                          borderRadius: "50%",
+                          objectFit: "cover",
+                        }}
+                      />
+                    </Dropdown.Toggle>
+                    <Dropdown.Menu>
+                      <Dropdown.Item>
+                        <button
+                          className="btn"
+                          onClick={() => navigate("/user-profile")}
+                        >
+                          Profile
+                        </button>
+                      </Dropdown.Item>
+                      <Dropdown.Item>
+                        <button className="btn" onClick={handleSignOut}>
+                          Sign Out
+                        </button>
+                      </Dropdown.Item>
+                    </Dropdown.Menu>
+                  </Dropdown>
+                </>
+              ) : isTeamOwner ? (
+                <>
+                  {/* Upload Button for Team Owner */}
+                  <button
+                    className="btn btn-ps p-3 d-flex align-items-center justify-content-center ms-3 mt-1 me-1"
+                    onClick={() => navigate("/Upload")}
+                    style={{
+                      width: "57px",
+                      height: "43px",
+                      backgroundColor: "#eee",
+                      borderRadius: "5px",
+                    }}
+                  >
+                    <BsPlus style={{ fontSize: "30px", color: "#000" }} />
+                  </button>
+
+                  {/* Profile Dropdown for Team Owner */}
+                  <Dropdown>
+                    <Dropdown.Toggle variant="light">
+                      <img
+                        src={teamData?.team?.teamlogo || Default_Pic}
+                        alt="Profile"
+                        style={{
+                          width: "40px",
+                          height: "40px",
+                          borderRadius: "50%",
+                          objectFit: "cover",
+                        }}
+                      />
+                    </Dropdown.Toggle>
+                    <Dropdown.Menu>
+                      <Dropdown.Item>
+                        <button
+                          className="btn"
+                          onClick={() => navigate("/team-profile")}
+                        >
+                          Profile
+                        </button>
+                      </Dropdown.Item>
+                      <Dropdown.Item>
+                        <button className="btn" onClick={handleSignOut}>
+                          Sign Out
+                        </button>
+                      </Dropdown.Item>
+                    </Dropdown.Menu>
+                  </Dropdown>
+                </>
+              ) : (
+                <>
+                  {/* Sign In and Sign Up Buttons for Unauthenticated Users */}
                   <button
                     className="btn btn-signin me-2"
-                    type="button"
                     onClick={() => navigate("/SigninLandPage")}
                   >
                     Sign In
                   </button>
                   <button
                     className="btn btn-signup"
-                    type="button"
                     onClick={() => navigate("/SignupLandPage")}
                   >
                     Sign Up
                   </button>
-                </>
-              )}
-              {isUser && (
-                <>
-                  <button
-                    className="btn btn-ps p-3 d-flex align-items-center justify-content-center ms-3 mt-1 me-1 ms-3" // Added 'me-3' for right margin
-                    onClick={() => navigate("/Upload")}
-                    style={{
-                      width: "57px", // Button width
-                      height: "43px", // Button height
-                      backgroundColor: "#eee", // Background color
-                      borderRadius: "5px", // Optional: adjust border radius
-                    }}
-                  >
-                    <BsPlus style={{ fontSize: "30px", color: "#000" }} />{" "}
-                    {/* Adjust icon size */}
-                  </button>
-
-                  {/* Profile part*/}
-                  <Dropdown>
-                    <Dropdown.Toggle variant="light">
-                      <img src={data?.pic} alt="Profile" />
-                    </Dropdown.Toggle>
-                    <Dropdown.Menu>
-                      <Dropdown.Item>
-                        <button className="btn">Profile</button>
-                      </Dropdown.Item>
-                      <Dropdown.Item>
-                        <button
-                          className="btn"
-                          onClick={() => {
-                            let ask = window.confirm("Are you sure ?");
-                            if (ask) {
-                              localStorage.removeItem("usertoken");
-                              navigate("/");
-                              showToast("Singout Successfuly", "success");
-                            } else {
-                              return;
-                            }
-                          }}
-                        >
-                          Sign Out
-                        </button>
-                      </Dropdown.Item>
-                    </Dropdown.Menu>
-                  </Dropdown>
-                </>
-              )}
-              {isTeamOwner && (
-                <>
-                  <button
-                    className="btn btn-ps p-3 d-flex align-items-center justify-content-center ms-3 mt-1 me-1 ms-3" // Added 'me-3' for right margin
-                    onClick={() => navigate("/Upload")}
-                    style={{
-                      width: "57px", // Button width
-                      height: "43px", // Button height
-                      backgroundColor: "#eee", // Background color
-                      borderRadius: "5px", // Optional: adjust border radius
-                    }}
-                  >
-                    <BsPlus style={{ fontSize: "30px", color: "#000" }} />{" "}
-                    {/* Adjust icon size */}
-                  </button>
-
-                  {/* Profile part*/}
-                  <Dropdown>
-                    <Dropdown.Toggle variant="light">
-                      <img src={teamData?.teamlogo} alt="Profile" />
-                    </Dropdown.Toggle>
-                    <Dropdown.Menu>
-                      <Dropdown.Item>
-                        <button className="btn">Profile</button>
-                      </Dropdown.Item>
-                      <Dropdown.Item>
-                        <button
-                          className="btn"
-                          onClick={() => {
-                            let ask = window.confirm("Are you sure ?");
-                            if (ask) {
-                              localStorage.removeItem("teamtoken");
-                              navigate("/");
-                              showToast("Singout Successfuly", "success");
-                            } else {
-                              return;
-                            }
-                          }}
-                        >
-                          Sign Out
-                        </button>
-                      </Dropdown.Item>
-                    </Dropdown.Menu>
-                  </Dropdown>
                 </>
               )}
             </div>

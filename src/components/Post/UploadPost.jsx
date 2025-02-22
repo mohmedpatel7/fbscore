@@ -15,7 +15,8 @@ export default function UploadPost() {
   const [isPending, startTransition] = useTransition();
   const [preview, setPreview] = useState(null);
 
-  const isUser = localStorage.getItem("token");
+  const isUser = localStorage.getItem("usertoken");
+  const isTeamOwner = localStorage.getItem("teamtoken");
   const { showToast } = useToast();
   const dispatch = useDispatch();
 
@@ -82,7 +83,7 @@ export default function UploadPost() {
 
   return (
     <>
-      {isUser && (
+      {isUser || isTeamOwner ? (
         <div className="container mt-5 mb-4">
           <div className="row">
             <div className="col-md-3"></div>
@@ -162,6 +163,8 @@ export default function UploadPost() {
             <div className="col-md-3"></div>
           </div>
         </div>
+      ) : (
+        <></>
       )}
     </>
   );

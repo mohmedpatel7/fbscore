@@ -94,7 +94,7 @@ export const Signin = createAsyncThunk(
   }
 );
 
-//Fetching sign in user details Async thunk.
+//Fetching sign in team details Async thunk.
 export const fetchTeamDetails = createAsyncThunk(
   "fetchUserDetails",
   async (_, { rejectWithValue }) => {
@@ -110,7 +110,7 @@ export const fetchTeamDetails = createAsyncThunk(
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          "auth-token": token,
+          "team-token": token,
         },
       });
 
@@ -120,7 +120,7 @@ export const fetchTeamDetails = createAsyncThunk(
       }
 
       const data = await response.json();
-      return data.response; // Return only the `response` field
+      return data; // Return only the `response` field
     } catch (error) {
       return rejectWithValue({
         message: "Failed to fetch user details. Please try again later.",
@@ -134,7 +134,7 @@ const teamSlice = createSlice({
   name: "team",
   initialState: {
     isLoading: false,
-    data: null,
+    teamData: null,
     error: null, // Error string or object from backend
   },
 
@@ -146,7 +146,7 @@ const teamSlice = createSlice({
     });
     builder.addCase(sendOtp.fulfilled, (state, action) => {
       state.isLoading = false;
-      state.data = action.payload;
+      state.teamData = action.payload;
       state.error = null;
     });
     builder.addCase(sendOtp.rejected, (state, action) => {
@@ -161,7 +161,7 @@ const teamSlice = createSlice({
     });
     builder.addCase(SignUp.fulfilled, (state, action) => {
       state.isLoading = false;
-      state.data = action.payload;
+      state.teamData = action.payload;
       state.error = null;
     });
     builder.addCase(SignUp.rejected, (state, action) => {
@@ -176,11 +176,11 @@ const teamSlice = createSlice({
     });
     builder.addCase(Signin.fulfilled, (state, action) => {
       state.isLoading = false;
-      state.data = action.payload;
-      state.error = null;
-
+      localStorage.removeItem("usertoken");
       // Store token in localStorage
       localStorage.setItem("teamtoken", action.payload.teamtoken);
+      state.teamData = action.payload;
+      state.error = null;
     });
     builder.addCase(Signin.rejected, (state, action) => {
       state.isLoading = false;
@@ -194,7 +194,7 @@ const teamSlice = createSlice({
     });
     builder.addCase(fetchTeamDetails.fulfilled, (state, action) => {
       state.isLoading = false;
-      state.data = action.payload;
+      state.teamData = action.payload;
       state.error = null;
     });
     builder.addCase(fetchTeamDetails.rejected, (state, action) => {
