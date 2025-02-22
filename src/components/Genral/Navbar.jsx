@@ -8,19 +8,24 @@ import { useToast } from "./ToastContext";
 import { BsPlus } from "react-icons/bs"; // Import the plus icon
 import { useSelector, useDispatch } from "react-redux";
 import { fetchUserDetails } from "../../Redux/fetures/authentication";
+import { fetchTeamDetails } from "../../Redux/fetures/Teamslice";
 
 export default function Navbar() {
   const navigate = useNavigate(); // naviagate object..
   const { showToast } = useToast();
 
-  const isUser = localStorage.getItem("token");
+  const isUser = localStorage.getItem("usertoken");
+  const isTeamOwner = localStorage.getItem("teamtoken");
 
   const { data } = useSelector((state) => state.authSlice);
+  const { teamData } = useSelector((state) => state.teamSlice);
   const dispatch = useDispatch();
 
   useEffect(() => {
     if (isUser) {
       dispatch(fetchUserDetails());
+    } else if (isTeamOwner) {
+      dispatch(fetchTeamDetails());
     }
   }, [dispatch]);
 
@@ -111,7 +116,7 @@ export default function Navbar() {
                   {/* Profile part*/}
                   <Dropdown>
                     <Dropdown.Toggle variant="light">
-                      <img src={data?.pic || Default_Pic} alt="Profile" />
+                      <img src={data?.pic} alt="Profile" />
                     </Dropdown.Toggle>
                     <Dropdown.Menu>
                       <Dropdown.Item>
@@ -123,7 +128,53 @@ export default function Navbar() {
                           onClick={() => {
                             let ask = window.confirm("Are you sure ?");
                             if (ask) {
-                              localStorage.removeItem("token");
+                              localStorage.removeItem("usertoken");
+                              navigate("/");
+                              showToast("Singout Successfuly", "success");
+                            } else {
+                              return;
+                            }
+                          }}
+                        >
+                          Sign Out
+                        </button>
+                      </Dropdown.Item>
+                    </Dropdown.Menu>
+                  </Dropdown>
+                </>
+              )}
+              {isTeamOwner && (
+                <>
+                  <button
+                    className="btn btn-ps p-3 d-flex align-items-center justify-content-center ms-3 mt-1 me-1 ms-3" // Added 'me-3' for right margin
+                    onClick={() => navigate("/Upload")}
+                    style={{
+                      width: "57px", // Button width
+                      height: "43px", // Button height
+                      backgroundColor: "#eee", // Background color
+                      borderRadius: "5px", // Optional: adjust border radius
+                    }}
+                  >
+                    <BsPlus style={{ fontSize: "30px", color: "#000" }} />{" "}
+                    {/* Adjust icon size */}
+                  </button>
+
+                  {/* Profile part*/}
+                  <Dropdown>
+                    <Dropdown.Toggle variant="light">
+                      <img src={teamData?.teamlogo} alt="Profile" />
+                    </Dropdown.Toggle>
+                    <Dropdown.Menu>
+                      <Dropdown.Item>
+                        <button className="btn">Profile</button>
+                      </Dropdown.Item>
+                      <Dropdown.Item>
+                        <button
+                          className="btn"
+                          onClick={() => {
+                            let ask = window.confirm("Are you sure ?");
+                            if (ask) {
+                              localStorage.removeItem("teamtoken");
                               navigate("/");
                               showToast("Singout Successfuly", "success");
                             } else {

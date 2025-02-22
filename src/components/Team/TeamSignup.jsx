@@ -4,7 +4,7 @@ import "./style/style.css";
 import { useNavigate } from "react-router-dom"; // Navigation hook for routing.
 import { useToast } from "../Genral/ToastContext"; // Custom Toast Context for notifications.
 import { useDispatch } from "react-redux"; // Dispatch hook for Redux actions.
-import { sendOtp } from "../../Redux/fetures/authentication"; // Redux action for signup.
+import { sendOtp } from "../../Redux/fetures/Teamslice"; // Redux action for signup.
 import { FaEye, FaEyeSlash } from "react-icons/fa"; // FontAwesome icons for password visibility
 
 export default function TeamSignup() {
@@ -85,7 +85,7 @@ export default function TeamSignup() {
           showToast(result.message || "OTP sent successfully!", "success");
 
           // Navigate to OTP verification page with form data.
-          navigate("/OtpVerify", { state: { formData } });
+          navigate("/Teamotpverify", { state: { formData } });
         } catch (error) {
           showToast(
             error.message || "Failed to send OTP. Please try again.",
@@ -139,7 +139,7 @@ export default function TeamSignup() {
                 <input
                   type="text"
                   className="form-control"
-                  name="name"
+                  name="teamname"
                   placeholder="Name"
                   value={formData.teamname}
                   onChange={handleChange}

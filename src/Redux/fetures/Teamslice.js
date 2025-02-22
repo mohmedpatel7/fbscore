@@ -7,7 +7,7 @@ export const sendOtp = createAsyncThunk(
   "auth/sendOtp",
   async (payload, { rejectWithValue }) => {
     try {
-      const response = await fetch(`${url}api/auth/sendotp`, {
+      const response = await fetch(`${url}api/team/sendotp`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -43,7 +43,7 @@ export const SignUp = createAsyncThunk(
       });
 
       // Make the API call
-      const response = await fetch(`${url}api/auth/signup`, {
+      const response = await fetch(`${url}api/team/createTeam`, {
         method: "POST",
         body: formData, // Pass FormData as the request body
       });
@@ -51,6 +51,7 @@ export const SignUp = createAsyncThunk(
       // Handle non-OK responses
       if (!response.ok) {
         const errorData = await response.json();
+        console.log(errorData);
         return rejectWithValue(errorData);
       }
 
@@ -69,7 +70,7 @@ export const Signin = createAsyncThunk(
   "Signin",
   async (payload, { rejectWithValue }) => {
     try {
-      const response = await fetch(`${url}api/auth/signin`, {
+      const response = await fetch(`${url}api/team/teamSignin`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -94,18 +95,18 @@ export const Signin = createAsyncThunk(
 );
 
 //Fetching sign in user details Async thunk.
-export const fetchUserDetails = createAsyncThunk(
+export const fetchTeamDetails = createAsyncThunk(
   "fetchUserDetails",
   async (_, { rejectWithValue }) => {
     try {
-      const token = localStorage.getItem("usertoken");
+      const token = localStorage.getItem("teamtoken");
       if (!token) {
         return rejectWithValue({
           message: "Authentication token is missing. Please log in again.",
         });
       }
 
-      const response = await fetch(`${url}api/auth/getuser`, {
+      const response = await fetch(`${url}api/team/getTeamDetails`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -129,13 +130,14 @@ export const fetchUserDetails = createAsyncThunk(
 );
 
 // Auth Slice
-const authSlice = createSlice({
-  name: "auth",
+const teamSlice = createSlice({
+  name: "team",
   initialState: {
     isLoading: false,
     data: null,
     error: null, // Error string or object from backend
   },
+
   extraReducers: (builder) => {
     // Handle sendOtp cases
     builder.addCase(sendOtp.pending, (state) => {
@@ -161,9 +163,6 @@ const authSlice = createSlice({
       state.isLoading = false;
       state.data = action.payload;
       state.error = null;
-
-      // Store token in localStorage
-      localStorage.setItem("usertoken", action.payload.usertoken);
     });
     builder.addCase(SignUp.rejected, (state, action) => {
       state.isLoading = false;
@@ -181,7 +180,7 @@ const authSlice = createSlice({
       state.error = null;
 
       // Store token in localStorage
-      localStorage.setItem("usertoken", action.payload.usertoken);
+      localStorage.setItem("teamtoken", action.payload.teamtoken);
     });
     builder.addCase(Signin.rejected, (state, action) => {
       state.isLoading = false;
@@ -189,20 +188,20 @@ const authSlice = createSlice({
     });
 
     //Handle fetch userdetails cases.
-    builder.addCase(fetchUserDetails.pending, (state) => {
+    builder.addCase(fetchTeamDetails.pending, (state) => {
       state.isLoading = true;
       state.error = null;
     });
-    builder.addCase(fetchUserDetails.fulfilled, (state, action) => {
+    builder.addCase(fetchTeamDetails.fulfilled, (state, action) => {
       state.isLoading = false;
       state.data = action.payload;
       state.error = null;
     });
-    builder.addCase(fetchUserDetails.rejected, (state, action) => {
+    builder.addCase(fetchTeamDetails.rejected, (state, action) => {
       state.isLoading = false;
       state.error = action.payload?.message || "Unknown error occurred.";
     });
   },
 });
 
-export default authSlice.reducer;
+export default teamSlice.reducer;
