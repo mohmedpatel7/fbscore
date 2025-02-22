@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Genral/Navbar";
-import Footer from "./components/Genral/Footer";
+//import Footer from "./components/Genral/Footer";
 import Posts from "./components/Post/Posts";
 import Signup from "./components/Authentication/Signup";
 import Signin from "./components/Authentication/Signin";
@@ -21,7 +21,7 @@ function App() {
         <Route exact path="/Upload" element={<UploadPost />} />
       </Routes>
 
-      <Footer />
+      {/*<Footer />*/}
     </Router>
   );
 }
