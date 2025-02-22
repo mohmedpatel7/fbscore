@@ -79,14 +79,14 @@ export default function Navbar() {
                   <button
                     className="btn btn-signin me-2"
                     type="button"
-                    onClick={() => navigate("/Signin")}
+                    onClick={() => navigate("/SigninLandPage")}
                   >
                     Sign In
                   </button>
                   <button
                     className="btn btn-signup"
                     type="button"
-                    onClick={() => navigate("/Signup")}
+                    onClick={() => navigate("/SignupLandPage")}
                   >
                     Sign Up
                   </button>

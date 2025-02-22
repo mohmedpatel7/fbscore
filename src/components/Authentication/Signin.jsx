@@ -81,35 +81,10 @@ export default function SignIn() {
   };
 
   return (
-    <div className="container">
-      <div className="row">
-        {/* Information Section */}
-        <div className="col-md-6 mt-5 mb-4 info-section">
-          <h4>Welcome Back!</h4>
-          <p>
-            Log in to your account to continue accessing all the amazing
-            features of our football community:
-          </p>
-          <ul>
-            <li>Track your player stats and progress over time.</li>
-            <li>Stay connected with your team and participate in leagues.</li>
-            <li>Access exclusive resources and match highlights.</li>
-            <li>Seamlessly manage your profile and preferences.</li>
-          </ul>
-          <p>
-            Don’t have an account?{" "}
-            <button
-              className="btn btn-link"
-              onClick={() => navigate("/Signup")}
-            >
-              Sign Up
-            </button>
-            to get started!
-          </p>
-        </div>
-
+    <div className="container-fluid d-flex justify-content-center">
+      <div className="row justify-content-center w-100">
         {/* Sign-In Form Section */}
-        <div className="col-md-6">
+        <div className="col-lg-6 col-md-8">
           <div className="card-lg mt-5 mb-4 p-4 shadow rounded-3">
             <h2 className="mb-3 text-center">Sign In</h2>
             <form

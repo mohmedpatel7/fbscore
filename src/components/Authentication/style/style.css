@@ -8,7 +8,9 @@ body {
 }
 
 .card-lg {
-    width: 5in;
+    max-width: 100%;
+    width: 450px;
+    margin: auto;
 }
 
 optgroup {

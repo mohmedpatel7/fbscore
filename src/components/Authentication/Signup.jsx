@@ -131,37 +131,9 @@ export default function Signup() {
   };
 
   return (
-    <div className="container">
-      <div className="row">
-        {/* Information Section */}
-        <div className="col-md-6 col-sm-12 mt-5 mb-4 info-section">
-          <h4>Welcome to Our FbScore Community!</h4>
-          <p>
-            Join the platform to manage your player profile, track match
-            statistics, and be a part of exciting leagues and tournaments.
-          </p>
-          <ul>
-            <li>Create and customize your player profile.</li>
-            <li>Participate in matches and record your stats.</li>
-            <li>Stay connected with your team and league.</li>
-            <li>Showcase your skills and achievements.</li>
-          </ul>
-          <p>
-            Sign up now to unlock a world of football opportunities and take
-            your game to the next level!
-          </p>
-          <p>
-            Already have an account?{" "}
-            <button
-              className="btn btn-link"
-              onClick={() => navigate("/Signin")}
-            >
-              Sign In
-            </button>
-          </p>
-        </div>
-
-        <div className="col-md-6 col-sm-12">
+    <div className="container-fluid d-flex justify-content-center">
+      <div className="row justify-content-center w-100">
+        <div className="col-lg-6 col-md-8">
           <div className="card-lg mt-5 mb-4 p-4 shadow rounded-3">
             <h2 className="mb-3 text-center">Sign Up</h2>
             <form
