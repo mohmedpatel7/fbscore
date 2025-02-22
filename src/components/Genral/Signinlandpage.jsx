@@ -38,7 +38,7 @@ const SigninLandPage = () => {
           },
           {
             role: "Match Official",
-            path: "/signin/matchofficial",
+            path: "/Matchofficialsignin",
             icon: "fa-solid fa-users fa-roles",
             description: [
               "Sign in to officiate matches.",

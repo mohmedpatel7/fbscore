@@ -7,7 +7,7 @@ import { useDispatch } from "react-redux"; // Redux dispatch to send actions
 import { Signin } from "../../Redux/fetures/authentication"; // Redux action for sign-in
 import { FaEye, FaEyeSlash } from "react-icons/fa"; // FontAwesome icons for password visibility
 
-export default function TeamSignin() {
+export default function MatchOfficialSignin() {
   const [validated, setValidated] = useState(false); // State to manage form validation status
   const [formData, setFormData] = useState({
     email: "",
@@ -86,7 +86,9 @@ export default function TeamSignin() {
         {/* Sign-In Form Section */}
         <div className="col-lg-6 col-md-8">
           <div className="card-lg mt-5 mb-4 p-4 shadow rounded-3">
-            <h2 className="mb-3 text-center">Sign In With Team Credentials</h2>
+            <h2 className="mb-3 text-center">
+              Sign In With Match Official Credentials
+            </h2>
             <form
               className={`needs-validation ${validated ? "was-validated" : ""}`}
               noValidate

@@ -11,6 +11,8 @@ import SignupLandPage from "./components/Genral/Signuplandpage";
 import SigninLandPage from "./components/Genral/Signinlandpage";
 import TeamSignup from "./components/Team/TeamSignup";
 import TeamSignin from "./components/Team/TeamSignin";
+import MatchOfficialSignup from "./components/Match/MatchOfficialSignup";
+import MatchOfficialSignin from "./components/Match/MatchOfficialSignin";
 
 function App() {
   return (
@@ -27,6 +29,16 @@ function App() {
         <Route exact path="/SigninLandPage" element={<SigninLandPage />} />
         <Route exact path="/Teamsignup" element={<TeamSignup />} />
         <Route exact path="/Teamsignin" element={<TeamSignin />} />
+        <Route
+          exact
+          path="/Matchofficialsignup"
+          element={<MatchOfficialSignup />}
+        />
+        <Route
+          exact
+          path="/Matchofficialsignin"
+          element={<MatchOfficialSignin />}
+        />
       </Routes>
 
       {/*<Footer />*/}

@@ -7,17 +7,14 @@ import { useDispatch } from "react-redux"; // Dispatch hook for Redux actions.
 import { sendOtp } from "../../Redux/fetures/authentication"; // Redux action for signup.
 import { FaEye, FaEyeSlash } from "react-icons/fa"; // FontAwesome icons for password visibility
 
-export default function TeamSignup() {
+export default function MatchOfficialSignup() {
   const [validated, setValidated] = useState(false); // State to track form validation.
   const [isPending, startTransition] = useTransition(); // Hook for managing transitions
   const [formData, setFormData] = useState({
     // State for form data.
-    teamname: "",
+    MatchOfficialName: "",
     email: "",
     password: "",
-    createdBy: "",
-    country: "",
-    teamlogo: null,
   });
   const [confirmPassword, setConfirmPassword] = useState(""); // State for confirm password field.
   const [fileError, setFileError] = useState(""); // State to track file upload errors.
@@ -36,28 +33,6 @@ export default function TeamSignup() {
       ...prevData,
       [name]: value,
     }));
-  };
-
-  // Handle profile Teamlogo file selection with validation for file type.
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    const validTypes = ["image/jpeg", "image/jpg", "image/png"];
-    if (file && validTypes.includes(file.type)) {
-      setFormData((prevData) => ({
-        ...prevData,
-        teamlogo: file,
-      }));
-      setFileError("");
-
-      // Generate image preview
-      const render = new FileReader();
-      render.onloadend = () => {
-        setPreview(render.result);
-      };
-      render.readAsDataURL(file);
-    } else {
-      setFileError("Please upload a valid image file (jpeg, jpg, png).");
-    }
   };
 
   // Update confirm password state.
@@ -101,12 +76,9 @@ export default function TeamSignup() {
   const handleClear = () => {
     // Reset form data to initial state
     setFormData({
-      teamname: "",
+      MatchOfficialName: "",
       email: "",
       password: "",
-      createdBy: "",
-      country: "",
-      teamlogo: null,
     });
     setPreview("");
     setConfirmPassword("");
@@ -129,7 +101,7 @@ export default function TeamSignup() {
       <div className="row justify-content-center w-100">
         <div className="col-lg-6 col-md-8">
           <div className="card-lg mt-5 mb-4 p-4 shadow rounded-3">
-            <h2 className="mb-3 text-center">Register Your Team</h2>
+            <h2 className="mb-4 text-center">Register as Match Official</h2>
             <form
               className={`needs-validation ${validated ? "was-validated" : ""}`}
               noValidate
@@ -141,63 +113,14 @@ export default function TeamSignup() {
                   className="form-control"
                   name="name"
                   placeholder="Name"
-                  value={formData.teamname}
+                  value={formData.MatchOfficialName}
                   onChange={handleChange}
                   required
                 />
-                <label htmlFor="floatingName">Teamname</label>
-                <div className="invalid-feedback">Teamname is required.</div>
-              </div>
-
-              <div className="form-floating mb-3 d-flex align-items-center">
-                {/* File Input */}
-                <div style={{ flex: "1" }}>
-                  <input
-                    type="file"
-                    className={`form-control ${fileError ? "is-invalid" : ""}`}
-                    name="floatingProfile"
-                    placeholder="Profile Teamlogo"
-                    onChange={handleFileChange}
-                    style={{ width: "60%" }} // Reduce the input width
-                    required
-                  />
-                  <label htmlFor="floatingProfile">Select Teamlogo</label>
-                  <div className="invalid-feedback">Teamlogo is required.</div>
-                  {fileError && (
-                    <div className="invalid-feedback">{fileError}</div>
-                  )}
+                <label htmlFor="floatingName">Match Official Name</label>
+                <div className="invalid-feedback">
+                  Match Officia lName is required.
                 </div>
-
-                {/* Preview Image */}
-                {preview && (
-                  <div className="text-center ms-3">
-                    <img
-                      src={preview}
-                      className="rounded-circle shadow"
-                      alt="Profile Preview"
-                      style={{
-                        height: "100px",
-                        width: "100px",
-                        border: "2px solid #50C878",
-                        padding: "5px",
-                      }}
-                    />
-                  </div>
-                )}
-              </div>
-
-              <div className="form-floating mb-3">
-                <input
-                  type="text"
-                  className="form-control"
-                  name="createdBy"
-                  placeholder="Date of Birth"
-                  value={formData.createdBy}
-                  onChange={handleChange}
-                  required
-                />
-                <label htmlFor="floatingcreatedBy">Owner Name</label>
-                <div className="invalid-feedback">Owner Name is required.</div>
               </div>
 
               <div className="form-floating mb-3">
@@ -214,22 +137,6 @@ export default function TeamSignup() {
                 <div className="invalid-feedback">
                   Please provide a valid email address.
                 </div>
-              </div>
-
-              <div className="form-floating mb-3">
-                <select
-                  className="form-control"
-                  name="country"
-                  placeholder="Country"
-                  value={formData.country}
-                  onChange={handleChange}
-                  required
-                >
-                  <option value="">Select</option>
-                  <option>India</option>
-                </select>
-                <label htmlFor="floatingCountry">Country</label>
-                <div className="invalid-feedback">Country is required.</div>
               </div>
 
               <div className="form-floating mb-3 mt-5">

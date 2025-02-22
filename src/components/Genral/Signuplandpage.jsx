@@ -38,7 +38,7 @@ const SignupLandPage = () => {
           },
           {
             role: "Match Official",
-            path: "/signup/matchofficial",
+            path: "/Matchofficialsignup",
             icon: "fa-solid fa-users fa-roles",
             description: [
               "Officiate matches and ensure fair play.",
