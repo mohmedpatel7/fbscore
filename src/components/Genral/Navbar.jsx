@@ -16,6 +16,7 @@ export default function Navbar() {
 
   const isUser = localStorage.getItem("usertoken");
   const isTeamOwner = localStorage.getItem("teamtoken");
+  const isMatchOfficial = localStorage.getItem("matchOfficialtoken");
 
   const { data } = useSelector((state) => state.authSlice);
   const { teamData } = useSelector((state) => state.teamSlice);
@@ -41,6 +42,7 @@ export default function Navbar() {
       // Clear both tokens
       localStorage.removeItem("usertoken");
       localStorage.removeItem("teamtoken");
+      localStorage.removeItem("matchOfficialtoken");
       navigate("/");
       showToast("Signout Successful", "success");
     }
@@ -185,6 +187,15 @@ export default function Navbar() {
                       </Dropdown.Item>
                     </Dropdown.Menu>
                   </Dropdown>
+                </>
+              ) : isMatchOfficial ? (
+                <>
+                  <button
+                    className="btn btn-signin me-2"
+                    onClick={handleSignOut}
+                  >
+                    Sign Out
+                  </button>
                 </>
               ) : (
                 <>

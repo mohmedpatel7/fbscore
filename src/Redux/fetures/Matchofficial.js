@@ -7,7 +7,7 @@ export const sendOtp = createAsyncThunk(
   "auth/sendOtp",
   async (payload, { rejectWithValue }) => {
     try {
-      const response = await fetch(`${url}api/team/sendotp`, {
+      const response = await fetch(`${url}api/match/sendotp`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -36,16 +36,13 @@ export const SignUp = createAsyncThunk(
   "auth/SignUp",
   async (payload, { rejectWithValue }) => {
     try {
-      // Construct FormData
-      const formData = new FormData();
-      Object.keys(payload).forEach((key) => {
-        formData.append(key, payload[key]);
-      });
-
       // Make the API call
-      const response = await fetch(`${url}api/team/createTeam`, {
+      const response = await fetch(`${url}api/match/matchOfficialSignup`, {
         method: "POST",
-        body: formData, // Pass FormData as the request body
+        headers: {
+          "Content-Type": "application/json", // Ensure JSON format
+        },
+        body: JSON.stringify(payload), // Send JSON directly
       });
 
       // Handle non-OK responses
@@ -69,7 +66,7 @@ export const Signin = createAsyncThunk(
   "Signin",
   async (payload, { rejectWithValue }) => {
     try {
-      const response = await fetch(`${url}api/team/teamSignin`, {
+      const response = await fetch(`${url}api/match/matchOfficialSignin`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -83,8 +80,11 @@ export const Signin = createAsyncThunk(
         return rejectWithValue(errorData);
       }
 
-      // Return the success response
-      return await response.json();
+      const data = await response.json();
+      localStorage.removeItem("teamtoken");
+      localStorage.removeItem("usertoken");
+      localStorage.setItem("matchOfficialtoken", data.matchOfficialtoken);
+      return data;
     } catch (error) {
       return rejectWithValue({
         message: "Failed to sign in. Please try again.",
@@ -93,47 +93,12 @@ export const Signin = createAsyncThunk(
   }
 );
 
-//Fetching sign in team details Async thunk.
-export const fetchTeamDetails = createAsyncThunk(
-  "fetchUserDetails",
-  async (_, { rejectWithValue }) => {
-    try {
-      const token = localStorage.getItem("teamtoken");
-      if (!token) {
-        return rejectWithValue({
-          message: "Authentication token is missing. Please log in again.",
-        });
-      }
-
-      const response = await fetch(`${url}api/team/getTeamDetails`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          "team-token": token,
-        },
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        return rejectWithValue(errorData);
-      }
-
-      const data = await response.json();
-      return data; // Return only the `response` field
-    } catch (error) {
-      return rejectWithValue({
-        message: "Failed to fetch user details. Please try again later.",
-      });
-    }
-  }
-);
-
-// team Slice
-const teamSlice = createSlice({
-  name: "team",
+// Matchofficial Slice
+const matchofficialSlice = createSlice({
+  name: "matchofficial",
   initialState: {
     isLoading: false,
-    teamData: null,
+    matchData: null,
     error: null, // Error string or object from backend
   },
 
@@ -145,7 +110,7 @@ const teamSlice = createSlice({
     });
     builder.addCase(sendOtp.fulfilled, (state, action) => {
       state.isLoading = false;
-      state.teamData = action.payload;
+      state.matchData = action.payload;
       state.error = null;
     });
     builder.addCase(sendOtp.rejected, (state, action) => {
@@ -163,7 +128,7 @@ const teamSlice = createSlice({
       localStorage.removeItem("usertoken");
       localStorage.removeItem("teamtoken");
       localStorage.removeItem("matchOfficialtoken");
-      state.teamData = action.payload;
+      state.matchData = action.payload;
       state.error = null;
     });
     builder.addCase(SignUp.rejected, (state, action) => {
@@ -178,33 +143,14 @@ const teamSlice = createSlice({
     });
     builder.addCase(Signin.fulfilled, (state, action) => {
       state.isLoading = false;
-      localStorage.removeItem("usertoken");
-      localStorage.removeItem("matchOfficialtoken");
-      // Store token in localStorage
-      localStorage.setItem("teamtoken", action.payload.teamtoken);
-      state.teamData = action.payload;
+      state.matchData = action.payload;
       state.error = null;
     });
     builder.addCase(Signin.rejected, (state, action) => {
       state.isLoading = false;
       state.error = action.payload?.message;
     });
-
-    //Handle fetch userdetails cases.
-    builder.addCase(fetchTeamDetails.pending, (state) => {
-      state.isLoading = true;
-      state.error = null;
-    });
-    builder.addCase(fetchTeamDetails.fulfilled, (state, action) => {
-      state.isLoading = false;
-      state.teamData = action.payload;
-      state.error = null;
-    });
-    builder.addCase(fetchTeamDetails.rejected, (state, action) => {
-      state.isLoading = false;
-      state.error = action.payload?.message || "Unknown error occurred.";
-    });
   },
 });
 
-export default teamSlice.reducer;
+export default matchofficialSlice.reducer;

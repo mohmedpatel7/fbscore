@@ -4,7 +4,7 @@ import "./style/style.css";
 import { useNavigate } from "react-router-dom"; // Navigation hook for routing.
 import { useToast } from "../Genral/ToastContext"; // Custom Toast Context for notifications.
 import { useDispatch } from "react-redux"; // Dispatch hook for Redux actions.
-import { sendOtp } from "../../Redux/fetures/authentication"; // Redux action for signup.
+import { sendOtp } from "../../Redux/fetures/Matchofficial"; // Redux action for signup.
 import { FaEye, FaEyeSlash } from "react-icons/fa"; // FontAwesome icons for password visibility
 
 export default function MatchOfficialSignup() {
@@ -12,7 +12,7 @@ export default function MatchOfficialSignup() {
   const [isPending, startTransition] = useTransition(); // Hook for managing transitions
   const [formData, setFormData] = useState({
     // State for form data.
-    MatchOfficialName: "",
+    name: "",
     email: "",
     password: "",
   });
@@ -20,7 +20,6 @@ export default function MatchOfficialSignup() {
   const [fileError, setFileError] = useState(""); // State to track file upload errors.
   const [passwordVisable, setPasswordVisable] = useState(false); // Toggle for password visibility.
   const [confirmPasswordVisable, setConfirmPasswordVisable] = useState(false); // Toggle for confirm password visibility.
-  const [preview, setPreview] = useState(null);
 
   const { showToast } = useToast(); // Toast notifications for feedback.
   const dispatch = useDispatch(); // Redux dispatch for triggering actions.
@@ -60,7 +59,7 @@ export default function MatchOfficialSignup() {
           showToast(result.message || "OTP sent successfully!", "success");
 
           // Navigate to OTP verification page with form data.
-          navigate("/OtpVerify", { state: { formData } });
+          navigate("/Matchofficialotpverify", { state: { formData } });
         } catch (error) {
           showToast(
             error.message || "Failed to send OTP. Please try again.",
@@ -76,7 +75,7 @@ export default function MatchOfficialSignup() {
   const handleClear = () => {
     // Reset form data to initial state
     setFormData({
-      MatchOfficialName: "",
+      name: "",
       email: "",
       password: "",
     });
@@ -113,7 +112,7 @@ export default function MatchOfficialSignup() {
                   className="form-control"
                   name="name"
                   placeholder="Name"
-                  value={formData.MatchOfficialName}
+                  value={formData.name}
                   onChange={handleChange}
                   required
                 />

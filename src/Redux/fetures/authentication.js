@@ -50,6 +50,7 @@ export const SignUp = createAsyncThunk(
 
       const data = await response.json();
       localStorage.removeItem("teamtoken");
+      localStorage.removeItem("matchOfficialtoken");
       localStorage.setItem("usertoken", data.usertoken);
 
       return data;
@@ -80,6 +81,7 @@ export const Signin = createAsyncThunk(
       const data = await response.json();
 
       localStorage.removeItem("teamtoken");
+      localStorage.removeItem("matchOfficialtoken");
       localStorage.setItem("usertoken", data.usertoken);
 
       return data;
