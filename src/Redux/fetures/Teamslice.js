@@ -83,10 +83,14 @@ export const Signin = createAsyncThunk(
         return rejectWithValue(errorData);
       }
 
-      // Return the success response
-      return await response.json();
+      const data = await response.json();
+      localStorage.removeItem("usertoken");
+      localStorage.removeItem("matchOfficialtoken");
+      // Store token in localStorage
+      localStorage.setItem("teamtoken", data.teamtoken);
+      return data;
     } catch (error) {
-      return rejectWithValue({
+      return rejectWithValue({ 
         message: "Failed to sign in. Please try again.",
       });
     }
@@ -178,10 +182,6 @@ const teamSlice = createSlice({
     });
     builder.addCase(Signin.fulfilled, (state, action) => {
       state.isLoading = false;
-      localStorage.removeItem("usertoken");
-      localStorage.removeItem("matchOfficialtoken");
-      // Store token in localStorage
-      localStorage.setItem("teamtoken", action.payload.teamtoken);
       state.teamData = action.payload;
       state.error = null;
     });

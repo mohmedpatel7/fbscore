@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./style/style.css";
@@ -13,14 +13,14 @@ import { fetchTeamDetails } from "../../Redux/fetures/Teamslice";
 export default function Navbar() {
   const navigate = useNavigate();
   const { showToast } = useToast();
+  const dispatch = useDispatch();
 
-  const isUser = localStorage.getItem("usertoken");
-  const isTeamOwner = localStorage.getItem("teamtoken");
-  const isMatchOfficial = localStorage.getItem("matchOfficialtoken");
+  const isUser = !!localStorage.getItem("usertoken");
+  const isTeamOwner = !!localStorage.getItem("teamtoken");
+  const isMatchOfficial = !!localStorage.getItem("matchOfficialtoken");
 
   const { data } = useSelector((state) => state.authSlice);
   const { teamData } = useSelector((state) => state.teamSlice);
-  const dispatch = useDispatch();
 
   useEffect(() => {
     if (isUser) {
@@ -29,7 +29,7 @@ export default function Navbar() {
       });
     }
 
-    if (isTeamOwner && localStorage.getItem("teamtoken")) {
+    if (isTeamOwner) {
       dispatch(fetchTeamDetails()).catch((error) => {
         console.error("Error fetching team details:", error);
       });
@@ -39,10 +39,10 @@ export default function Navbar() {
   const handleSignOut = () => {
     const ask = window.confirm("Are you sure?");
     if (ask) {
-      // Clear both tokens
       localStorage.removeItem("usertoken");
       localStorage.removeItem("teamtoken");
       localStorage.removeItem("matchOfficialtoken");
+
       navigate("/");
       showToast("Signout Successful", "success");
     }
@@ -191,7 +191,7 @@ export default function Navbar() {
               ) : isMatchOfficial ? (
                 <>
                   <button
-                    className="btn btn-signin me-2"
+                    className="btn btn-signup me-2"
                     onClick={handleSignOut}
                   >
                     Sign Out
