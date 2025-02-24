@@ -25,6 +25,10 @@ export default function MatchOfficialSignup() {
   const dispatch = useDispatch(); // Redux dispatch for triggering actions.
   const navigate = useNavigate(); // Hook for navigation.
 
+  const isUser = !!localStorage.getItem("usertoken");
+  const isTeamOwner = !!localStorage.getItem("teamtoken");
+  const isMatchOfficial = !!localStorage.getItem("matchOfficialtoken");
+
   // Handle input field changes for text inputs.
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -97,125 +101,129 @@ export default function MatchOfficialSignup() {
 
   return (
     <div className="container-fluid d-flex justify-content-center">
-      <div className="row justify-content-center w-100">
-        <div className="col-lg-6 col-md-8">
-          <div className="card-lg mt-5 mb-4 p-4 shadow rounded-3">
-            <h2 className="mb-4 text-center">Register as Match Official</h2>
-            <form
-              className={`needs-validation ${validated ? "was-validated" : ""}`}
-              noValidate
-              onSubmit={handleSubmit}
-            >
-              <div className="form-floating mb-3">
-                <input
-                  type="text"
-                  className="form-control"
-                  name="name"
-                  placeholder="Name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  required
-                />
-                <label htmlFor="floatingName">Match Official Name</label>
-                <div className="invalid-feedback">
-                  Match Officia lName is required.
-                </div>
-              </div>
-
-              <div className="form-floating mb-3">
-                <input
-                  type="email"
-                  className="form-control"
-                  name="email"
-                  placeholder="name@example.com"
-                  value={formData.email}
-                  onChange={handleChange}
-                  required
-                />
-                <label htmlFor="floatingEmail">Email address</label>
-                <div className="invalid-feedback">
-                  Please provide a valid email address.
-                </div>
-              </div>
-
-              <div className="form-floating mb-3 mt-5">
-                <input
-                  type={passwordVisable ? "text" : "password"}
-                  className="form-control"
-                  name="password"
-                  placeholder="Password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  required
-                />
-                <label htmlFor="floatingPassword">Password</label>
-                <div className="invalid-feedback">Password is required.</div>
-
-                <span
-                  onClick={handlePasswordVisability}
-                  style={{
-                    position: "absolute",
-                    top: "50%",
-                    right: "10px",
-                    transform: "translateY(-50%)",
-                    cursor: "pointer",
-                    zIndex: 10,
-                  }}
-                >
-                  {passwordVisable ? <FaEye /> : <FaEyeSlash />}
-                </span>
-              </div>
-
-              <div className="form-floating mb-3 mt-3">
-                <input
-                  type={confirmPasswordVisable ? "text" : "password"}
-                  className="form-control"
-                  name="confirmPassword"
-                  placeholder="Confirm Password"
-                  value={confirmPassword}
-                  onChange={handleConfirmPassword}
-                  required
-                />
-                <label htmlFor="floatingConfirmPassword">
-                  Confirm Password
-                </label>
-                <div className="invalid-feedback">
-                  Please confirm your password.
-                </div>
-
-                <span
-                  onClick={handleConfirmPasswordVisability}
-                  style={{
-                    position: "absolute",
-                    top: "50%",
-                    right: "10px",
-                    transform: "translateY(-50%)",
-                    cursor: "pointer",
-                    zIndex: 10,
-                  }}
-                >
-                  {confirmPasswordVisable ? <FaEye /> : <FaEyeSlash />}
-                </span>
-              </div>
-
-              <button
-                type="reset"
-                className="btn btn-primary"
-                onClick={handleClear}
+      {!isUser && !isMatchOfficial && !isTeamOwner && (
+        <div className="row justify-content-center w-100">
+          <div className="col-lg-6 col-md-8">
+            <div className="card-lg mt-5 mb-4 p-4 shadow rounded-3">
+              <h2 className="mb-4 text-center">Register as Match Official</h2>
+              <form
+                className={`needs-validation ${
+                  validated ? "was-validated" : ""
+                }`}
+                noValidate
+                onSubmit={handleSubmit}
               >
-                Clear
-              </button>
-              <button
-                type="submit"
-                className="btn btn-primary ms-2"
-                disabled={isPending}
-              >
-                Submit
-              </button>
-            </form>
+                <div className="form-floating mb-3">
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="name"
+                    placeholder="Name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    required
+                  />
+                  <label htmlFor="floatingName">Match Official Name</label>
+                  <div className="invalid-feedback">
+                    Match Officia lName is required.
+                  </div>
+                </div>
+
+                <div className="form-floating mb-3">
+                  <input
+                    type="email"
+                    className="form-control"
+                    name="email"
+                    placeholder="name@example.com"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
+                  />
+                  <label htmlFor="floatingEmail">Email address</label>
+                  <div className="invalid-feedback">
+                    Please provide a valid email address.
+                  </div>
+                </div>
+
+                <div className="form-floating mb-3 mt-5">
+                  <input
+                    type={passwordVisable ? "text" : "password"}
+                    className="form-control"
+                    name="password"
+                    placeholder="Password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    required
+                  />
+                  <label htmlFor="floatingPassword">Password</label>
+                  <div className="invalid-feedback">Password is required.</div>
+
+                  <span
+                    onClick={handlePasswordVisability}
+                    style={{
+                      position: "absolute",
+                      top: "50%",
+                      right: "10px",
+                      transform: "translateY(-50%)",
+                      cursor: "pointer",
+                      zIndex: 10,
+                    }}
+                  >
+                    {passwordVisable ? <FaEye /> : <FaEyeSlash />}
+                  </span>
+                </div>
+
+                <div className="form-floating mb-3 mt-3">
+                  <input
+                    type={confirmPasswordVisable ? "text" : "password"}
+                    className="form-control"
+                    name="confirmPassword"
+                    placeholder="Confirm Password"
+                    value={confirmPassword}
+                    onChange={handleConfirmPassword}
+                    required
+                  />
+                  <label htmlFor="floatingConfirmPassword">
+                    Confirm Password
+                  </label>
+                  <div className="invalid-feedback">
+                    Please confirm your password.
+                  </div>
+
+                  <span
+                    onClick={handleConfirmPasswordVisability}
+                    style={{
+                      position: "absolute",
+                      top: "50%",
+                      right: "10px",
+                      transform: "translateY(-50%)",
+                      cursor: "pointer",
+                      zIndex: 10,
+                    }}
+                  >
+                    {confirmPasswordVisable ? <FaEye /> : <FaEyeSlash />}
+                  </span>
+                </div>
+
+                <button
+                  type="reset"
+                  className="btn btn-primary"
+                  onClick={handleClear}
+                >
+                  Clear
+                </button>
+                <button
+                  type="submit"
+                  className="btn btn-primary ms-2"
+                  disabled={isPending}
+                >
+                  Submit
+                </button>
+              </form>
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

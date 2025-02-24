@@ -18,6 +18,10 @@ export default function Otpverify() {
 
   const dispatch = useDispatch(); // Redux dispatch hook for triggering actions
 
+  const isUser = !!localStorage.getItem("usertoken");
+  const isTeamOwner = !!localStorage.getItem("teamtoken");
+  const isMatchOfficial = !!localStorage.getItem("matchOfficialtoken");
+
   const { showToast } = useToast(); // Custom toast hook for displaying messages
 
   // Handler for OTP input changes
@@ -78,52 +82,56 @@ export default function Otpverify() {
 
   return (
     <div className="container">
-      <div className="row">
-        {/* Empty column for centering the form */}
-        <div className="col-md-3"></div>
+      {!isUser && !isMatchOfficial && !isTeamOwner && (
+        <div className="row">
+          {/* Empty column for centering the form */}
+          <div className="col-md-3"></div>
 
-        {/* Form column */}
-        <div className="col-md-6">
-          <div className="card-lg mt-5 mb-4 p-4 shadow rounded-3">
-            <h2 className="mb-3 text-center">Verify OTP</h2>
+          {/* Form column */}
+          <div className="col-md-6">
+            <div className="card-lg mt-5 mb-4 p-4 shadow rounded-3">
+              <h2 className="mb-3 text-center">Verify OTP</h2>
 
-            {/* OTP Verification Form */}
-            <form
-              className={`needs-validation ${validated ? "was-validated" : ""}`}
-              noValidate
-              onSubmit={handleSubmit}
-            >
-              <div className="form-floating mb-3">
-                {/* OTP Input Field */}
-                <input
-                  type="text"
-                  className="form-control"
-                  id="floatingOtp"
-                  name="Otp"
-                  placeholder="Enter OTP"
-                  value={Otp}
-                  onChange={handleChange}
-                  required
-                />
-                <label htmlFor="floatingOtp">Enter OTP</label>
-                <div className="invalid-feedback">OTP is required.</div>
-              </div>
-
-              {/* Submit Button */}
-              <button
-                type="submit"
-                className="btn btn-primary"
-                disabled={isPending} // Disable button during pending state
+              {/* OTP Verification Form */}
+              <form
+                className={`needs-validation ${
+                  validated ? "was-validated" : ""
+                }`}
+                noValidate
+                onSubmit={handleSubmit}
               >
-                Verify
-              </button>
-            </form>
-          </div>
-        </div>
+                <div className="form-floating mb-3">
+                  {/* OTP Input Field */}
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="floatingOtp"
+                    name="Otp"
+                    placeholder="Enter OTP"
+                    value={Otp}
+                    onChange={handleChange}
+                    required
+                  />
+                  <label htmlFor="floatingOtp">Enter OTP</label>
+                  <div className="invalid-feedback">OTP is required.</div>
+                </div>
 
-        {/* Empty column for centering the form */}
-        <div className="col-md-3"></div>
-      </div>
+                {/* Submit Button */}
+                <button
+                  type="submit"
+                  className="btn btn-primary"
+                  disabled={isPending} // Disable button during pending state
+                >
+                  Verify
+                </button>
+              </form>
+            </div>
+          </div>
+
+          {/* Empty column for centering the form */}
+          <div className="col-md-3"></div>
+        </div>
+      )}
     </div>
   );
 }
