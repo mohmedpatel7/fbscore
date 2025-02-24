@@ -90,7 +90,7 @@ export const Signin = createAsyncThunk(
       localStorage.setItem("teamtoken", data.teamtoken);
       return data;
     } catch (error) {
-      return rejectWithValue({ 
+      return rejectWithValue({
         message: "Failed to sign in. Please try again.",
       });
     }
@@ -132,12 +132,84 @@ export const fetchTeamDetails = createAsyncThunk(
   }
 );
 
+//Fetching all users which are not in any team.Sign in reuired for team owner.
+export const fetchAvailableUsers = createAsyncThunk(
+  "fetchAvailableUsers",
+  async (_, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("teamtoken");
+      if (!token) {
+        return rejectWithValue({
+          message: "Authentication token is missing. Please log in again.",
+        });
+      }
+
+      const response = await fetch(`${url}api/player/usersWithoutTeam`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "team-token": token,
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData);
+      }
+
+      const data = await response.json();
+      return data; // Return only the `response` field
+    } catch (error) {
+      return rejectWithValue({
+        message: "Failed to fetch user details. Please try again later.",
+      });
+    }
+  }
+);
+
+export const SendPlayerReq = createAsyncThunk(
+  "SendPlayerReq",
+  async ({ userId, playerNo }, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("teamtoken");
+      if (!token) {
+        return rejectWithValue({
+          message: "Authentication token is missing. Please log in again.",
+        });
+      }
+
+      const response = await fetch(`${url}api/team/sendPlayerReq/${userId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "team-token": token,
+        },
+        body: JSON.stringify({ playerNo }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData);
+      }
+
+      // Return the success response
+      return await response.json();
+    } catch (error) {
+      return rejectWithValue({
+        message: "Failed to send request. Please try again later.",
+      });
+    }
+  }
+);
+
 // team Slice
 const teamSlice = createSlice({
   name: "team",
   initialState: {
     isLoading: false,
     teamData: null,
+    availableUsers: null,
+    playerReq: null,
     error: null, // Error string or object from backend
   },
 
@@ -201,6 +273,36 @@ const teamSlice = createSlice({
       state.error = null;
     });
     builder.addCase(fetchTeamDetails.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload?.message || "Unknown error occurred.";
+    });
+
+    //Handle fetch available users cases.
+    builder.addCase(fetchAvailableUsers.pending, (state) => {
+      state.isLoading = true;
+      state.error = null;
+    });
+    builder.addCase(fetchAvailableUsers.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.availableUsers = action.payload;
+      state.error = null;
+    });
+    builder.addCase(fetchAvailableUsers.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload?.message || "Unknown error occurred.";
+    });
+
+    //Handle send player request cases.
+    builder.addCase(SendPlayerReq.pending, (state) => {
+      state.isLoading = true;
+      state.error = null;
+    });
+    builder.addCase(SendPlayerReq.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.playerReq = action.payload;
+      state.error = null;
+    });
+    builder.addCase(SendPlayerReq.rejected, (state, action) => {
       state.isLoading = false;
       state.error = action.payload?.message || "Unknown error occurred.";
     });

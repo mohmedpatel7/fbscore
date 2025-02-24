@@ -12,6 +12,7 @@ import SigninLandPage from "./components/Genral/Signinlandpage";
 import TeamSignup from "./components/Team/TeamSignup";
 import TeamSignin from "./components/Team/TeamSignin";
 import TeamOtpverify from "./components/Team/TeamOtpverify";
+import Dashboard from "./components/Team/Dashboard";
 import MatchOfficialSignup from "./components/Match/MatchOfficialSignup";
 import MatchOfficialSignin from "./components/Match/MatchOfficialSignin";
 import MatchOfficialOtpverify from "./components/Match/MatchOfficialOtpverify";
@@ -32,6 +33,7 @@ function App() {
         <Route exact path="/Teamsignup" element={<TeamSignup />} />
         <Route exact path="/Teamsignin" element={<TeamSignin />} />
         <Route exact path="/Teamotpverify" element={<TeamOtpverify />} />
+        <Route exact path="/TeamDashboard" element={<Dashboard />} />
         <Route
           exact
           path="/Matchofficialsignup"

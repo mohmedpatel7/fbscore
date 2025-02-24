@@ -80,11 +80,13 @@ export default function Navbar() {
                   Match
                 </Link>
               </li>
-              <li className="nav-item me-3 mt-2">
-                <Link className="nav-link" to="/pricing">
-                  Team
-                </Link>
-              </li>
+              {isTeamOwner && (
+                <li className="nav-item me-3 mt-2">
+                  <Link className="nav-link" to="/TeamDashboard">
+                    Team
+                  </Link>
+                </li>
+              )}
             </div>
 
             <div className="d-flex align-items-center">

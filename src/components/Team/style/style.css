@@ -1,0 +1,17 @@
+.nav-tabs {
+    white-space: nowrap;
+    /* Prevents wrapping */
+    overflow-x: auto;
+    /* Allows horizontal scrolling */
+    overflow-y: hidden;
+    /* Hides vertical scrollbar */
+    -webkit-overflow-scrolling: touch;
+    /* Smooth scrolling on mobile */
+    scrollbar-width: none;
+    /* Hide scrollbar for Firefox */
+}
+
+.nav-tabs::-webkit-scrollbar {
+    display: none;
+    /* Hide scrollbar for Chrome, Safari, Edge */
+}
