@@ -76,11 +76,6 @@ const TeamDashboard = () => {
     country: teamData?.team?.country || "Unknown",
     owner: teamData?.team?.createdBy || "Unknown",
     email: teamData?.team?.email || "N/A",
-    players: [
-      { id: 1, name: "Alex Johnson", number: 7, position: "Forward" },
-      { id: 2, name: "Michael Smith", number: 10, position: "Midfielder" },
-      { id: 3, name: "David Lee", number: 5, position: "Defender" },
-    ],
     matches: [
       { id: 1, opponent: "Titans FC", result: "Win 2-1", date: "2024-09-01" },
       { id: 2, opponent: "Falcons", result: "Loss 0-1", date: "2024-08-25" },
@@ -136,30 +131,36 @@ const TeamDashboard = () => {
             )}
 
             {activeTab === "squad" && (
-              <div className="card p-3">
-                <h5>Squad List</h5>
-                <ul className="list-group">
-                  {teamDatas.players.map((player) => (
-                    <li
-                      key={player.id}
-                      className="list-group-item d-flex justify-content-between align-items-center"
+              <div className="card card-squad-list p-3">
+                <h5 className="mb-3">Squad List</h5>
+                <div className="d-flex flex-column gap-2">
+                  {teamData.players.map((player) => (
+                    <div
+                      key={player.playerId}
+                      className="card card-squad-item d-flex flex-row align-items-center p-2"
                     >
-                      <span className="d-flex align-items-center">
-                        <img
-                          src={player.profilePic || "default-pic.jpg"}
-                          alt={player.name}
-                          className="rounded-circle me-3"
-                          style={{
-                            width: "40px",
-                            height: "40px",
-                            objectFit: "cover",
-                          }}
-                        />
-                        {player.name} (#{player.number}) - {player.position}
+                      <img
+                        src={player.users.pic || "default-pic.jpg"}
+                        alt={player.users.name}
+                        className="rounded-circle"
+                        style={{
+                          width: "50px",
+                          height: "50px",
+                          objectFit: "cover",
+                        }}
+                      />
+                      <div className="ms-3 flex-grow-1">
+                        <h6 className="mb-1">{player.users.name}</h6>
+                        <small className="text-muted">
+                          {player.users.position}
+                        </small>
+                      </div>
+                      <span className="player-number px-3 py-1">
+                        {player.playerNo}
                       </span>
-                    </li>
+                    </div>
                   ))}
-                </ul>
+                </div>
               </div>
             )}
 
