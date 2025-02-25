@@ -64,8 +64,11 @@ export default function Otpverify() {
 
         if (response.meta.requestStatus === "fulfilled") {
           // Show success toast and navigate to homepage on success
-          showToast("Signup successful", "success");
-          navigate("/");
+          showToast(
+            "Signup successful,Please signin with your email and password again.",
+            "success"
+          );
+          navigate("/Signin");
         } else {
           // Show error toast if signup fails
           showToast(
