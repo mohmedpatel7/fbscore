@@ -51,6 +51,7 @@ const TeamDashboard = () => {
             "success"
           );
           setFormData({ playerno: "" });
+          await dispatch(fetchAvailableUsers());
         } catch (error) {
           showToast(error.message || "Error while sending request!", "danger");
         }

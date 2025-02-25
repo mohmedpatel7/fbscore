@@ -189,6 +189,7 @@ export const SendPlayerReq = createAsyncThunk(
 
       if (!response.ok) {
         const errorData = await response.json();
+        console.log(errorData);
         return rejectWithValue(errorData);
       }
 
