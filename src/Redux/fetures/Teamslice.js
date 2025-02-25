@@ -189,7 +189,6 @@ export const SendPlayerReq = createAsyncThunk(
 
       if (!response.ok) {
         const errorData = await response.json();
-        console.log(errorData);
         return rejectWithValue(errorData);
       }
 
@@ -203,6 +202,40 @@ export const SendPlayerReq = createAsyncThunk(
   }
 );
 
+export const fetchPlayerProfile = createAsyncThunk(
+  "fetchPlayerProfile",
+  async (playerId, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("teamtoken");
+      if (!token) {
+        return rejectWithValue({
+          message: "Authentication token is missing. Please log in again.",
+        });
+      }
+
+      const response = await fetch(
+        `${url}api/team/getPlayerDetails/${playerId}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "team-token": token,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData);
+      }
+
+      return response.json();
+    } catch (error) {
+      return rejectWithValue({ message: "Failed to fethc player details!" });
+    }
+  }
+);
+
 // team Slice
 const teamSlice = createSlice({
   name: "team",
@@ -211,6 +244,7 @@ const teamSlice = createSlice({
     teamData: null,
     availableUsers: null,
     playerReq: null,
+    playerProfile: null,
     error: null, // Error string or object from backend
   },
 
@@ -304,6 +338,21 @@ const teamSlice = createSlice({
       state.error = null;
     });
     builder.addCase(SendPlayerReq.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload?.message || "Unknown error occurred.";
+    });
+
+    //Handle player profile cases.
+    builder.addCase(fetchPlayerProfile.pending, (state) => {
+      state.isLoading = true;
+      state.error = null;
+    });
+    builder.addCase(fetchPlayerProfile.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.playerProfile = action.payload;
+      state.error = null;
+    });
+    builder.addCase(fetchPlayerProfile.rejected, (state, action) => {
       state.isLoading = false;
       state.error = action.payload?.message || "Unknown error occurred.";
     });

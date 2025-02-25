@@ -16,6 +16,11 @@
     /* Hide scrollbar for Chrome, Safari, Edge */
 }
 
+.team-profile {
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
 .card-squad-list {
     background: #ffffff;
     border-radius: 10px;

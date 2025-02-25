@@ -5,10 +5,12 @@ import {
   fetchTeamDetails,
   fetchAvailableUsers,
   SendPlayerReq,
+  fetchPlayerProfile,
 } from "../../Redux/fetures/Teamslice";
 import { useSelector, useDispatch } from "react-redux";
 import { useToast } from "../Genral/ToastContext";
 import "./style/style.css";
+import { useNavigate } from "react-router-dom";
 
 const TeamDashboard = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
@@ -18,6 +20,7 @@ const TeamDashboard = () => {
   });
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { showToast } = useToast();
   const isTeamOwner = localStorage.getItem("teamtoken");
 
@@ -61,6 +64,15 @@ const TeamDashboard = () => {
     }
   };
 
+  const playerProfileClick = (playerId) => {
+    try {
+      dispatch(fetchPlayerProfile(playerId)); // Fetch player details
+      navigate(`/TeamPlayerProfile/${playerId}`);
+    } catch (error) {
+      showToast(error.message || "Error while fetching player profile!");
+    }
+  };
+
   // Handles input changes and updates formData state
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -69,6 +81,8 @@ const TeamDashboard = () => {
       [name]: value,
     }));
   };
+
+  if (isPending) return showToast("Please wait!", "warnig");
 
   const teamDatas = {
     logo: teamData?.team?.teamlogo || "default-logo.png",
@@ -87,7 +101,7 @@ const TeamDashboard = () => {
       {isTeamOwner && (
         <div className="container mt-4">
           {/* Profile Section */}
-          <div className="card p-3 d-flex flex-row align-items-center">
+          <div className="card p-3 d-flex flex-row align-items-center team-profile">
             <img
               src={teamDatas.logo}
               alt="Team Logo"
@@ -101,9 +115,15 @@ const TeamDashboard = () => {
             />
             <div>
               <h4>{teamDatas.name}</h4>
-              <p className="text-muted mb-1">Owner: {teamDatas.owner}</p>
-              <p className="text-muted mb-1">Email: {teamDatas.email}</p>
-              <p className="text-muted">Country: {teamDatas.country}</p>
+              <p className="text-muted mb-1">
+                <strong>Owner:</strong> {teamDatas.owner}
+              </p>
+              <p className="text-muted mb-1">
+                <strong>Email:</strong> {teamDatas.email}
+              </p>
+              <p className="text-muted">
+                <strong>Country:</strong> {teamDatas.country}
+              </p>
             </div>
           </div>
 
@@ -137,8 +157,10 @@ const TeamDashboard = () => {
                   {teamData.players.map((player) => (
                     <div
                       key={player.playerId}
-                      className="card card-squad-item d-flex flex-row align-items-center p-2"
+                      className="card card-squad-item d-flex flex-row align-items-center p-2 position-relative"
+                      onClick={() => playerProfileClick(player.playerId)}
                     >
+                      {/* Player Image */}
                       <img
                         src={player.users.pic || "default-pic.jpg"}
                         alt={player.users.name}
@@ -149,15 +171,21 @@ const TeamDashboard = () => {
                           objectFit: "cover",
                         }}
                       />
+
+                      {/* Player Name & Position */}
                       <div className="ms-3 flex-grow-1">
                         <h6 className="mb-1">{player.users.name}</h6>
                         <small className="text-muted">
                           {player.users.position}
                         </small>
                       </div>
+
+                      {/* Player Number */}
                       <span className="player-number px-3 py-1">
                         {player.playerNo}
                       </span>
+
+                      {/* Three-Dot Menu */}
                     </div>
                   ))}
                 </div>
