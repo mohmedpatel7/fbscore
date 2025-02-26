@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { fetchPlayerProfile } from "../../Redux/fetures/Teamslice";
 import { useToast } from "../Genral/ToastContext";
+import "./style/style.css";
 
 export default function TeamPlayerProfile() {
   const { playerId } = useParams();
@@ -17,7 +18,30 @@ export default function TeamPlayerProfile() {
 
   return (
     <div className="container mt-4">
-      <div className="card shadow-lg p-4">
+      <div className="card shadow-lg p-4 position-relative">
+        {/* Three Dots Dropdown Menu */}
+        <div className="position-absolute top-0 end-0 mt-2 me-2">
+          <div className="dropdown">
+            <button
+              className="btn btn-light border-0"
+              type="button"
+              id="dropdownMenuButton"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              <i className="fas fa-ellipsis-v"></i>
+            </button>
+            <ul
+              className="dropdown-menu dropdown-menu-end"
+              aria-labelledby="dropdownMenuButton"
+            >
+              <li>
+                <button className="dropdown-item dt-release">Release</button>
+              </li>
+            </ul>
+          </div>
+        </div>
+
         <div className="row g-4 align-items-center">
           {/* Profile Image */}
           <div className="col-md-4 text-center border-end">
@@ -82,11 +106,15 @@ export default function TeamPlayerProfile() {
                 Player Stats
               </h5>
               <div className="row text-center">
-                <div className="col-6 border-end">
+                <div className="col-4 border-end">
+                  <h6 className="text-muted">Matches</h6>
+                  <p className="fw-bold fs-4">-</p>
+                </div>
+                <div className="col-4 border-end">
                   <h6 className="text-muted">Goals</h6>
                   <p className="fw-bold fs-4">-</p>
                 </div>
-                <div className="col-6">
+                <div className="col-4">
                   <h6 className="text-muted">Assists</h6>
                   <p className="fw-bold fs-4">-</p>
                 </div>

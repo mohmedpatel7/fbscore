@@ -105,3 +105,7 @@
 .btn-signup:hover {
     background-color: #45b469;
 }
+
+.dt-release:hover {
+    background-color: red;
+}

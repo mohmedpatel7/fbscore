@@ -193,7 +193,7 @@ export default function Navbar() {
               ) : isMatchOfficial ? (
                 <>
                   <button
-                    className="btn btn-signup me-2"
+                    className="btn btn-signout me-2"
                     onClick={handleSignOut}
                   >
                     Sign Out

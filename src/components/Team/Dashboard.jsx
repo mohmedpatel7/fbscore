@@ -11,6 +11,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useToast } from "../Genral/ToastContext";
 import "./style/style.css";
 import { useNavigate } from "react-router-dom";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 const TeamDashboard = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
@@ -64,6 +65,7 @@ const TeamDashboard = () => {
     }
   };
 
+  // Function for squad player profile.
   const playerProfileClick = (playerId) => {
     try {
       dispatch(fetchPlayerProfile(playerId)); // Fetch player details
@@ -81,8 +83,6 @@ const TeamDashboard = () => {
       [name]: value,
     }));
   };
-
-  if (isPending) return showToast("Please wait!", "warnig");
 
   const teamDatas = {
     logo: teamData?.team?.teamlogo || "default-logo.png",
