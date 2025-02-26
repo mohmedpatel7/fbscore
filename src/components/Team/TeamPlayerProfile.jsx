@@ -1,20 +1,40 @@
-import { useEffect } from "react";
+import { useEffect, useTransition } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { fetchPlayerProfile } from "../../Redux/fetures/Teamslice";
+import {
+  fetchPlayerProfile,
+  releasePlayer,
+} from "../../Redux/fetures/Teamslice";
+import { useNavigate } from "react-router-dom";
 import { useToast } from "../Genral/ToastContext";
 import "./style/style.css";
 
 export default function TeamPlayerProfile() {
+  const [isPending, startTransition] = useTransition(); // Manage pending state for async transitions
+
   const { playerId } = useParams();
   const dispatch = useDispatch();
   const { showToast } = useToast();
+  const navigate = useNavigate();
 
   const { playerProfile } = useSelector((state) => state.teamSlice);
 
   useEffect(() => {
     dispatch(fetchPlayerProfile(playerId));
   }, []);
+
+  // Handle release player.
+  const handleReleasePlayer = async (pid) => {
+    startTransition(async () => {
+      try {
+        const result = await dispatch(releasePlayer(pid));
+        showToast(result.message || "Player Release successfully.", "success");
+        navigate("/TeamDashboard");
+      } catch (error) {
+        showToast(error.message || "Error while releasing player!", "danger");
+      }
+    });
+  };
 
   return (
     <div className="container mt-4">
@@ -36,7 +56,12 @@ export default function TeamPlayerProfile() {
               aria-labelledby="dropdownMenuButton"
             >
               <li>
-                <button className="dropdown-item dt-release">Release</button>
+                <button
+                  className="dropdown-item dt-release"
+                  onClick={() => handleReleasePlayer(playerId)}
+                >
+                  Release
+                </button>
               </li>
             </ul>
           </div>

@@ -167,6 +167,7 @@ export const fetchAvailableUsers = createAsyncThunk(
   }
 );
 
+// Function for sending player request.
 export const SendPlayerReq = createAsyncThunk(
   "SendPlayerReq",
   async ({ userId, playerNo }, { rejectWithValue }) => {
@@ -202,6 +203,7 @@ export const SendPlayerReq = createAsyncThunk(
   }
 );
 
+// Fetching squad player profile.
 export const fetchPlayerProfile = createAsyncThunk(
   "fetchPlayerProfile",
   async (playerId, { rejectWithValue }) => {
@@ -236,6 +238,40 @@ export const fetchPlayerProfile = createAsyncThunk(
   }
 );
 
+// Releasing sinfle player from team.
+export const releasePlayer = createAsyncThunk(
+  "releasePlayer",
+  async (playerId, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("teamtoken");
+      if (!token) {
+        return rejectWithValue({
+          message: "Authentication token is missing. Please log in again.",
+        });
+      }
+
+      const response = await fetch(`${url}api/team/removePlayer/${playerId}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          "team-token": token,
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData);
+      }
+
+      return response.json();
+    } catch (error) {
+      return rejectWithValue({
+        message: "Failed to release player from team!",
+      });
+    }
+  }
+);
+
 // team Slice
 const teamSlice = createSlice({
   name: "team",
@@ -245,6 +281,7 @@ const teamSlice = createSlice({
     availableUsers: null,
     playerReq: null,
     playerProfile: null,
+    release: null,
     error: null, // Error string or object from backend
   },
 
@@ -353,6 +390,21 @@ const teamSlice = createSlice({
       state.error = null;
     });
     builder.addCase(fetchPlayerProfile.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload?.message || "Unknown error occurred.";
+    });
+
+    // Handle release single player cases.
+    builder.addCase(releasePlayer.pending, (state) => {
+      state.isLoading = true;
+      state.error = null;
+    });
+    builder.addCase(releasePlayer.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.release = action.payload;
+      state.error = null;
+    });
+    builder.addCase(releasePlayer.rejected, (state, action) => {
       state.isLoading = false;
       state.error = action.payload?.message || "Unknown error occurred.";
     });
