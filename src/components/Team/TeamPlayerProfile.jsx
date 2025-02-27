@@ -59,6 +59,7 @@ export default function TeamPlayerProfile() {
                 <button
                   className="dropdown-item dt-release"
                   onClick={() => handleReleasePlayer(playerId)}
+                  disabled={isPending}
                 >
                   Release
                 </button>

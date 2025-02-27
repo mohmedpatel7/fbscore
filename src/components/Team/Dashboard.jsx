@@ -11,7 +11,6 @@ import { useSelector, useDispatch } from "react-redux";
 import { useToast } from "../Genral/ToastContext";
 import "./style/style.css";
 import { useNavigate } from "react-router-dom";
-import InfiniteScroll from "react-infinite-scroll-component";
 
 const TeamDashboard = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
@@ -19,6 +18,7 @@ const TeamDashboard = () => {
   const [formData, setFormData] = useState({
     playerno: "",
   });
+  const [displayedPlayers, setDisplayedPlayers] = useState(10);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -211,100 +211,117 @@ const TeamDashboard = () => {
 
                 <div className="accordion" id="recruitmentAccordion">
                   {Array.isArray(availableUsers.users) &&
-                    availableUsers?.users?.map((user, index) => (
-                      <div className="accordion-item mt-3" key={user.userId}>
-                        <h2 className="accordion-header">
-                          <button
-                            className="accordion-button"
-                            type="button"
-                            data-bs-toggle="collapse"
-                            data-bs-target={`#collapse${index}`}
-                            aria-expanded="true"
-                            aria-controls={`collapse${index}`}
-                            style={{
-                              display: "flex",
-                              justifyContent: "space-between",
-                              width: "100%",
-                            }} // Ensures proper spacing
-                          >
-                            {/* Left side: Image and Name */}
-                            <div className="d-flex align-items-center">
-                              <img
-                                src={user.pic || "default-pic.jpg"}
-                                alt={user.name}
-                                className="rounded-circle me-2"
-                                style={{
-                                  width: "50px",
-                                  height: "50px",
-                                  objectFit: "cover",
-                                }}
-                              />
-                              <span className="fw-bold">{user.name}</span>
-                            </div>
-
-                            {/* Right side: Position */}
-                            <span
-                              className="fw-bold"
-                              style={{ marginLeft: "auto" }}
-                            >
-                              {user.position}
-                            </span>
-                          </button>
-                        </h2>
-                        <div
-                          id={`collapse${index}`}
-                          className="accordion-collapse collapse"
-                          data-bs-parent="#recruitmentAccordion"
-                        >
-                          <div className="accordion-body">
-                            <p className="mb-1">
-                              <strong>Email:</strong> {user.email}
-                            </p>
-                            <p className="mb-1">
-                              <strong>Country:</strong> {user.country}
-                            </p>
-                            <p className="mb-1">
-                              <strong>Gender:</strong> {user.gender}
-                            </p>
-                            <p className="mb-1">
-                              <strong>Age:</strong> {user.age}
-                            </p>
-                            <p className="mb-1">
-                              <strong>Foot:</strong> {user.foot}
-                            </p>
-
-                            <div className="mb-2">
-                              <label className="form-label">
-                                <strong>Player Number:</strong>
-                              </label>
-                              <input
-                                type="text"
-                                name="playerno"
-                                value={formData.playerno}
-                                onChange={handleChange}
-                                className="form-control"
-                                placeholder="Enter player number"
-                              />
-                            </div>
-
+                    availableUsers.users
+                      .slice(0, displayedPlayers)
+                      .map((user, index) => (
+                        <div className="accordion-item mt-3" key={user.userId}>
+                          <h2 className="accordion-header">
                             <button
-                              className="btn btn-signup w-100 mt-2"
-                              disabled={isPending}
-                              onClick={(event) =>
-                                handleSendPlayerReq(
-                                  user.userId,
-                                  formData.playerno,
-                                  event
-                                )
-                              }
+                              className="accordion-button"
+                              type="button"
+                              data-bs-toggle="collapse"
+                              data-bs-target={`#collapse${index}`}
+                              aria-expanded="true"
+                              aria-controls={`collapse${index}`}
+                              style={{
+                                display: "flex",
+                                justifyContent: "space-between",
+                                width: "100%",
+                              }}
                             >
-                              Send Recruitment Request
+                              {/* Left side: Image and Name */}
+                              <div className="d-flex align-items-center">
+                                <img
+                                  src={user.pic || "default-pic.jpg"}
+                                  alt={user.name}
+                                  className="rounded-circle me-2"
+                                  style={{
+                                    width: "50px",
+                                    height: "50px",
+                                    objectFit: "cover",
+                                  }}
+                                />
+                                <span className="fw-bold">{user.name}</span>
+                              </div>
+
+                              {/* Right side: Position */}
+                              <span
+                                className="fw-bold"
+                                style={{ marginLeft: "auto" }}
+                              >
+                                {user.position}
+                              </span>
                             </button>
+                          </h2>
+                          <div
+                            id={`collapse${index}`}
+                            className="accordion-collapse collapse"
+                            data-bs-parent="#recruitmentAccordion"
+                          >
+                            <div className="accordion-body">
+                              <p className="mb-1">
+                                <strong>Email:</strong> {user.email}
+                              </p>
+                              <p className="mb-1">
+                                <strong>Country:</strong> {user.country}
+                              </p>
+                              <p className="mb-1">
+                                <strong>Gender:</strong> {user.gender}
+                              </p>
+                              <p className="mb-1">
+                                <strong>Age:</strong> {user.age}
+                              </p>
+                              <p className="mb-1">
+                                <strong>Foot:</strong> {user.foot}
+                              </p>
+
+                              <div className="mb-2">
+                                <label className="form-label">
+                                  <strong>Player Number:</strong>
+                                </label>
+                                <input
+                                  type="text"
+                                  name="playerno"
+                                  value={formData.playerno}
+                                  onChange={handleChange}
+                                  className="form-control"
+                                  placeholder="Enter player number"
+                                />
+                              </div>
+
+                              <button
+                                className="btn btn-signup w-100 mt-2"
+                                disabled={isPending}
+                                onClick={(event) =>
+                                  handleSendPlayerReq(
+                                    user.userId,
+                                    formData.playerno,
+                                    event
+                                  )
+                                }
+                              >
+                                Send Recruitment Request
+                              </button>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    ))}
+                      ))}
                 </div>
+
+                {/* Load More Button */}
+                {displayedPlayers < availableUsers.users.length && (
+                  <button
+                    className="btn  w-100 mt-3 "
+                    onClick={() => setDisplayedPlayers(displayedPlayers + 5)}
+                    style={{
+                      color: "#45b469",
+                      border: "none",
+                      fontWeight: "bolder",
+                    }}
+                  >
+                    More
+                  </button>
+                )}
               </div>
             )}
           </div>
