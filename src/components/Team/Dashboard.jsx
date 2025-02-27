@@ -6,6 +6,7 @@ import {
   fetchAvailableUsers,
   SendPlayerReq,
   fetchPlayerProfile,
+  fetchMatches,
 } from "../../Redux/fetures/Teamslice";
 import { useSelector, useDispatch } from "react-redux";
 import { useToast } from "../Genral/ToastContext";
@@ -25,7 +26,9 @@ const TeamDashboard = () => {
   const { showToast } = useToast();
   const isTeamOwner = localStorage.getItem("teamtoken");
 
-  const { teamData, availableUsers } = useSelector((state) => state.teamSlice);
+  const { teamData, availableUsers, matchesList } = useSelector(
+    (state) => state.teamSlice
+  );
 
   useEffect(() => {
     if (isTeamOwner) {
@@ -34,6 +37,9 @@ const TeamDashboard = () => {
       );
       dispatch(fetchAvailableUsers()).catch(() =>
         showToast("Error while fetching available users!", "danger")
+      );
+      dispatch(fetchMatches()).catch(() =>
+        showToast("Error while fetching match list!", "danger")
       );
     }
   }, [dispatch, isTeamOwner]);
@@ -193,15 +199,75 @@ const TeamDashboard = () => {
             )}
 
             {activeTab === "matches" && (
-              <div className="card p-3">
-                <h5>Match History</h5>
-                <ul className="list-group">
-                  {teamDatas.matches.map((match) => (
-                    <li key={match.id} className="list-group-item">
-                      {match.opponent} - {match.result} ({match.date})
-                    </li>
-                  ))}
-                </ul>
+              <div className="d-flex justify-content-center flex-wrap">
+                {matchesList.matches.map((match) => (
+                  <div key={match.matchId} className="match-card-container">
+                    <div className="card p-4 shadow-lg mb-4 match-card">
+                      <ul className="list-group">
+                        <li className="list-group-item border-0 shadow-sm rounded">
+                          <div className="row align-items-center text-center">
+                            {/* Team & Scores */}
+                            <div className="col-md-5 d-flex flex-column text-start">
+                              <div className="d-flex justify-content-between align-items-center mb-2">
+                                <div className="d-flex align-items-center">
+                                  <img
+                                    src={match.teamA.teamlogo}
+                                    alt="Team A Logo"
+                                    className="team-logo me-2"
+                                  />
+                                  <strong className="fs-6">
+                                    {match.teamA.teamname}
+                                  </strong>
+                                </div>
+                                <h5 className="fw-bold">{match.score.teamA}</h5>
+                              </div>
+                              <div className="d-flex justify-content-between align-items-center">
+                                <div className="d-flex align-items-center">
+                                  <img
+                                    src={match.teamB.teamlogo}
+                                    alt="Team B Logo"
+                                    className="team-logo me-2"
+                                  />
+                                  <strong className="fs-6">
+                                    {match.teamB.teamname}
+                                  </strong>
+                                </div>
+                                <h5 className="fw-bold">{match.score.teamB}</h5>
+                              </div>
+                            </div>
+
+                            {/* Vertical Line */}
+                            <div className="col-auto d-flex justify-content-center">
+                              <div className="vr vr-match"></div>
+                            </div>
+
+                            {/* Match Status */}
+                            <div className="col-md-4">
+                              <span
+                                className={`badge px-3 py-2 ${
+                                  match.status === "Full Time"
+                                    ? "bg-success"
+                                    : match.status === "Live"
+                                    ? "bg-danger"
+                                    : "bg-warning"
+                                }`}
+                              >
+                                {match.status}
+                              </span>
+                            </div>
+
+                            {/* Date & Time (Centered Below Everything) */}
+                            <div className="col-12 mt-2">
+                              <small className="text-muted">
+                                {match.date} | {match.time}
+                              </small>
+                            </div>
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                ))}
               </div>
             )}
 

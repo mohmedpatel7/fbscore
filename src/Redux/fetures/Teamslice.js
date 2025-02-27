@@ -272,6 +272,40 @@ export const releasePlayer = createAsyncThunk(
   }
 );
 
+// Fetching sign in team matches list.
+export const fetchMatches = createAsyncThunk(
+  "fetchMatches",
+  async (_, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("teamtoken");
+      if (!token) {
+        return rejectWithValue({
+          message: "Authentication token is missing. Please log in again.",
+        });
+      }
+
+      const response = await fetch(`${url}api/team/signinMatches`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "team-token": token,
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData);
+      }
+
+      return response.json();
+    } catch (error) {
+      return rejectWithValue({
+        message: "Failed to release player from team!",
+      });
+    }
+  }
+);
+
 // team Slice
 const teamSlice = createSlice({
   name: "team",
@@ -282,6 +316,7 @@ const teamSlice = createSlice({
     playerReq: null,
     playerProfile: null,
     release: null,
+    matchesList: null,
     error: null, // Error string or object from backend
   },
 
@@ -405,6 +440,21 @@ const teamSlice = createSlice({
       state.error = null;
     });
     builder.addCase(releasePlayer.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload?.message || "Unknown error occurred.";
+    });
+
+    //Handle fetching match list.
+    builder.addCase(fetchMatches.pending, (state) => {
+      state.isLoading = true;
+      state.error = null;
+    });
+    builder.addCase(fetchMatches.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.matchesList = action.payload;
+      state.error = null;
+    });
+    builder.addCase(fetchMatches.rejected, (state, action) => {
       state.isLoading = false;
       state.error = action.payload?.message || "Unknown error occurred.";
     });

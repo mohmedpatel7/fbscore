@@ -109,3 +109,46 @@
 .dt-release:hover {
     background-color: red;
 }
+
+.match-card-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.match-card {
+    width: 90%;
+    max-width: 1000px;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .match-card {
+        width: 90%;
+        max-width: 400px;
+        padding: 1rem;
+    }
+}
+
+/* Hover Effect */
+.match-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Team Logo */
+.team-logo {
+    width: 45px;
+    height: 45px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+/* Vertical Line */
+.vr-match {
+    width: 2px;
+    height: 100%;
+    background-color: #ccc;
+    margin: 0 15px;
+}

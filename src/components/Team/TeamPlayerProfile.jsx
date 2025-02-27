@@ -134,15 +134,21 @@ export default function TeamPlayerProfile() {
               <div className="row text-center">
                 <div className="col-4 border-end">
                   <h6 className="text-muted">Matches</h6>
-                  <p className="fw-bold fs-4">-</p>
+                  <p className="fw-bold fs-4">
+                    {playerProfile?.player?.stats?.totalmatches}
+                  </p>
                 </div>
                 <div className="col-4 border-end">
                   <h6 className="text-muted">Goals</h6>
-                  <p className="fw-bold fs-4">-</p>
+                  <p className="fw-bold fs-4">
+                    {playerProfile?.player?.stats?.totalgoals}
+                  </p>
                 </div>
                 <div className="col-4">
                   <h6 className="text-muted">Assists</h6>
-                  <p className="fw-bold fs-4">-</p>
+                  <p className="fw-bold fs-4">
+                    {playerProfile?.player?.stats?.totalassits}
+                  </p>
                 </div>
               </div>
             </div>
