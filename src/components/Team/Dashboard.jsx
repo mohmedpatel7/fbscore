@@ -7,6 +7,7 @@ import {
   SendPlayerReq,
   fetchPlayerProfile,
   fetchMatches,
+  fetchMatchDetails,
 } from "../../Redux/fetures/Teamslice";
 import { useSelector, useDispatch } from "react-redux";
 import { useToast } from "../Genral/ToastContext";
@@ -143,6 +144,16 @@ const TeamDashboard = () => {
       setVisibleCompleted((prev) =>
         Math.min(prev + 2, remainingCompletedMatches.length)
       );
+    }
+  };
+
+  // Handle fetching match details.
+  const handleMatchDeatils = async (matchId) => {
+    try {
+      dispatch(fetchMatchDetails(matchId));
+      navigate(`/TeamMatchDetails/${matchId}`);
+    } catch (error) {
+      showToast(error.message || "Error while fetching match details!");
     }
   };
 
@@ -381,6 +392,9 @@ const TeamDashboard = () => {
                     <div
                       key={lastCompletedMatch.matchId}
                       className="match-card-container"
+                      onClick={() =>
+                        handleMatchDeatils(lastCompletedMatch.matchId)
+                      }
                     >
                       <div className="card p-4 shadow-lg mb-4 match-card">
                         <ul className="list-group">
@@ -448,6 +462,7 @@ const TeamDashboard = () => {
                     <div
                       key={nextMatch.matchId}
                       className="match-card-container"
+                      onClick={() => handleMatchDeatils(nextMatch.matchId)}
                     >
                       <div className="card p-4 shadow-lg mb-4 match-card">
                         <ul className="list-group">
@@ -513,6 +528,7 @@ const TeamDashboard = () => {
                         <div
                           key={match.matchId}
                           className="match-card-container"
+                          onClick={() => handleMatchDeatils(match.matchId)}
                         >
                           <div className="card p-4 shadow-lg mb-4 match-card">
                             <ul className="list-group">
@@ -583,6 +599,7 @@ const TeamDashboard = () => {
                         <div
                           key={match.matchId}
                           className="match-card-container"
+                          onClick={() => handleMatchDeatils(match.matchId)}
                         >
                           <div className="card p-4 shadow-lg mb-4 match-card">
                             <ul className="list-group">

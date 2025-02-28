@@ -14,6 +14,7 @@ import TeamSignin from "./components/Team/TeamSignin";
 import TeamOtpverify from "./components/Team/TeamOtpverify";
 import Dashboard from "./components/Team/Dashboard";
 import TeamPlayerProfile from "./components/Team/TeamPlayerProfile";
+import TeamMatchDetails from "./components/Team/TeamMatchDetails";
 import MatchOfficialSignup from "./components/Match/MatchOfficialSignup";
 import MatchOfficialSignin from "./components/Match/MatchOfficialSignin";
 import MatchOfficialOtpverify from "./components/Match/MatchOfficialOtpverify";
@@ -39,6 +40,11 @@ function App() {
           exact
           path="/TeamPlayerProfile/:playerId"
           element={<TeamPlayerProfile />}
+        />
+        <Route
+          exact
+          path="/TeamMatchDetails/:matchId"
+          element={<TeamMatchDetails />}
         />
         <Route
           exact

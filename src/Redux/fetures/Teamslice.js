@@ -300,7 +300,42 @@ export const fetchMatches = createAsyncThunk(
       return response.json();
     } catch (error) {
       return rejectWithValue({
-        message: "Failed to release player from team!",
+        message: "Failed to fetches matches list for team!",
+      });
+    }
+  }
+);
+
+// Fetching match details.
+export const fetchMatchDetails = createAsyncThunk(
+  "matchDetails",
+  async (matchId, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("teamtoken");
+      if (!token) {
+        return rejectWithValue({
+          message: "Authentication token is missing. Please log in again.",
+        });
+      }
+
+      const response = await fetch(`${url}api/team/matchDetails/${matchId}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "team-token": token,
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData);
+      }
+
+      const responseData = await response.json();
+      return responseData.data;
+    } catch (error) {
+      return rejectWithValue({
+        message: "Failed to fetches matches list for team!",
       });
     }
   }
@@ -317,6 +352,7 @@ const teamSlice = createSlice({
     playerProfile: null,
     release: null,
     matchesList: null,
+    matchDetails: null,
     error: null, // Error string or object from backend
   },
 
@@ -455,6 +491,21 @@ const teamSlice = createSlice({
       state.error = null;
     });
     builder.addCase(fetchMatches.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload?.message || "Unknown error occurred.";
+    });
+
+    //Handle match details feching.
+    builder.addCase(fetchMatchDetails.pending, (state) => {
+      state.isLoading = true;
+      state.error = null;
+    });
+    builder.addCase(fetchMatchDetails.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.matchDetails = action.payload;
+      state.error = null;
+    });
+    builder.addCase(fetchMatchDetails.rejected, (state, action) => {
       state.isLoading = false;
       state.error = action.payload?.message || "Unknown error occurred.";
     });
