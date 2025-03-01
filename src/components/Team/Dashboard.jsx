@@ -371,8 +371,6 @@ const TeamDashboard = () => {
                       <span className="player-number px-3 py-1">
                         {player.playerNo}
                       </span>
-
-                      {/* Three-Dot Menu */}
                     </div>
                   ))}
                 </div>
