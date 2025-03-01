@@ -91,7 +91,7 @@ export default function TeamMatchDetails() {
       <ul className="nav nav-tabs mt-4" id="matchTabs">
         <li className="nav-item">
           <a className="nav-link active" data-bs-toggle="tab" href="#tab1">
-            Match Stats
+            Overview
           </a>
         </li>
         <li className="nav-item">
@@ -101,213 +101,173 @@ export default function TeamMatchDetails() {
         </li>
       </ul>
 
-      {/* Tabs Content */}
-      <div className="tab-content mt-3">
-        <div id="tab1" className="tab-pane fade show active">
-          <p>Match statistics go here...</p>
-        </div>
+      <div className="tab-content">
+        <div id="tab1" className="tab-pane fade">
+          <div className="row">
+            <div className="col-12 mt-3">
+              <h4
+                style={{
+                  color: "#50C878",
+                  fontWeight: "600",
+                  marginBottom: "20px",
+                }}
+              >
+                Scorers
+              </h4>
+            </div>
 
+            <div className="col-12">
+              
+            </div>
+          </div>
+        </div>
+        {/* Tabs Content */}
         <div id="tab2" className="tab-pane fade">
           <div className="row">
-            <div className="col-12">
-              <h4 style={{ color: "#50C878" }}>Line Up</h4>
+            {/* Team A Section */}
+            <div className="col-12 mt-3">
+              <h4
+                style={{
+                  color: "#50C878",
+                  fontWeight: "600",
+                  marginBottom: "20px",
+                }}
+              >
+                Line Up
+              </h4>
             </div>
-            <div className="card col-12 linup-card-main">
-              <div className="card mt-2 mb-1 linup-card">
-                <div className="d-flex align-items-center flex-column flex-sm-row mt-1 mb-2">
+
+            <div className="col-12">
+              <div className="card linup-card-main p-3">
+                {/* Team A Header */}
+                <div className="d-flex align-items-center mb-3">
                   <img
                     src={matchDetails.teams.teamA.logo || "/placeholder.svg"}
                     alt={matchDetails.teams.teamA.name}
-                    className="rounded-circle"
+                    className="rounded-circle me-3"
                     style={{
                       width: "50px",
                       height: "50px",
                       objectFit: "cover",
+                      border: "2px solid #50C878",
                     }}
                   />
-                  <span className="ms-sm-2 mt-2 mt-sm-0 fw-semibold">
+                  <h5 className="mb-0 fw-semibold">
                     {matchDetails.teams.teamA.name}
-                  </span>
+                  </h5>
                 </div>
-              </div>
-              <div className="col-12 mt-2">
-                {matchDetails.status === "Upcoming" ? (
-                  <>
-                    <h5 className="text-muted">
-                      Possible {matchDetails.teams.teamA.name} Playing 11
-                    </h5>
-                    <br />
+
+                {/* Team A Players */}
+                <div className="mt-3">
+                  <h6 className="text-muted mb-3">
+                    {matchDetails.status === "Upcoming"
+                      ? `Possible ${matchDetails.teams.teamA.name} Playing 11`
+                      : `${matchDetails.teams.teamA.name} Playing 11`}
+                  </h6>
+                  <div className="row">
                     {matchDetails.teams.teamA.players.map((player) => (
                       <div
                         key={player.id}
-                        className="card card-squad-item d-flex flex-row align-items-center p-2 position-relative mb-2"
-                      >
-                        {/* Player Image */}
-                        <img
-                          src={player.pic || "default-pic.jpg"}
-                          alt={player.name}
-                          className="rounded-circle"
-                          style={{
-                            width: "50px",
-                            height: "50px",
-                            objectFit: "cover",
-                          }}
-                        />
-
-                        {/* Player Name & Position */}
-                        <div className="ms-3 flex-grow-1">
-                          <h6 className="mb-1">{player.name}</h6>
-                        </div>
-
-                        {/* Player Number */}
-                        <span className="player-number px-3 py-1">
-                          {player.jeresyNo} 
-                        </span>
-                      </div>
-                    ))}
-                  </>
-                ) : (
-                  <>
-                    <h5 className="text-muted">
-                      {matchDetails.teams.teamA.name} Playing 11
-                    </h5>
-                    <br />
-                    {matchDetails.teams.teamA.players.map((player) => (
-                      <div
-                        key={player.id}
-                        className="card card-squad-item d-flex flex-row align-items-center p-2 position-relative mb-2"
+                        className="col-12 col-md-6 mb-3"
                         onClick={() => playerProfileClick(player.id)}
                       >
-                        {/* Player Image */}
-                        <img
-                          src={player.pic || "default-pic.jpg"}
-                          alt={player.name}
-                          className="rounded-circle"
-                          style={{
-                            width: "50px",
-                            height: "50px",
-                            objectFit: "cover",
-                          }}
-                        />
+                        <div className="card card-squad-item p-2 d-flex flex-row align-items-center hover-effect">
+                          {/* Player Image */}
+                          <img
+                            src={player.pic || "default-pic.jpg"}
+                            alt={player.name}
+                            className="rounded-circle me-3"
+                            style={{
+                              width: "50px",
+                              height: "50px",
+                              objectFit: "cover",
+                            }}
+                          />
 
-                        {/* Player Name & Position */}
-                        <div className="ms-3 flex-grow-1">
-                          <h6 className="mb-1">{player.name}</h6>
+                          {/* Player Details */}
+                          <div className="flex-grow-1">
+                            <h6 className="mb-1 fw-semibold">{player.name}</h6>
+                            <small className="text-muted">
+                              {player.position}
+                            </small>
+                          </div>
 
-                          <small className="text-muted">
-                            {player.position}
-                          </small>
+                          {/* Player Number */}
+                          <span className="player-number bg-light  px-3 py-1 rounded-circle">
+                            {player.jeresyNo}
+                          </span>
                         </div>
-
-                        {/* Player Number */}
-                        <span className="player-number px-3 py-1">
-                          {player.jeresyNo}
-                        </span>
                       </div>
                     ))}
-                  </>
-                )}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
 
-          <div className="row mt-4 mb-4">
-            <div className="col-12"></div>
-            <div className="card col-12 linup-card-main">
-              <div className="card mt-2 mb-1 linup-card">
-                <div className="d-flex align-items-center flex-column flex-sm-row mt-1 mb-2">
+          {/* Team B Section */}
+          <div className="row mt-4">
+            <div className="col-12">
+              <div className="card linup-card-main p-3">
+                {/* Team B Header */}
+                <div className="d-flex align-items-center mb-3">
                   <img
                     src={matchDetails.teams.teamB.logo || "/placeholder.svg"}
                     alt={matchDetails.teams.teamB.name}
-                    className="rounded-circle"
+                    className="rounded-circle me-3"
                     style={{
                       width: "50px",
                       height: "50px",
                       objectFit: "cover",
+                      border: "2px solid #50C878",
                     }}
                   />
-                  <span className="ms-sm-2 mt-2 mt-sm-0 fw-semibold">
+                  <h5 className="mb-0 fw-semibold">
                     {matchDetails.teams.teamB.name}
-                  </span>
+                  </h5>
                 </div>
-              </div>
-              <div className="col-12 mt-2">
-                {matchDetails.status === "Upcoming" ? (
-                  <>
-                    <h5 className="text-muted">
-                      Possible {matchDetails.teams.teamB.name} Playing 11
-                    </h5>
-                    <br />
+
+                {/* Team B Players */}
+                <div className="mt-3">
+                  <h6 className="text-muted mb-3">
+                    {matchDetails.status === "Upcoming"
+                      ? `Possible ${matchDetails.teams.teamB.name} Playing 11`
+                      : `${matchDetails.teams.teamB.name} Playing 11`}
+                  </h6>
+                  <div className="row">
                     {matchDetails.teams.teamB.players.map((player) => (
                       <div
                         key={player.id}
-                        className="card card-squad-item d-flex flex-row align-items-center p-2 position-relative mb-2"
-                      >
-                        {/* Player Image */}
-                        <img
-                          src={player.pic || "default-pic.jpg"}
-                          alt={player.name}
-                          className="rounded-circle"
-                          style={{
-                            width: "50px",
-                            height: "50px",
-                            objectFit: "cover",
-                          }}
-                        />
-
-                        {/* Player Name & Position */}
-                        <div className="ms-3 flex-grow-1">
-                          <h6 className="mb-1">{player.name}</h6>
-                        </div>
-
-                        {/* Player Number */}
-                        <span className="player-number px-3 py-1">
-                          {player.jeresyNo}
-                        </span>
-                      </div>
-                    ))}
-                  </>
-                ) : (
-                  <>
-                    <h5 className="text-muted">
-                      {matchDetails.teams.teamB.name} Playing 11
-                    </h5>
-                    <br />
-                    {matchDetails.teams.teamB.players.map((player) => (
-                      <div
-                        key={player.id}
-                        className="card card-squad-item d-flex flex-row align-items-center p-2 position-relative mb-2"
+                        className="col-12 col-md-6 mb-3"
                         onClick={() => playerProfileClick(player.id)}
                       >
-                        {/* Player Image */}
-                        <img
-                          src={player.pic || "default-pic.jpg"}
-                          alt={player.name}
-                          className="rounded-circle"
-                          style={{
-                            width: "50px",
-                            height: "50px",
-                            objectFit: "cover",
-                          }}
-                        />
+                        <div className="card card-squad-item p-2 d-flex flex-row align-items-center hover-effect">
+                          {/* Player Image */}
+                          <img
+                            src={player.pic || "default-pic.jpg"}
+                            alt={player.name}
+                            className="rounded-circle me-3"
+                            style={{
+                              width: "50px",
+                              height: "50px",
+                              objectFit: "cover",
+                            }}
+                          />
 
-                        {/* Player Name & Position */}
-                        <div className="ms-3 flex-grow-1">
-                          <h6 className="mb-1">{player.name}</h6>
+                          {/* Player Details */}
+                          <div className="flex-grow-1">
+                            <h6 className="mb-1 fw-semibold">{player.name}</h6>
+                          </div>
 
-                          <small className="text-muted">
-                            {player.position}
-                          </small>
+                          {/* Player Number */}
+                          <span className="player-number bg-light px-3 py-1 rounded-circle">
+                            {player.jeresyNo}
+                          </span>
                         </div>
-
-                        {/* Player Number */}
-                        <span className="player-number px-3 py-1">
-                          {player.jeresyNo}
-                        </span>
                       </div>
                     ))}
-                  </>
-                )}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
