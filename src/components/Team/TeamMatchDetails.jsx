@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { fetchMatchDetails } from "../../Redux/fetures/Teamslice";
@@ -16,7 +16,46 @@ export default function TeamMatchDetails() {
     dispatch(fetchMatchDetails(matchId));
   }, [dispatch, matchId]);
 
-  //  Handle loading state to prevent crashes
+  // Compute scorers only when matchDetails changes
+  const scorers = useMemo(() => {
+    if (!matchDetails?.goals) return [];
+    return Object.values(
+      matchDetails.goals.reduce((acc, goal) => {
+        if (!goal.scorer) return acc;
+
+        const scorerId = goal.scorer.id;
+        if (!acc[scorerId]) {
+          acc[scorerId] = {
+            ...goal.scorer,
+            goalsCount: 0,
+          };
+        }
+        acc[scorerId].goalsCount += 1;
+        return acc;
+      }, {})
+    );
+  }, [matchDetails]);
+
+  // Compute assist provider only when matchDetails changes
+  const assister = useMemo(() => {
+    if (!matchDetails?.goals) return [];
+    return Object.values(
+      matchDetails.goals.reduce((acc, assist) => {
+        if (!assist.assist) return acc;
+
+        const assisterId = assist.assist.id;
+        if (!acc[assisterId]) {
+          acc[assisterId] = {
+            ...assist.assist,
+            assistCount: 0,
+          };
+        }
+        acc[assisterId].assistCount += 1;
+        return acc;
+      }, {})
+    );
+  }, [matchDetails]);
+
   if (!matchDetails) {
     return <div className="container mt-4">Loading match details...</div>;
   }
@@ -102,24 +141,107 @@ export default function TeamMatchDetails() {
       </ul>
 
       <div className="tab-content">
-        <div id="tab1" className="tab-pane fade">
-          <div className="row">
-            <div className="col-12 mt-3">
-              <h4
-                style={{
-                  color: "#50C878",
-                  fontWeight: "600",
-                  marginBottom: "20px",
-                }}
-              >
-                Scorers
-              </h4>
-            </div>
+        <div id="tab1" className="tab-pane fade  show active">
+          {scorers.length > 0 && (
+            <>
+              <div className="mb-2">
+                <div className="col-12 mt-3">
+                  <h4
+                    style={{
+                      color: "#50C878",
+                      fontWeight: "600",
+                      marginBottom: "20px",
+                    }}
+                  >
+                    Scorer
+                  </h4>
+                </div>
+                <div className="row">
+                  {scorers.map((scorer) => (
+                    <div
+                      key={scorer.id}
+                      className="card card-squad-item d-flex flex-row align-items-center p-2 position-relative mb-2"
+                    >
+                      {/* Player Image */}
+                      <img
+                        src={scorer.pic || "default-pic.jpg"}
+                        alt={scorer.name || "Unknown Player"}
+                        className="rounded-circle"
+                        style={{
+                          width: "50px",
+                          height: "50px",
+                          objectFit: "cover",
+                        }}
+                      />
 
-            <div className="col-12">
-              
-            </div>
-          </div>
+                      {/* Player Name & Position */}
+                      <div className="ms-3 flex-grow-1">
+                        <h6 className="mb-1">{scorer.name || "Unknown"}</h6>
+                        <small className="text-muted">
+                          {scorer.position || "Unknown"}
+                        </small>
+                      </div>
+
+                      {/* Goal Count - Right End */}
+                      <span className="player-number px-3 py-1">
+                        ⚽ {scorer.goalsCount}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </>
+          )}
+          {assister.length > 0 && (
+            <>
+              <div className="mb-2">
+                <div className="col-12 mt-3">
+                  <h4
+                    style={{
+                      color: "#50C878",
+                      fontWeight: "600",
+                      marginBottom: "20px",
+                    }}
+                  >
+                    Assist Provider
+                  </h4>
+                </div>
+                <div className="row">
+                  {assister.map((assist) => (
+                    <div
+                      key={assist.id}
+                      className="card card-squad-item d-flex flex-row align-items-center p-2 position-relative mb-2"
+                    >
+                      {/* Player Image */}
+                      <img
+                        src={assist.pic || "default-pic.jpg"}
+                        alt={assist.name || "Unknown Player"}
+                        className="rounded-circle"
+                        style={{
+                          width: "50px",
+                          height: "50px",
+                          objectFit: "cover",
+                        }}
+                      />
+
+                      {/* Player Name & Position */}
+                      <div className="ms-3 flex-grow-1">
+                        <h6 className="mb-1">{assist.name || "Unknown"}</h6>
+                        <small className="text-muted">
+                          {assist.position || "Unknown"}
+                        </small>
+                      </div>
+
+                      {/* Goal Count - Right End */}
+                      <span className="player-number px-3 py-1">
+                        👟{assist.assistCount}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </>
+          )}
         </div>
         {/* Tabs Content */}
         <div id="tab2" className="tab-pane fade">
