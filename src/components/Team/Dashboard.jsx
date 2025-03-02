@@ -214,6 +214,12 @@ const TeamDashboard = () => {
                     <div
                       key={lastCompletedMatch.matchId}
                       className="match-card-container"
+                      onClick={() =>
+                        showToast(
+                          "For more details click on match tab.",
+                          "success"
+                        )
+                      }
                     >
                       <div className="card p-4 shadow-lg mb-4 match-card">
                         <ul className="list-group">
@@ -281,6 +287,12 @@ const TeamDashboard = () => {
                     <div
                       key={nextMatch.matchId}
                       className="match-card-container"
+                      onClick={() =>
+                        showToast(
+                          "For more details click on match tab.",
+                          "success"
+                        )
+                      }
                     >
                       <div className="card p-4 shadow-lg mb-4 match-card">
                         <ul className="list-group">

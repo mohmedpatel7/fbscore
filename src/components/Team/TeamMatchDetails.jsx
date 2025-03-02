@@ -133,17 +133,25 @@ export default function TeamMatchDetails() {
             Overview
           </a>
         </li>
+
         <li className="nav-item">
           <a className="nav-link" data-bs-toggle="tab" href="#tab2">
             Line Up
           </a>
         </li>
+        <li className="nav-item">
+          <a className="nav-link" data-bs-toggle="tab" href="#tab3">
+            About Match
+          </a>
+        </li>
       </ul>
 
       <div className="tab-content">
-        <div id="tab1" className="tab-pane fade  show active">
-          {scorers.length > 0 && (
-            <>
+        {["Live", "Half Time", "Full Time"].includes(matchDetails.status) ? (
+          <div id="tab1" className="tab-pane fade show active">
+            {matchDetails.mvp &&
+            Object.keys(matchDetails.mvp).length > 0 &&
+            matchDetails.mvp.name ? (
               <div className="mb-2">
                 <div className="col-12 mt-3">
                   <h4
@@ -153,97 +161,136 @@ export default function TeamMatchDetails() {
                       marginBottom: "20px",
                     }}
                   >
-                    Scorer
+                    Best Player of The Game
                   </h4>
                 </div>
                 <div className="row">
-                  {scorers.map((scorer) => (
-                    <div
-                      key={scorer.id}
-                      className="card card-squad-item d-flex flex-row align-items-center p-2 position-relative mb-2"
-                    >
-                      {/* Player Image */}
-                      <img
-                        src={scorer.pic || "default-pic.jpg"}
-                        alt={scorer.name || "Unknown Player"}
-                        className="rounded-circle"
-                        style={{
-                          width: "50px",
-                          height: "50px",
-                          objectFit: "cover",
-                        }}
-                      />
-
-                      {/* Player Name & Position */}
-                      <div className="ms-3 flex-grow-1">
-                        <h6 className="mb-1">{scorer.name || "Unknown"}</h6>
-                        <small className="text-muted">
-                          {scorer.position || "Unknown"}
-                        </small>
-                      </div>
-
-                      {/* Goal Count - Right End */}
-                      <span className="player-number px-3 py-1">
-                        ⚽ {scorer.goalsCount}
-                      </span>
+                  <div className="card card-squad-item d-flex flex-row align-items-center p-2 position-relative mb-2">
+                    {/* Player Image */}
+                    <img
+                      src={matchDetails.mvp.pic || "default-pic.jpg"}
+                      alt={matchDetails.mvp.name || "Unknown Player"}
+                      className="rounded-circle"
+                      style={{
+                        width: "50px",
+                        height: "50px",
+                        objectFit: "cover",
+                      }}
+                    />
+                    {/* Player Name & Position */}
+                    <div className="ms-3 flex-grow-1">
+                      <h6 className="mb-1">
+                        {matchDetails.mvp.name || "Unknown"}
+                      </h6>
+                      <small className="text-muted">
+                        {matchDetails.mvp.position || "Unknown"}
+                      </small>
                     </div>
-                  ))}
+                  </div>
                 </div>
               </div>
-            </>
-          )}
-          {assister.length > 0 && (
-            <>
-              <div className="mb-2">
-                <div className="col-12 mt-3">
-                  <h4
-                    style={{
-                      color: "#50C878",
-                      fontWeight: "600",
-                      marginBottom: "20px",
-                    }}
-                  >
-                    Assist Provider
-                  </h4>
-                </div>
-                <div className="row">
-                  {assister.map((assist) => (
-                    <div
-                      key={assist.id}
-                      className="card card-squad-item d-flex flex-row align-items-center p-2 position-relative mb-2"
+            ) : null}
+
+            {scorers.length > 0 && (
+              <>
+                <div className="mb-2">
+                  <div className="col-12 mt-3">
+                    <h4
+                      style={{
+                        color: "#50C878",
+                        fontWeight: "600",
+                        marginBottom: "20px",
+                      }}
                     >
-                      {/* Player Image */}
-                      <img
-                        src={assist.pic || "default-pic.jpg"}
-                        alt={assist.name || "Unknown Player"}
-                        className="rounded-circle"
-                        style={{
-                          width: "50px",
-                          height: "50px",
-                          objectFit: "cover",
-                        }}
-                      />
-
-                      {/* Player Name & Position */}
-                      <div className="ms-3 flex-grow-1">
-                        <h6 className="mb-1">{assist.name || "Unknown"}</h6>
-                        <small className="text-muted">
-                          {assist.position || "Unknown"}
-                        </small>
+                      Scorer
+                    </h4>
+                  </div>
+                  <div className="row">
+                    {scorers.map((scorer) => (
+                      <div
+                        key={scorer.id}
+                        className="card card-squad-item d-flex flex-row align-items-center p-2 position-relative mb-2"
+                      >
+                        <img
+                          src={scorer.pic || "default-pic.jpg"}
+                          alt={scorer.name || "Unknown Player"}
+                          className="rounded-circle"
+                          style={{
+                            width: "50px",
+                            height: "50px",
+                            objectFit: "cover",
+                          }}
+                        />
+                        <div className="ms-3 flex-grow-1">
+                          <h6 className="mb-1">{scorer.name || "Unknown"}</h6>
+                          <small className="text-muted">
+                            {scorer.position || "Unknown"}
+                          </small>
+                        </div>
+                        <span className="player-number px-3 py-1">
+                          ⚽ {scorer.goalsCount}
+                        </span>
                       </div>
-
-                      {/* Goal Count - Right End */}
-                      <span className="player-number px-3 py-1">
-                        👟{assist.assistCount}
-                      </span>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
-              </div>
-            </>
-          )}
-        </div>
-        {/* Tabs Content */}
+              </>
+            )}
+            {assister.length > 0 && (
+              <>
+                <div className="mb-2">
+                  <div className="col-12 mt-3">
+                    <h4
+                      style={{
+                        color: "#50C878",
+                        fontWeight: "600",
+                        marginBottom: "20px",
+                      }}
+                    >
+                      Assist Provider
+                    </h4>
+                  </div>
+                  <div className="row">
+                    {assister.map((assist) => (
+                      <div
+                        key={assist.id}
+                        className="card card-squad-item d-flex flex-row align-items-center p-2 position-relative mb-2"
+                      >
+                        <img
+                          src={assist.pic || "default-pic.jpg"}
+                          alt={assist.name || "Unknown Player"}
+                          className="rounded-circle"
+                          style={{
+                            width: "50px",
+                            height: "50px",
+                            objectFit: "cover",
+                          }}
+                        />
+                        <div className="ms-3 flex-grow-1">
+                          <h6 className="mb-1">{assist.name || "Unknown"}</h6>
+                          <small className="text-muted">
+                            {assist.position || "Unknown"}
+                          </small>
+                        </div>
+                        <span className="player-number px-3 py-1">
+                          👟{assist.assistCount}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
+        ) : (
+          <div className="d-flex justify-content-center align-items-center">
+            <p className="text-muted text-center">
+              Overview available at the time of the match!
+            </p>
+          </div>
+        )}
+
+        {/* Tab2 Content */}
         <div id="tab2" className="tab-pane fade">
           <div className="row">
             {/* Team A Section */}
@@ -390,6 +437,47 @@ export default function TeamMatchDetails() {
                     ))}
                   </div>
                 </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/**tab3 */}
+        <div id="tab3" className="tab-pane fade">
+          <div className="row">
+            <div className="card card-squad-item mt-3">
+              <div className="col-12 mt-2">
+                <h4
+                  style={{
+                    color: "#50C878",
+                    fontWeight: "600",
+                    marginBottom: "20px",
+                  }}
+                >
+                  About Match
+                </h4>
+              </div>
+              <div className="col-12">
+                <p className="text-muted">
+                  <strong>Match Official Name:</strong>
+                  {matchDetails.createdBy}
+                </p>
+                <p className="text-muted">
+                  <strong>Match Date:</strong>
+                  {matchDetails.matchDate}
+                </p>
+                <p className="text-muted">
+                  <strong>Match Time:</strong>
+                  {matchDetails.matchTime}
+                </p>
+                <p className="text-muted">
+                  <strong>Home Team:</strong>
+                  {matchDetails.teams?.teamA?.name}
+                </p>
+                <p className="text-muted">
+                  <strong>Away Team:</strong>
+                  {matchDetails.teams?.teamB?.name}
+                </p>
               </div>
             </div>
           </div>
