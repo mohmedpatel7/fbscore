@@ -132,6 +132,41 @@ export const fetchTeamDetails = createAsyncThunk(
   }
 );
 
+// Function for fetching other team details.
+export const fetchOtherTeamDetails = createAsyncThunk(
+  "fetchOtherTeamDetails",
+  async (teamid, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("teamtoken");
+      if (!token) {
+        return rejectWithValue({
+          message: "Authentication token is missing. Please log in again.",
+        });
+      }
+
+      const response = await fetch(`${url}api/team/getTeamDetails/${teamid}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "team-token": token,
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData);
+      }
+
+      const data = await response.json();
+      return data; // Return only the `response` field
+    } catch (error) {
+      return rejectWithValue({
+        message: "Failed to fetch user details. Please try again later.",
+      });
+    }
+  }
+);
+
 //Fetching all users which are not in any team.Sign in reuired for team owner.
 export const fetchAvailableUsers = createAsyncThunk(
   "fetchAvailableUsers",
@@ -347,6 +382,7 @@ const teamSlice = createSlice({
   initialState: {
     isLoading: false,
     teamData: null,
+    otherTeamData: null,
     availableUsers: null,
     playerReq: null,
     playerProfile: null,
@@ -416,6 +452,21 @@ const teamSlice = createSlice({
       state.error = null;
     });
     builder.addCase(fetchTeamDetails.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload?.message || "Unknown error occurred.";
+    });
+
+    //handle fetch other team details.
+    builder.addCase(fetchOtherTeamDetails.pending, (state) => {
+      state.isLoading = true;
+      state.error = null;
+    });
+    builder.addCase(fetchOtherTeamDetails.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.otherTeamData = action.payload;
+      state.error = null;
+    });
+    builder.addCase(fetchOtherTeamDetails.rejected, (state, action) => {
       state.isLoading = false;
       state.error = action.payload?.message || "Unknown error occurred.";
     });

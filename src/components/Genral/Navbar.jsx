@@ -177,7 +177,7 @@ export default function Navbar() {
                       <Dropdown.Item>
                         <button
                           className="btn"
-                          onClick={() => navigate("/team-profile")}
+                          onClick={() => navigate("/Teamprofile")}
                         >
                           Profile
                         </button>
