@@ -6,6 +6,7 @@ import Posts from "./components/Post/Posts";
 import Signup from "./components/Authentication/Signup";
 import Signin from "./components/Authentication/Signin";
 import Otpverify from "./components/Authentication/Otpverify";
+import PlayerProfile from "./components/Authentication/PlayerProfile";
 import UploadPost from "./components/Post/UploadPost";
 import SignupLandPage from "./components/Genral/Signuplandpage";
 import SigninLandPage from "./components/Genral/Signinlandpage";
@@ -31,6 +32,7 @@ function App() {
         <Route exact path="/Signup" element={<Signup />} />
         <Route exact path="/Signin" element={<Signin />} />
         <Route exact path="/OtpVerify" element={<Otpverify />} />
+        <Route exact path="/Playerprofile" element={<PlayerProfile />} />
         <Route exact path="/Upload" element={<UploadPost />} />
         <Route exact path="/SignupLandPage" element={<SignupLandPage />} />
         <Route exact path="/SigninLandPage" element={<SigninLandPage />} />

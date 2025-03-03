@@ -130,7 +130,7 @@ export default function Navbar() {
                       <Dropdown.Item>
                         <button
                           className="btn"
-                          onClick={() => navigate("/user-profile")}
+                          onClick={() => navigate("/Playerprofile")}
                         >
                           Profile
                         </button>
