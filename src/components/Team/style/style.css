@@ -250,15 +250,19 @@
 }
 
 .hover-effect {
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .hover-effect:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transform: translateY(-5px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .tab-content {
     min-height: 400px;
     /* Adjust as per your content */
+}
+
+.logo-click:hover {
+    cursor: pointer;
 }

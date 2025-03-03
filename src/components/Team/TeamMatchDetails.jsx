@@ -1,9 +1,13 @@
 import { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { fetchMatchDetails } from "../../Redux/fetures/Teamslice";
+import {
+  fetchMatchDetails,
+  fetchOtherTeamDetails,
+} from "../../Redux/fetures/Teamslice";
 import { useToast } from "../Genral/ToastContext";
 import "./style/style.css";
+import { useNavigate } from "react-router-dom";
 
 export default function TeamMatchDetails() {
   const { matchId } = useParams();
@@ -11,6 +15,7 @@ export default function TeamMatchDetails() {
   const { showToast } = useToast();
 
   const { matchDetails } = useSelector((state) => state.teamSlice);
+  const navigate = useNavigate();
 
   useEffect(() => {
     dispatch(fetchMatchDetails(matchId));
@@ -60,6 +65,15 @@ export default function TeamMatchDetails() {
     return <div className="container mt-4">Loading match details...</div>;
   }
 
+  const handleOtherTeamProfile = async (teamid) => {
+    try {
+      dispatch(fetchOtherTeamDetails(teamid));
+      navigate(`/OtherTeamProfile/${teamid}`);
+    } catch (error) {
+      showToast(error.message || "Error while fetching player profile!");
+    }
+  };
+
   return (
     <div className="container mt-4">
       <div
@@ -70,7 +84,12 @@ export default function TeamMatchDetails() {
           {/* Teams and Score */}
           <div className="d-flex align-items-center justify-content-between flex-wrap">
             {/* Team A */}
-            <div className="d-flex align-items-center flex-column flex-sm-row">
+            <div
+              className="d-flex align-items-center flex-column flex-sm-row logo-click"
+              onClick={() =>
+                handleOtherTeamProfile(matchDetails.teams.teamA.id)
+              }
+            >
               <img
                 src={matchDetails.teams.teamA.logo || "/placeholder.svg"}
                 alt={matchDetails.teams.teamA.name}
@@ -85,12 +104,17 @@ export default function TeamMatchDetails() {
             {/* Score */}
             <div className="text-center my-2" style={{ fontWeight: "bolder" }}>
               <span className="fs-4">
-                {matchDetails.score.teamA} - {matchDetails.score.teamB}
+                {matchDetails.score.teamA} : {matchDetails.score.teamB}
               </span>
             </div>
 
             {/* Team B (Name Below Logo on Mobile) */}
-            <div className="d-flex align-items-center flex-column flex-sm-row">
+            <div
+              className="d-flex align-items-center flex-column flex-sm-row logo-click"
+              onClick={() =>
+                handleOtherTeamProfile(matchDetails.teams.teamB.id)
+              }
+            >
               <img
                 src={matchDetails.teams.teamB.logo || "/placeholder.svg"}
                 alt={matchDetails.teams.teamB.name}
