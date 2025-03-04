@@ -87,6 +87,13 @@ export default function Navbar({ setShowModal }) {
                   </Link>
                 </li>
               )}
+              {isUser && (
+                <li className="nav-item me-3 mt-2">
+                  <Link className="nav-link" to="/PlayerTeam">
+                    Team
+                  </Link>
+                </li>
+              )}
             </div>
 
             <div className="d-flex align-items-center">
