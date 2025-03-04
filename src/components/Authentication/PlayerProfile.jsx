@@ -9,7 +9,6 @@ export default function PlayerProfile() {
   const { showToast } = useToast();
 
   const { data } = useSelector((state) => state.authSlice);
-  console.log(data);
 
   useEffect(() => {
     try {
@@ -17,7 +16,7 @@ export default function PlayerProfile() {
     } catch (error) {
       showToast(error.message || "Error while feching profile!", "danger");
     }
-  }, []);
+  }, [dispatch]);
 
   return (
     <div className="container mt-4">

@@ -10,7 +10,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { fetchUserDetails } from "../../Redux/fetures/authentication";
 import { fetchTeamDetails } from "../../Redux/fetures/Teamslice";
 
-export default function Navbar() {
+export default function Navbar({ setShowModal }) {
   const navigate = useNavigate();
   const { showToast } = useToast();
   const dispatch = useDispatch();
@@ -133,6 +133,14 @@ export default function Navbar() {
                           onClick={() => navigate("/Playerprofile")}
                         >
                           Profile
+                        </button>
+                      </Dropdown.Item>
+                      <Dropdown.Item>
+                        <button
+                          className="btn"
+                          onClick={() => setShowModal(true)}
+                        >
+                          Requests
                         </button>
                       </Dropdown.Item>
                       <Dropdown.Item>

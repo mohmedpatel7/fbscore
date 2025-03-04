@@ -62,34 +62,30 @@ h2 {
     font-weight: bold;
 }
 
-/* Info section styling */
-.info-section {
-    background-color: #f8f9fa;
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+/* Custom Modal Header */
+.custom-modal-header {
+    background-color: #ffffff;
+    /* Light gray background */
+    border-bottom: 2px solid #50C878;
+    /* Green border */
+
+    /* Center align title */
+    align-items: center;
 }
 
-.info-section h4 {
-    font-size: 1.8rem;
-    font-weight: bold;
-    color: #50C878;
+/* Close Button Customization */
+.custom-modal-header .btn-close {
+    position: absolute;
+    right: 15px;
+    top: 15px;
 }
 
-.info-section p {
-    font-size: 1rem;
-    color: #495057;
-    margin-bottom: 15px;
+/* Modal Animation */
+.modal.fade .modal-dialog {
+    transition: transform 0.4s ease-out;
+    transform: translateY(-10%);
 }
 
-.info-section ul {
-    list-style-type: disc;
-    margin-left: 20px;
-    padding-left: 10px;
-    color: #495057;
-}
-
-.info-section ul li {
-    font-size: 0.95rem;
-    margin-bottom: 10px;
+.modal.show .modal-dialog {
+    transform: translateY(0);
 }

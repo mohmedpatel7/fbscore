@@ -129,12 +129,82 @@ export const fetchUserDetails = createAsyncThunk(
   }
 );
 
+// Fetch team requests for signin user.
+export const fetchTeamReq = createAsyncThunk(
+  "fetchTeamReq",
+  async (_, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("usertoken");
+
+      if (!token) {
+        return rejectWithValue({
+          message: "Authentication token is missing. Please log in again.",
+        });
+      }
+
+      const response = await fetch(`${url}api/player/getTeamReq`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "auth-token": token,
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData);
+      }
+
+      const data = await response.json();
+      return data.response;
+    } catch (error) {
+      return rejectWithValue({
+        message: "Failed to fetch user details. Please try again later.",
+      });
+    }
+  }
+);
+
+// Api call for user action on team req.
+export const reqAction = createAsyncThunk(
+  "reqAction",
+  async ({ action, reqId }, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("usertoken");
+
+      if (!token) {
+        return rejectWithValue({
+          message: "Authentication token is missing. Please log in again.",
+        });
+      }
+
+      const response = await fetch(`${url}api/player/userAction/${reqId}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "auth-token": token },
+        body: JSON.stringify({ action }), // Send action as expected
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData);
+      }
+
+      return await response.json();
+    } catch (error) {
+      return rejectWithValue({
+        message: "Failed to process the request. Please try again.",
+      });
+    }
+  }
+);
+
 // Auth Slice
 const authSlice = createSlice({
   name: "auth",
   initialState: {
     isLoading: false,
     data: null,
+    teamReq: null,
     error: null,
   },
   extraReducers: (builder) => {
@@ -194,6 +264,36 @@ const authSlice = createSlice({
       state.error = null;
     });
     builder.addCase(fetchUserDetails.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload?.message || "Unknown error occurred.";
+    });
+
+    // Fetch team request cases
+    builder.addCase(fetchTeamReq.pending, (state) => {
+      state.isLoading = true;
+      state.error = null;
+    });
+    builder.addCase(fetchTeamReq.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.teamReq = action.payload;
+      state.error = null;
+    });
+    builder.addCase(fetchTeamReq.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload?.message || "Unknown error occurred.";
+    });
+
+    // User action on team req cases.
+    builder.addCase(reqAction.pending, (state) => {
+      state.isLoading = true;
+      state.error = null;
+    });
+    builder.addCase(reqAction.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.teamReq = action.payload;
+      state.error = null;
+    });
+    builder.addCase(reqAction.rejected, (state, action) => {
       state.isLoading = false;
       state.error = action.payload?.message || "Unknown error occurred.";
     });
