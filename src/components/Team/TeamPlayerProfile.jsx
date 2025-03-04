@@ -10,8 +10,7 @@ import { useToast } from "../Genral/ToastContext";
 import "./style/style.css";
 
 export default function TeamPlayerProfile() {
-  const [isPending, startTransition] = useTransition(); // Manage pending state for async transitions
-
+  const [isPending, startTransition] = useTransition();
   const { playerId } = useParams();
   const dispatch = useDispatch();
   const { showToast } = useToast();
@@ -21,14 +20,13 @@ export default function TeamPlayerProfile() {
 
   useEffect(() => {
     dispatch(fetchPlayerProfile(playerId));
-  }, []);
+  }, [dispatch, playerId]);
 
-  // Handle release player.
   const handleReleasePlayer = async (pid) => {
     startTransition(async () => {
       try {
         const result = await dispatch(releasePlayer(pid));
-        showToast(result.message || "Player Release successfully.", "success");
+        showToast(result.message || "Player released successfully.", "success");
         navigate("/TeamDashboard");
       } catch (error) {
         showToast(error.message || "Error while releasing player!", "danger");
@@ -39,22 +37,15 @@ export default function TeamPlayerProfile() {
   return (
     <div className="container mt-4">
       <div className="card shadow-lg p-4 position-relative">
-        {/* Three Dots Dropdown Menu */}
         <div className="position-absolute top-0 end-0 mt-2 me-2">
           <div className="dropdown">
             <button
               className="btn btn-light border-0"
-              type="button"
-              id="dropdownMenuButton"
               data-bs-toggle="dropdown"
-              aria-expanded="false"
             >
               <i className="fas fa-ellipsis-v"></i>
             </button>
-            <ul
-              className="dropdown-menu dropdown-menu-end"
-              aria-labelledby="dropdownMenuButton"
-            >
+            <ul className="dropdown-menu dropdown-menu-end">
               <li>
                 <button
                   className="dropdown-item dt-release"
@@ -69,75 +60,58 @@ export default function TeamPlayerProfile() {
         </div>
 
         <div className="row g-4 align-items-center">
-          {/* Profile Image */}
           <div className="col-md-4 text-center border-end">
             <img
               src={playerProfile?.player?.user?.pic}
               alt="Profile"
               className="rounded-circle border border-3"
-              style={{
-                height: "150px",
-                width: "150px",
-                objectFit: "cover",
-              }}
+              style={{ height: "150px", width: "150px", objectFit: "cover" }}
             />
             <h4 className="fw-bold mt-3">
               {playerProfile?.player?.user?.name}
             </h4>
-            <br />
             <h4>{playerProfile?.player?.playerNo}</h4>
           </div>
 
-          {/* User Info */}
           <div className="col-md-8">
             <div className="row">
-              {/* Contact Details */}
               <div className="col-md-6">
                 <h5 className="fw-bold" style={{ color: "#45b469" }}>
                   Contact Details
                 </h5>
                 <hr />
-                <p className="text-muted mb-1">
+                <p>
                   <strong>Email:</strong>{" "}
                   {playerProfile?.player?.user?.email || "N/A"}
                 </p>
-                <p className="text-muted mb-1">
+                <p>
                   <strong>Country:</strong>{" "}
                   {playerProfile?.player?.user?.country}
                 </p>
               </div>
-
-              {/* Personal Details */}
               <div className="col-md-6 border-start">
                 <h5 className="fw-bold" style={{ color: "#45b469" }}>
                   Personal Details
                 </h5>
                 <hr />
-                <p className="text-muted mb-1">
-                  <strong>Age:</strong> {playerProfile?.player?.user?.dob}
+                <p>
+                  <strong>Age:</strong> {playerProfile?.player?.user?.age}
                 </p>
-                <p className="text-muted mb-1">
+                <p>
                   <strong>Gender:</strong> {playerProfile?.player?.user?.gender}
                 </p>
-                <p className="text-muted">
+                <p>
                   <strong>Strong Foot:</strong>{" "}
                   {playerProfile?.player?.user?.foot}
                 </p>
               </div>
             </div>
 
-            {/* Player Stats */}
             <div className="mt-4 pt-3 border-top">
               <h5 className="fw-bold text-center" style={{ color: "#45b469" }}>
                 Player Stats
               </h5>
               <div className="row text-center">
-                {/*  <div className="col-4 border-end">
-                  <h6 className="text-muted">Matches</h6>
-                  <p className="fw-bold fs-4">
-                    {playerProfile?.player?.stats?.totalmatches}
-                  </p>
-                </div> */}
                 <div className="col-6 border-end">
                   <h6 className="text-muted">Goals</h6>
                   <p className="fw-bold fs-4">
@@ -161,24 +135,45 @@ export default function TeamPlayerProfile() {
           src={playerProfile?.player?.team?.teamlogo}
           alt="Team Logo"
           className="rounded-circle me-3"
-          style={{
-            height: "150px",
-            width: "150px",
-            borderRadius: "50%",
-            objectFit: "cover",
-          }}
+          style={{ height: "150px", width: "150px", objectFit: "cover" }}
         />
         <div>
           <h4>{playerProfile?.player?.team?.teamname}</h4>
-          <p className="text-muted mb-1">
+          <p>
             <strong>Owner:</strong> {playerProfile?.player?.team?.owner}
           </p>
-          <p className="text-muted mb-1">
+          <p>
             <strong>Email:</strong> {playerProfile?.player?.team?.teamemail}
           </p>
-          <p className="text-muted">
+          <p>
             <strong>Country:</strong> {playerProfile?.player?.team?.country}
           </p>
+        </div>
+      </div>
+
+      <div className="card p-3 mt-3 mb-3 team-profile">
+        <h5 className="fw-bold" style={{ color: "#45b469" }}>
+          Current Team Stats
+        </h5>
+        <div className="row text-center">
+          <div className="col-4 border-end">
+            <h6 className="text-muted">Matches Played</h6>
+            <p className="fw-bold fs-4">
+              {playerProfile?.player?.stats?.totalmatches || 0}
+            </p>
+          </div>
+          <div className="col-4 border-end">
+            <h6 className="text-muted">Goals Scored</h6>
+            <p className="fw-bold fs-4">
+              {playerProfile?.player?.stats?.currentgoals || 0}
+            </p>
+          </div>
+          <div className="col-4">
+            <h6 className="text-muted">Assists Made</h6>
+            <p className="fw-bold fs-4">
+              {playerProfile?.player?.stats?.currentassists || 0}
+            </p>
+          </div>
         </div>
       </div>
     </div>

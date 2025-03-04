@@ -121,7 +121,7 @@ export default function PlayerProfile() {
                 </div>
                 <div className="col-6">
                   <h6 className="text-muted">Assists</h6>
-                  <p className="fw-bold fs-4">{data?.stats?.totalassist}</p>
+                  <p className="fw-bold fs-4">{data?.stats?.totalassits}</p>
                 </div>
               </div>
             </div>
@@ -131,31 +131,57 @@ export default function PlayerProfile() {
 
       {/*team part*/}
       {data?.playerDetails?.teamname ? (
-        <div className="card p-3 d-flex flex-row align-items-center mt-3 mb-3 team-profile">
-          <img
-            src={data.playerDetails?.teamlogo}
-            alt={data.playerDetails?.teamname}
-            className="rounded-circle me-3"
-            style={{
-              height: "150px",
-              width: "150px",
-              borderRadius: "50%",
-              objectFit: "cover",
-            }}
-          />
-          <div>
-            <h4>{data.playerDetails?.teamname}</h4>
-            <p className="text-muted mb-1">
-              <strong>Owner:</strong> {data.playerDetails?.teamowner}
-            </p>
-            <p className="text-muted mb-1">
-              <strong>Email:</strong> {data.playerDetails?.teamemail}
-            </p>
-            <p className="text-muted">
-              <strong>Country:</strong> {data.playerDetails?.teamcountry}
-            </p>
+        <>
+          <div className="card p-3 d-flex flex-row align-items-center mt-3 mb-3 team-profile">
+            <img
+              src={data.playerDetails?.teamlogo}
+              alt={data.playerDetails?.teamname}
+              className="rounded-circle me-3"
+              style={{
+                height: "150px",
+                width: "150px",
+                borderRadius: "50%",
+                objectFit: "cover",
+              }}
+            />
+            <div>
+              <h4>{data.playerDetails?.teamname}</h4>
+              <p className="text-muted mb-1">
+                <strong>Owner:</strong> {data.playerDetails?.teamowner}
+              </p>
+              <p className="text-muted mb-1">
+                <strong>Email:</strong> {data.playerDetails?.teamemail}
+              </p>
+              <p className="text-muted">
+                <strong>Country:</strong> {data.playerDetails?.teamcountry}
+              </p>
+            </div>
           </div>
-        </div>
+
+          {/**stats for current team */}
+          <div className="card p-3 mt-3 mb-3 team-profile">
+            <h5 className="fw-bold mb-1" style={{ color: "#45b469" }}>
+              Current Team Stats
+            </h5>
+            <hr /> {/* Added horizontal line */}
+            <div className="row text-center">
+              <div className="col-4 border-end">
+                <h6 className="text-muted">Matches Played</h6>
+                <p className="fw-bold fs-4">{data?.stats?.totalmatches || 0}</p>
+              </div>
+              <div className="col-4 border-end">
+                <h6 className="text-muted">Goals Scored</h6>
+                <p className="fw-bold fs-4">{data?.stats?.currentgoals || 0}</p>
+              </div>
+              <div className="col-4">
+                <h6 className="text-muted">Assists Made</h6>
+                <p className="fw-bold fs-4">
+                  {data?.stats?.currentassists || 0}
+                </p>
+              </div>
+            </div>
+          </div>
+        </>
       ) : (
         <p className="text-center text-muted mt-3">
           User is not part of the team!
