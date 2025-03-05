@@ -1,64 +1,24 @@
-import { useEffect, useTransition } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import {
-  fetchPlayerProfile,
-  releasePlayer,
-} from "../../Redux/fetures/Teamslice";
-import { useNavigate } from "react-router-dom";
+import { fetchPlayerProfile } from "../../Redux/fetures/authentication";
 import { useToast } from "../Genral/ToastContext";
 import "./style/style.css";
 
-export default function TeamPlayerProfile() {
-  const [isPending, startTransition] = useTransition();
+export default function OtherPlayerProfile() {
   const { playerId } = useParams();
   const dispatch = useDispatch();
   const { showToast } = useToast();
-  const navigate = useNavigate();
 
-  const { playerProfile } = useSelector((state) => state.teamSlice);
+  const { playerProfile } = useSelector((state) => state.authSlice);
 
   useEffect(() => {
     dispatch(fetchPlayerProfile(playerId));
   }, [dispatch, playerId]);
 
-  const handleReleasePlayer = async (pid) => {
-    startTransition(async () => {
-      try {
-        const result = await dispatch(releasePlayer(pid));
-        showToast(result.message || "Player released successfully.", "success");
-        navigate("/TeamDashboard");
-      } catch (error) {
-        showToast(error.message || "Error while releasing player!", "danger");
-      }
-    });
-  };
-
   return (
     <div className="container mt-4">
       <div className="card shadow-lg p-4 position-relative">
-        <div className="position-absolute top-0 end-0 mt-2 me-2">
-          <div className="dropdown">
-            <button
-              className="btn btn-light border-0"
-              data-bs-toggle="dropdown"
-            >
-              <i className="fas fa-ellipsis-v"></i>
-            </button>
-            <ul className="dropdown-menu dropdown-menu-end">
-              <li>
-                <button
-                  className="dropdown-item dt-release"
-                  onClick={() => handleReleasePlayer(playerId)}
-                  disabled={isPending}
-                >
-                  Release
-                </button>
-              </li>
-            </ul>
-          </div>
-        </div>
-
         <div className="row g-4 align-items-center">
           <div className="col-md-4 text-center border-end">
             <img

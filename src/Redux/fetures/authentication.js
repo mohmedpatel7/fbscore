@@ -268,6 +268,41 @@ export const fetchOtherTeamDetails = createAsyncThunk(
   }
 );
 
+// Fetching squad player profile.
+export const fetchPlayerProfile = createAsyncThunk(
+  "fetchPlayerProfile",
+  async (playerId, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("usertoken");
+      if (!token) {
+        return rejectWithValue({
+          message: "Authentication token is missing. Please log in again.",
+        });
+      }
+
+      const response = await fetch(
+        `${url}api/auth/getPlayerDetails/${playerId}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "auth-token": token,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData);
+      }
+
+      return response.json();
+    } catch (error) {
+      return rejectWithValue({ message: "Failed to fethc player details!" });
+    }
+  }
+);
+
 // Auth Slice
 const authSlice = createSlice({
   name: "auth",
@@ -277,6 +312,7 @@ const authSlice = createSlice({
     teamReq: null,
     matchDetails: null,
     otherTeamData: null,
+    playerProfile: null,
     error: null,
   },
   extraReducers: (builder) => {
@@ -396,6 +432,21 @@ const authSlice = createSlice({
       state.error = null;
     });
     builder.addCase(fetchOtherTeamDetails.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload?.message || "Unknown error occurred.";
+    });
+
+    //Handle player profile cases.
+    builder.addCase(fetchPlayerProfile.pending, (state) => {
+      state.isLoading = true;
+      state.error = null;
+    });
+    builder.addCase(fetchPlayerProfile.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.playerProfile = action.payload;
+      state.error = null;
+    });
+    builder.addCase(fetchPlayerProfile.rejected, (state, action) => {
       state.isLoading = false;
       state.error = action.payload?.message || "Unknown error occurred.";
     });

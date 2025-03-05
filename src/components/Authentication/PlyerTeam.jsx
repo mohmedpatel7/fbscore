@@ -6,6 +6,7 @@ import "./style/style.css";
 import {
   fetchUserDetails,
   fetchMatchDetails,
+  fetchPlayerProfile,
 } from "../../Redux/fetures/authentication";
 import { useNavigate } from "react-router-dom";
 
@@ -83,6 +84,16 @@ export default function PlyerTeam() {
         error.message || "Error while fetching match details!",
         "danger"
       );
+    }
+  };
+
+  // Function for squad player profile.
+  const playerProfileClick = (playerId) => {
+    try {
+      dispatch(fetchPlayerProfile(playerId)); // Fetch player details
+      navigate(`/OtherPlayerProfile/${playerId}`);
+    } catch (error) {
+      showToast(error.message || "Error while fetching player profile!");
     }
   };
 
@@ -411,6 +422,7 @@ export default function PlyerTeam() {
                   <div
                     key={player.playerId}
                     className="card card-squad-item d-flex flex-row align-items-center p-2 position-relative"
+                    onClick={() => playerProfileClick(player.playerId)}
                   >
                     {/* Player Image */}
                     <img

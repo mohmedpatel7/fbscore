@@ -11,6 +11,7 @@ import RequestModel from "./components/Authentication/RequestModel";
 import PlayerTeam from "./components/Authentication/PlyerTeam";
 import PlayerMatchDetails from "./components/Authentication/PlayerMatchDetails";
 import PlayerOtherTeamProfile from "./components/Authentication/PlayerOtherTeamProfile";
+import OtherPlayerProfile from "./components/Authentication/OtherPlayerProfile";
 import UploadPost from "./components/Post/UploadPost";
 import SignupLandPage from "./components/Genral/Signuplandpage";
 import SigninLandPage from "./components/Genral/Signinlandpage";
@@ -48,6 +49,11 @@ function App() {
           exact
           path="/PlayerOtherTeamProfile/:teamid"
           element={<PlayerOtherTeamProfile />}
+        />
+        <Route
+          exact
+          path="/OtherPlayerProfile/:playerId"
+          element={<OtherPlayerProfile />}
         />
         <Route exact path="/Upload" element={<UploadPost />} />
         <Route exact path="/SignupLandPage" element={<SignupLandPage />} />

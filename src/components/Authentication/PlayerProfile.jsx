@@ -23,7 +23,7 @@ export default function PlayerProfile() {
       <div className="card shadow-lg p-4 position-relative">
         {/* Three Dots Dropdown Menu */}
         <div className="position-absolute top-0 end-0 mt-2 me-2">
-          {/* <div className="dropdown">
+          <div className="dropdown">
             <button
               className="btn btn-light border-0"
               type="button"
@@ -38,16 +38,10 @@ export default function PlayerProfile() {
               aria-labelledby="dropdownMenuButton"
             >
               <li>
-                <button
-                  className="dropdown-item dt-release"
-                  onClick={() => handleReleasePlayer(playerId)}
-                  disabled={isPending}
-                >
-                  Release
-                </button>
+                <button className="dropdown-item ">Edit</button>
               </li>
             </ul>
-          </div> */}
+          </div>
         </div>
 
         <div className="row g-4 align-items-center">
@@ -99,6 +93,9 @@ export default function PlayerProfile() {
                 </p>
                 <p className="text-muted">
                   <strong>Strong Foot:</strong> {data?.foot || "N/A"}
+                </p>
+                <p className="text-muted">
+                  <strong>Playing Position:</strong> {data?.position || "N/A"}
                 </p>
               </div>
             </div>
