@@ -198,6 +198,76 @@ export const reqAction = createAsyncThunk(
   }
 );
 
+// Fetching match details.
+export const fetchMatchDetails = createAsyncThunk(
+  "matchDetails",
+  async (matchId, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("usertoken");
+      if (!token) {
+        return rejectWithValue({
+          message: "Authentication token is missing. Please log in again.",
+        });
+      }
+
+      const response = await fetch(`${url}api/auth/matchDetails/${matchId}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "auth-token": token,
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData);
+      }
+
+      const responseData = await response.json();
+      return responseData.data;
+    } catch (error) {
+      return rejectWithValue({
+        message: "Failed to fetches matches list for team!",
+      });
+    }
+  }
+);
+
+// Function for fetching other team details.
+export const fetchOtherTeamDetails = createAsyncThunk(
+  "fetchOtherTeamDetails",
+  async (teamid, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("usertoken");
+      if (!token) {
+        return rejectWithValue({
+          message: "Authentication token is missing. Please log in again.",
+        });
+      }
+
+      const response = await fetch(`${url}api/auth/getTeamDetails/${teamid}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "auth-token": token,
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData);
+      }
+
+      const data = await response.json();
+      return data; // Return only the `response` field
+    } catch (error) {
+      return rejectWithValue({
+        message: "Failed to fetch user details. Please try again later.",
+      });
+    }
+  }
+);
+
 // Auth Slice
 const authSlice = createSlice({
   name: "auth",
@@ -205,6 +275,8 @@ const authSlice = createSlice({
     isLoading: false,
     data: null,
     teamReq: null,
+    matchDetails: null,
+    otherTeamData: null,
     error: null,
   },
   extraReducers: (builder) => {
@@ -294,6 +366,36 @@ const authSlice = createSlice({
       state.error = null;
     });
     builder.addCase(reqAction.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload?.message || "Unknown error occurred.";
+    });
+
+    //Handle match details feching.
+    builder.addCase(fetchMatchDetails.pending, (state) => {
+      state.isLoading = true;
+      state.error = null;
+    });
+    builder.addCase(fetchMatchDetails.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.matchDetails = action.payload;
+      state.error = null;
+    });
+    builder.addCase(fetchMatchDetails.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload?.message || "Unknown error occurred.";
+    });
+
+    //handle fetch other team details.
+    builder.addCase(fetchOtherTeamDetails.pending, (state) => {
+      state.isLoading = true;
+      state.error = null;
+    });
+    builder.addCase(fetchOtherTeamDetails.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.otherTeamData = action.payload;
+      state.error = null;
+    });
+    builder.addCase(fetchOtherTeamDetails.rejected, (state, action) => {
       state.isLoading = false;
       state.error = action.payload?.message || "Unknown error occurred.";
     });

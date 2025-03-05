@@ -8,6 +8,9 @@ import Signin from "./components/Authentication/Signin";
 import Otpverify from "./components/Authentication/Otpverify";
 import PlayerProfile from "./components/Authentication/PlayerProfile";
 import RequestModel from "./components/Authentication/RequestModel";
+import PlayerTeam from "./components/Authentication/PlyerTeam";
+import PlayerMatchDetails from "./components/Authentication/PlayerMatchDetails";
+import PlayerOtherTeamProfile from "./components/Authentication/PlayerOtherTeamProfile";
 import UploadPost from "./components/Post/UploadPost";
 import SignupLandPage from "./components/Genral/Signuplandpage";
 import SigninLandPage from "./components/Genral/Signinlandpage";
@@ -19,7 +22,6 @@ import TeamPlayerProfile from "./components/Team/TeamPlayerProfile";
 import TeamMatchDetails from "./components/Team/TeamMatchDetails";
 import TeamProfile from "./components/Team/TeamProfile";
 import OtherTeamProfile from "./components/Team/OtherTeamProfile";
-import PlayerTeam from "./components/Authentication/PlyerTeam";
 import MatchOfficialSignup from "./components/Match/MatchOfficialSignup";
 import MatchOfficialSignin from "./components/Match/MatchOfficialSignin";
 import MatchOfficialOtpverify from "./components/Match/MatchOfficialOtpverify";
@@ -37,6 +39,16 @@ function App() {
         <Route exact path="/Signin" element={<Signin />} />
         <Route exact path="/OtpVerify" element={<Otpverify />} />
         <Route exact path="/Playerprofile" element={<PlayerProfile />} />
+        <Route
+          exact
+          path="/PlayerMatchDetails/:matchId"
+          element={<PlayerMatchDetails />}
+        />
+        <Route
+          exact
+          path="/PlayerOtherTeamProfile/:teamid"
+          element={<PlayerOtherTeamProfile />}
+        />
         <Route exact path="/Upload" element={<UploadPost />} />
         <Route exact path="/SignupLandPage" element={<SignupLandPage />} />
         <Route exact path="/SigninLandPage" element={<SigninLandPage />} />

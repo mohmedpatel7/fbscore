@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import {
   fetchMatchDetails,
   fetchOtherTeamDetails,
-} from "../../Redux/fetures/Teamslice";
+} from "../../Redux/fetures/authentication";
 import { useToast } from "../Genral/ToastContext";
 import "./style/style.css";
 import { useNavigate } from "react-router-dom";
@@ -14,15 +14,11 @@ export default function TeamMatchDetails() {
   const dispatch = useDispatch();
   const { showToast } = useToast();
 
-  const isTeamOwner = localStorage.getItem("teamtoken");
-
-  const { matchDetails } = useSelector((state) => state.teamSlice);
+  const { matchDetails } = useSelector((state) => state.authSlice);
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (isTeamOwner) {
-      dispatch(fetchMatchDetails(matchId));
-    }
+    dispatch(fetchMatchDetails(matchId));
   }, [dispatch, matchId]);
 
   // Compute scorers only when matchDetails changes
@@ -72,7 +68,7 @@ export default function TeamMatchDetails() {
   const handleOtherTeamProfile = async (teamid) => {
     try {
       dispatch(fetchOtherTeamDetails(teamid));
-      navigate(`/OtherTeamProfile/${teamid}`);
+      navigate(`/PlayerOtherTeamProfile/${teamid}`);
     } catch (error) {
       showToast(error.message || "Error while fetching player profile!");
     }
@@ -218,6 +214,7 @@ export default function TeamMatchDetails() {
                 </div>
               </div>
             ) : null}
+
             <hr />
 
             {scorers.length > 0 && (
@@ -267,6 +264,7 @@ export default function TeamMatchDetails() {
             )}
 
             <hr />
+
             {assister.length > 0 && (
               <>
                 <div className="mb-2">
