@@ -3,10 +3,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchUserDetails } from "../../Redux/fetures/authentication";
 import { useToast } from "../Genral/ToastContext";
 import "./style/style.css";
+import { useNavigate } from "react-router-dom";
 
 export default function PlayerProfile() {
   const dispatch = useDispatch();
   const { showToast } = useToast();
+  const navigate = useNavigate();
 
   const { data } = useSelector((state) => state.authSlice);
 
@@ -38,7 +40,12 @@ export default function PlayerProfile() {
               aria-labelledby="dropdownMenuButton"
             >
               <li>
-                <button className="dropdown-item ">Edit</button>
+                <button
+                  className="dropdown-item "
+                  onClick={() => navigate("/UpdateUserProfile")}
+                >
+                  Edit
+                </button>
               </li>
             </ul>
           </div>

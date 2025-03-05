@@ -303,6 +303,39 @@ export const fetchPlayerProfile = createAsyncThunk(
   }
 );
 
+// Api call for updating user details.
+export const updateUserDetails = createAsyncThunk(
+  "updateUserDetails",
+  async (payload, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("usertoken");
+      if (!token) {
+        return rejectWithValue({
+          message: "Authentication token is missing. Please log in again.",
+        });
+      }
+
+      const response = await fetch(`${url}api/auth/updateUserDetails`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          "auth-token": token,
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData);
+      }
+
+      return response.json();
+    } catch (error) {
+      return rejectWithValue({ message: "Failed to fethc player details!" });
+    }
+  }
+);
+
 // Auth Slice
 const authSlice = createSlice({
   name: "auth",
@@ -313,6 +346,7 @@ const authSlice = createSlice({
     matchDetails: null,
     otherTeamData: null,
     playerProfile: null,
+    updateUser: null,
     error: null,
   },
   extraReducers: (builder) => {
@@ -447,6 +481,21 @@ const authSlice = createSlice({
       state.error = null;
     });
     builder.addCase(fetchPlayerProfile.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload?.message || "Unknown error occurred.";
+    });
+
+    //Handle update user profile cases.
+    builder.addCase(updateUserDetails.pending, (state) => {
+      state.isLoading = true;
+      state.error = null;
+    });
+    builder.addCase(updateUserDetails.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.updateUser = action.payload;
+      state.error = null;
+    });
+    builder.addCase(updateUserDetails.rejected, (state, action) => {
       state.isLoading = false;
       state.error = action.payload?.message || "Unknown error occurred.";
     });
