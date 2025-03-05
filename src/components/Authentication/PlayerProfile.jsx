@@ -121,7 +121,7 @@ export default function PlayerProfile() {
                 </div>
                 <div className="col-6">
                   <h6 className="text-muted">Assists</h6>
-                  <p className="fw-bold fs-4">{data?.stats?.totalassits}</p>
+                  <p className="fw-bold fs-4">{data?.stats?.totalassists}</p>
                 </div>
               </div>
             </div>

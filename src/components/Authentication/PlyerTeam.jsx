@@ -402,6 +402,43 @@ export default function PlyerTeam() {
               )}
             </div>
           )}
+
+          {activeTab === "Teammates" && (
+            <>
+              <h5 className="mb-3 mt-3">Squad List</h5>
+              <div className="d-flex flex-column gap-2">
+                {data.teammates.map((player) => (
+                  <div
+                    key={player.playerId}
+                    className="card card-squad-item d-flex flex-row align-items-center p-2 position-relative"
+                  >
+                    {/* Player Image */}
+                    <img
+                      src={player?.pic || "default-pic.jpg"}
+                      alt={player?.name}
+                      className="rounded-circle"
+                      style={{
+                        width: "50px",
+                        height: "50px",
+                        objectFit: "cover",
+                      }}
+                    />
+
+                    {/* Player Name & Position */}
+                    <div className="ms-3 flex-grow-1">
+                      <h6 className="mb-1">{player?.name}</h6>
+                      <small className="text-muted">{player?.position}</small>
+                    </div>
+
+                    {/* Player Number */}
+                    <span className="player-number px-3 py-1">
+                      {player?.jeresyNo}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
         </div>
       )}
     </div>

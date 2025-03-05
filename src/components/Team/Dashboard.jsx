@@ -350,7 +350,7 @@ const TeamDashboard = () => {
             )}
 
             {activeTab === "squad" && (
-              <div className="card card-squad-list p-3">
+              <>
                 <h5 className="mb-3">Squad List</h5>
                 <div className="d-flex flex-column gap-2">
                   {teamData.players.map((player) => (
@@ -386,7 +386,7 @@ const TeamDashboard = () => {
                     </div>
                   ))}
                 </div>
-              </div>
+              </>
             )}
 
             {activeTab === "matches" && (
