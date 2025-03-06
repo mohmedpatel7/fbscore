@@ -76,7 +76,7 @@ export default function Navbar({ setShowModal }) {
                 </Link>
               </li>
               <li className="nav-item me-3 mt-2">
-                <Link className="nav-link" to="/features">
+                <Link className="nav-link" to="/Matches">
                   Match
                 </Link>
               </li>

@@ -17,6 +17,7 @@ import ForgotPassword from "./components/Authentication/ForgotPassword";
 import UploadPost from "./components/Post/UploadPost";
 import SignupLandPage from "./components/Genral/Signuplandpage";
 import SigninLandPage from "./components/Genral/Signinlandpage";
+import Matches from "./components/Genral/Matches";
 import TeamSignup from "./components/Team/TeamSignup";
 import TeamSignin from "./components/Team/TeamSignin";
 import TeamOtpverify from "./components/Team/TeamOtpverify";
@@ -108,6 +109,7 @@ function App() {
           path="/Matchofficialotpverify"
           element={<MatchOfficialOtpverify />}
         />
+        <Route exact path="/Matches" element={<Matches />} />
       </Routes>
       <RequestModel showModal={showModal} setShowModal={setShowModal} />
 

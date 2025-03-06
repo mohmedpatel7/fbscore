@@ -63,42 +63,89 @@ export const uploadPost = createAsyncThunk(
   }
 );
 
+// Fetching all matches.signin not required.
+export const fetchAllMatches = createAsyncThunk(
+  "fetchAllMatches",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await fetch(`${url}api/match/matches`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      // Handle non-OK responses
+      if (!response.ok) {
+        const errorData = await response
+          .json()
+          .catch(() => ({ message: "Unknown error occurred" }));
+        return rejectWithValue(errorData);
+      }
+
+      // Return the success response
+      const data = await response.json();
+      return data.matches;
+    } catch (error) {
+      return rejectWithValue({
+        message: "Internal server error..!",
+      });
+    }
+  }
+);
+
 const postSlice = createSlice({
   name: "postSlice",
   initialState: {
     posts: [],
-    loading: false,
+    isLoading: false,
+    matches: null,
     error: null,
   },
 
   extraReducers: (builder) => {
     // Handle fetching all posts cases
     builder.addCase(fetchPosts.pending, (state) => {
-      state.loading = true;
+      state.isLoading = true;
       state.error = null;
     });
     builder.addCase(fetchPosts.fulfilled, (state, action) => {
-      state.loading = false;
+      state.isLoading = false;
       state.posts = action.payload;
       state.error = null;
     });
     builder.addCase(fetchPosts.rejected, (state, action) => {
-      state.loading = false;
+      state.isLoading = false;
       state.error = action.payload.message;
     });
 
     //Handle upload post cases
     builder.addCase(uploadPost.pending, (state) => {
-      state.loading = true;
+      state.isLoading = true;
       state.error = null;
     });
     builder.addCase(uploadPost.fulfilled, (state, action) => {
-      state.loading = false;
+      state.isLoading = false;
       state.posts = action.payload;
     });
     builder.addCase(uploadPost.rejected, (state, action) => {
-      state.loading = false;
+      state.isLoading = false;
       state.error = action.payload?.message || "Unknown error occurred."; // Use backend error or fallback
+    });
+
+    //Handle fetching all matches cases.
+    builder.addCase(fetchAllMatches.pending, (state) => {
+      state.isLoading = true;
+      state.error = null;
+    });
+    builder.addCase(fetchAllMatches.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.matches = action.payload;
+      state.error = null;
+    });
+    builder.addCase(fetchAllMatches.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload.message;
     });
   },
 });
