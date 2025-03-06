@@ -1,7 +1,7 @@
 import React, { useState, useTransition } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useToast } from "../Genral/ToastContext";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./style/style.css";
 import { SignUp } from "../../Redux/fetures/Matchofficial";
@@ -22,6 +22,8 @@ export default function Otpverify() {
   const isMatchOfficial = !!localStorage.getItem("matchOfficialtoken");
 
   const { showToast } = useToast(); // Custom toast hook for displaying messages
+
+  const { isLoading } = useSelector((state) => state.matchOfficialSlice);
 
   // Handler for OTP input changes
   const handleChange = (e) => {
@@ -121,7 +123,7 @@ export default function Otpverify() {
                   className="btn btn-primary"
                   disabled={isPending} // Disable button during pending state
                 >
-                  Verify
+                  {isLoading ? "Verifying" : "Verify"}
                 </button>
               </form>
             </div>

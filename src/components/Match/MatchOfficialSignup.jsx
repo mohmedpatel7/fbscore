@@ -3,7 +3,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./style/style.css";
 import { useNavigate } from "react-router-dom"; // Navigation hook for routing.
 import { useToast } from "../Genral/ToastContext"; // Custom Toast Context for notifications.
-import { useDispatch } from "react-redux"; // Dispatch hook for Redux actions.
+import { useDispatch, useSelector } from "react-redux"; // Dispatch hook for Redux actions.
 import { sendOtp } from "../../Redux/fetures/Matchofficial"; // Redux action for signup.
 import { FaEye, FaEyeSlash } from "react-icons/fa"; // FontAwesome icons for password visibility
 
@@ -28,6 +28,8 @@ export default function MatchOfficialSignup() {
   const isUser = !!localStorage.getItem("usertoken");
   const isTeamOwner = !!localStorage.getItem("teamtoken");
   const isMatchOfficial = !!localStorage.getItem("matchOfficialtoken");
+
+  const { isLoading } = useSelector((state) => state.matchOfficialSlice);
 
   // Handle input field changes for text inputs.
   const handleChange = (e) => {
@@ -217,7 +219,7 @@ export default function MatchOfficialSignup() {
                   className="btn btn-primary ms-2"
                   disabled={isPending}
                 >
-                  Submit
+                  {isLoading ? "Submiting" : "Submit"}
                 </button>
               </form>
             </div>

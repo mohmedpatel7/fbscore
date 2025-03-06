@@ -376,6 +376,31 @@ export const fetchMatchDetails = createAsyncThunk(
   }
 );
 
+// Api call for forgot Password .
+export const forgotPassword = createAsyncThunk(
+  "forgotPassword",
+  async (payload, { rejectWithValue }) => {
+    try {
+      const response = await fetch(`${url}api/team/forgotpassword`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData);
+      }
+
+      return response.json();
+    } catch (error) {
+      return rejectWithValue({ message: "Failed to fethc player details!" });
+    }
+  }
+);
+
 // team Slice
 const teamSlice = createSlice({
   name: "team",
@@ -389,6 +414,7 @@ const teamSlice = createSlice({
     release: null,
     matchesList: null,
     matchDetails: null,
+    updateUser: null,
     error: null, // Error string or object from backend
   },
 
@@ -557,6 +583,21 @@ const teamSlice = createSlice({
       state.error = null;
     });
     builder.addCase(fetchMatchDetails.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload?.message || "Unknown error occurred.";
+    });
+
+    //Handle update user password cases.
+    builder.addCase(forgotPassword.pending, (state) => {
+      state.isLoading = true;
+      state.error = null;
+    });
+    builder.addCase(forgotPassword.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.updateUser = action.payload;
+      state.error = null;
+    });
+    builder.addCase(forgotPassword.rejected, (state, action) => {
       state.isLoading = false;
       state.error = action.payload?.message || "Unknown error occurred.";
     });

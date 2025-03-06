@@ -20,7 +20,6 @@ export const sendOtp = createAsyncThunk(
 
       return await response.json();
     } catch (error) {
-      console.error("Send OTP Error:", error);
       return rejectWithValue({
         message: "Failed to send OTP. Please try again.",
       });
@@ -336,6 +335,31 @@ export const updateUserDetails = createAsyncThunk(
   }
 );
 
+// Api call for forgot Password .
+export const forgotPassword = createAsyncThunk(
+  "forgotPassword",
+  async (payload, { rejectWithValue }) => {
+    try {
+      const response = await fetch(`${url}api/auth/forgotpassword`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData);
+      }
+
+      return response.json();
+    } catch (error) {
+      return rejectWithValue({ message: "Failed to fethc player details!" });
+    }
+  }
+);
+
 // Auth Slice
 const authSlice = createSlice({
   name: "auth",
@@ -496,6 +520,21 @@ const authSlice = createSlice({
       state.error = null;
     });
     builder.addCase(updateUserDetails.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload?.message || "Unknown error occurred.";
+    });
+
+    //Handle update user password cases.
+    builder.addCase(forgotPassword.pending, (state) => {
+      state.isLoading = true;
+      state.error = null;
+    });
+    builder.addCase(forgotPassword.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.updateUser = action.payload;
+      state.error = null;
+    });
+    builder.addCase(forgotPassword.rejected, (state, action) => {
       state.isLoading = false;
       state.error = action.payload?.message || "Unknown error occurred.";
     });

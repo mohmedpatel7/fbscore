@@ -13,6 +13,7 @@ import PlayerMatchDetails from "./components/Authentication/PlayerMatchDetails";
 import PlayerOtherTeamProfile from "./components/Authentication/PlayerOtherTeamProfile";
 import OtherPlayerProfile from "./components/Authentication/OtherPlayerProfile";
 import UpdateUserProfile from "./components/Authentication/updateUserProfile";
+import ForgotPassword from "./components/Authentication/ForgotPassword";
 import UploadPost from "./components/Post/UploadPost";
 import SignupLandPage from "./components/Genral/Signuplandpage";
 import SigninLandPage from "./components/Genral/Signinlandpage";
@@ -24,6 +25,7 @@ import TeamPlayerProfile from "./components/Team/TeamPlayerProfile";
 import TeamMatchDetails from "./components/Team/TeamMatchDetails";
 import TeamProfile from "./components/Team/TeamProfile";
 import OtherTeamProfile from "./components/Team/OtherTeamProfile";
+import TeamForgotPassword from "./components/Team/TeamForgotPassword";
 import MatchOfficialSignup from "./components/Match/MatchOfficialSignup";
 import MatchOfficialSignin from "./components/Match/MatchOfficialSignin";
 import MatchOfficialOtpverify from "./components/Match/MatchOfficialOtpverify";
@@ -61,6 +63,7 @@ function App() {
           path="/UpdateUserProfile"
           element={<UpdateUserProfile />}
         />
+        <Route exact path="/ForgotPassword" element={<ForgotPassword />} />
         <Route exact path="/Upload" element={<UploadPost />} />
         <Route exact path="/SignupLandPage" element={<SignupLandPage />} />
         <Route exact path="/SigninLandPage" element={<SigninLandPage />} />
@@ -84,6 +87,11 @@ function App() {
           exact
           path="/OtherTeamProfile/:teamid"
           element={<OtherTeamProfile />}
+        />
+        <Route
+          exact
+          path="/TeamForgotPassword"
+          element={<TeamForgotPassword />}
         />
         <Route
           exact

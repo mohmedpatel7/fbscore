@@ -3,7 +3,7 @@ import "bootstrap/dist/css/bootstrap.min.css"; // Importing Bootstrap CSS for st
 import "./style/style.css"; // Importing custom CSS
 import { useToast } from "../Genral/ToastContext"; // Custom toast context for notifications
 import { useNavigate } from "react-router-dom"; // For navigation between routes
-import { useDispatch } from "react-redux"; // Redux dispatch to send actions
+import { useDispatch, useSelector } from "react-redux"; // Redux dispatch to send actions
 import { Signin } from "../../Redux/fetures/Matchofficial"; // Redux action for sign-in
 import { FaEye, FaEyeSlash } from "react-icons/fa"; // FontAwesome icons for password visibility
 
@@ -23,6 +23,8 @@ export default function MatchOfficialSignin() {
   const isUser = !!localStorage.getItem("usertoken");
   const isTeamOwner = !!localStorage.getItem("teamtoken");
   const isMatchOfficial = !!localStorage.getItem("matchOfficialtoken");
+
+  const { isLoading } = useSelector((state) => state.matchOfficialSlice);
 
   // Handles form submission
   const handleSubmit = async (event) => {
@@ -161,7 +163,7 @@ export default function MatchOfficialSignin() {
                   className="btn btn-primary ms-2"
                   disabled={isPending} // Disable button when pending
                 >
-                  Submit
+                  {isLoading ? "Submiting" : "Submit"}
                 </button>
               </form>
 
