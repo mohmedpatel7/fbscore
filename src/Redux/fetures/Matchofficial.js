@@ -117,6 +117,33 @@ export const forgotPassword = createAsyncThunk(
   }
 );
 
+export const fetchedTeamlist = createAsyncThunk(
+  "fetchedTeamlist",
+  async (_, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("matchOfficialtoken");
+      if (!token) return rejectWithValue({ message: "Authorization failed!" });
+
+      const response = await fetch(
+        "http://localhost:5000/api/match/getTeamNames",
+        {
+          method: "GET",
+          "Content-Type": "application/json",
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData);
+      }
+
+      return response.data.json();
+    } catch (error) {
+      return rejectWithValue({ message: "Failed to fethc player details!" });
+    }
+  }
+);
+
 // Matchofficial Slice
 const matchofficialSlice = createSlice({
   name: "matchofficial",
@@ -124,6 +151,7 @@ const matchofficialSlice = createSlice({
     isLoading: false,
     matchData: null,
     updateUser: null,
+    teamList: null,
     error: null, // Error string or object from backend
   },
 
@@ -187,6 +215,21 @@ const matchofficialSlice = createSlice({
       state.error = null;
     });
     builder.addCase(forgotPassword.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload?.message || "Unknown error occurred.";
+    });
+
+    //Handle fetching team list cases.
+    builder.addCase(fetchedTeamlist.pending, (state) => {
+      state.isLoading = true;
+      state.error = null;
+    });
+    builder.addCase(fetchedTeamlist.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.teamList = action.payload;
+      state.error = null;
+    });
+    builder.addCase(forgotPfetchedTeamlistassword.rejected, (state, action) => {
       state.isLoading = false;
       state.error = action.payload?.message || "Unknown error occurred.";
     });

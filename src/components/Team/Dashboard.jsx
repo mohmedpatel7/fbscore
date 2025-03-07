@@ -107,7 +107,7 @@ const TeamDashboard = () => {
   const [visibleOngoing, setVisibleOngoing] = useState(10); // Show next match initially
 
   if (!matchesList || !matchesList.matches) {
-    return <p>Loading matches...</p>;
+    return <></>;
   }
 
   const matches = matchesList.matches || [];

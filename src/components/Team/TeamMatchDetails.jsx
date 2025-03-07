@@ -65,10 +65,6 @@ export default function TeamMatchDetails() {
     );
   }, [matchDetails]);
 
-  if (!matchDetails) {
-    return <div className="container mt-4">Loading match details...</div>;
-  }
-
   const handleOtherTeamProfile = async (teamid) => {
     try {
       dispatch(fetchOtherTeamDetails(teamid));
@@ -77,6 +73,10 @@ export default function TeamMatchDetails() {
       showToast(error.message || "Error while fetching player profile!");
     }
   };
+
+  if (!matchDetails) {
+    return <></>;
+  }
 
   return (
     <div className="container mt-4">
