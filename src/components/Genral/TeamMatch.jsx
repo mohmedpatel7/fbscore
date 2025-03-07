@@ -67,6 +67,16 @@ export default function TeamMatch() {
     }
   };
 
+  // Handle fetching match details.
+  const handleMatchDeatils = async (matchId) => {
+    try {
+      dispatch(fetchMatchDetails(matchId));
+      navigate(`/CommonMatchDetails/${matchId}`);
+    } catch (error) {
+      showToast(error.message || "Error while fetching match details!");
+    }
+  };
+
   return (
     <div>
       {isTeamOwner && (

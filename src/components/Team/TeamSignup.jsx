@@ -322,6 +322,14 @@ export default function TeamSignup() {
                   {isLoading ? "Submiting" : "Submit"}
                 </button>
               </form>
+
+              <hr />
+              <button
+                className="btn-signin mt-2 w-100"
+                onClick={() => navigate("/TeamSignin")}
+              >
+                Already have an account!
+              </button>
             </div>
           </div>
         </div>

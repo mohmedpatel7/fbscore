@@ -222,6 +222,14 @@ export default function MatchOfficialSignup() {
                   {isLoading ? "Submiting" : "Submit"}
                 </button>
               </form>
+
+              <hr />
+              <button
+                className="btn-signin mt-2 w-100"
+                onClick={() => navigate("/Matchofficialsignin")}
+              >
+                Already have an account!
+              </button>
             </div>
           </div>
         </div>

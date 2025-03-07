@@ -167,8 +167,14 @@ export default function MatchOfficialSignin() {
                 </button>
               </form>
 
+              <hr />
               {/* Forgot Password Link */}
-              <button className="btn btn-link mt-3">Forgot Password</button>
+              <button
+                className="btn btn-signin mt-3 w-100"
+                onClick={() => navigate("/")}
+              >
+                Forgot Password
+              </button>
             </div>
           </div>
         </div>

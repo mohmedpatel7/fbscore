@@ -29,6 +29,7 @@
     font-weight: bold;
     width: 1in;
     height: 0.5in;
+    transition: transform 0.2s ease-in-out;
 }
 
 .btn-signup:hover {
@@ -36,6 +37,7 @@
     border: #F5F5F5;
     color: #F5F5F5;
     font-weight: bold;
+    transform: translateY(-3px);
 }
 
 .btn-signin {
@@ -45,6 +47,7 @@
     font-weight: bold;
     font-size: large;
     width: 1in;
+    transition: transform 0.2s ease-in-out;
 }
 
 .btn-signin:hover {
@@ -53,6 +56,7 @@
     color: #50C878;
     font-weight: bold;
     width: 1in;
+    transform: translateY(-3px);
 }
 
 .nav-link {

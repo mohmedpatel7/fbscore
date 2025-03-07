@@ -18,6 +18,7 @@ import UploadPost from "./components/Post/UploadPost";
 import SignupLandPage from "./components/Genral/Signuplandpage";
 import SigninLandPage from "./components/Genral/Signinlandpage";
 import Matches from "./components/Genral/Matches";
+import CommonMatchDetails from "./components/Genral/CommonMatchDetails";
 import TeamSignup from "./components/Team/TeamSignup";
 import TeamSignin from "./components/Team/TeamSignin";
 import TeamOtpverify from "./components/Team/TeamOtpverify";
@@ -69,7 +70,7 @@ function App() {
         <Route exact path="/SignupLandPage" element={<SignupLandPage />} />
         <Route exact path="/SigninLandPage" element={<SigninLandPage />} />
         <Route exact path="/Teamsignup" element={<TeamSignup />} />
-        <Route exact path="/Teamsignin" element={<TeamSignin />} />
+        <Route exact path="/TeamSignin" element={<TeamSignin />} />
         <Route exact path="/Teamotpverify" element={<TeamOtpverify />} />
         <Route exact path="/TeamDashboard" element={<Dashboard />} />
         <Route exact path="/Teamprofile" element={<TeamProfile />} />
@@ -110,6 +111,11 @@ function App() {
           element={<MatchOfficialOtpverify />}
         />
         <Route exact path="/Matches" element={<Matches />} />
+        <Route
+          exact
+          path="/CommonMatchDetails/:matchId"
+          element={<CommonMatchDetails />}
+        />
       </Routes>
       <RequestModel showModal={showModal} setShowModal={setShowModal} />
 

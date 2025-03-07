@@ -165,9 +165,11 @@ export default function SignIn() {
                 </button>
               </form>
 
+              <hr />
+
               {/* Forgot Password Link */}
               <button
-                className="btn btn-link text-muted mt-3"
+                className="btn btn-signin mt-3 w-100"
                 onClick={() => navigate("/ForgotPassword")}
               >
                 Forgot Password

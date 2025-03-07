@@ -94,12 +94,71 @@ export const fetchAllMatches = createAsyncThunk(
   }
 );
 
+// Fetching match details.
+export const fetchMatchDetails = createAsyncThunk(
+  "matchDetails",
+  async (matchId, { rejectWithValue }) => {
+    try {
+      const response = await fetch(
+        `${url}api/match/commonMatchDetails/${matchId}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData);
+      }
+
+      const responseData = await response.json();
+      return responseData.data;
+    } catch (error) {
+      return rejectWithValue({
+        message: "Failed to fetches matches list for team!",
+      });
+    }
+  }
+);
+
+// Function for fetching other team details.
+export const fetchOtherTeamDetails = createAsyncThunk(
+  "fetchOtherTeamDetails",
+  async (teamid, { rejectWithValue }) => {
+    try {
+      const response = await fetch(`${url}api/match/getTeamDetails/${teamid}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData);
+      }
+
+      const data = await response.json();
+      return data; // Return only the `response` field
+    } catch (error) {
+      return rejectWithValue({
+        message: "Failed to fetch user details. Please try again later.",
+      });
+    }
+  }
+);
+
 const postSlice = createSlice({
   name: "postSlice",
   initialState: {
     posts: [],
     isLoading: false,
     matches: null,
+    matchDetails: null,
+    otherTeamData: null,
     error: null,
   },
 
@@ -146,6 +205,36 @@ const postSlice = createSlice({
     builder.addCase(fetchAllMatches.rejected, (state, action) => {
       state.isLoading = false;
       state.error = action.payload.message;
+    });
+
+    //Handle match details feching.
+    builder.addCase(fetchMatchDetails.pending, (state) => {
+      state.isLoading = true;
+      state.error = null;
+    });
+    builder.addCase(fetchMatchDetails.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.matchDetails = action.payload;
+      state.error = null;
+    });
+    builder.addCase(fetchMatchDetails.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload?.message || "Unknown error occurred.";
+    });
+
+    //handle fetch other team details.
+    builder.addCase(fetchOtherTeamDetails.pending, (state) => {
+      state.isLoading = true;
+      state.error = null;
+    });
+    builder.addCase(fetchOtherTeamDetails.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.otherTeamData = action.payload;
+      state.error = null;
+    });
+    builder.addCase(fetchOtherTeamDetails.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload?.message || "Unknown error occurred.";
     });
   },
 });

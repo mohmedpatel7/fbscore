@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { fetchAllMatches } from "../../Redux/fetures/postslice";
+import {
+  fetchAllMatches,
+  fetchMatchDetails,
+} from "../../Redux/fetures/postslice";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import TeamMatch from "./TeamMatch";
@@ -65,8 +68,19 @@ export default function Matches() {
     }
   };
 
+  // Handle fetching match details.
+  const handleMatchDeatils = async (matchId) => {
+    try {
+      dispatch(fetchMatchDetails(matchId));
+      navigate(`/CommonMatchDetails/${matchId}`);
+    } catch (error) {
+      showToast(error.message || "Error while fetching match details!");
+    }
+  };
+
   return (
     <div className="container mt-3">
+      
       {/* Navbar */}
       <ul className="nav nav-tabs mt-3 d-flex flex-nowrap overflow-auto">
         {[
@@ -84,6 +98,7 @@ export default function Matches() {
           </li>
         ))}
       </ul>
+
       {/**tab1 */}
       {activeTab === "All" && (
         <div

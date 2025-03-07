@@ -19,13 +19,23 @@ optgroup {
     /* Adjust color */
 }
 
-.btn-primary,
+.btn-primary {
+    background-color: #50C878;
+    border: none;
+    color: #F5F5F5;
+    font-weight: bold;
+    width: 1in;
+    transition: transform 0.2s ease-in-out;
+
+}
+
 .btn-primary:hover {
     background-color: #50C878;
     border: none;
     color: #F5F5F5;
     font-weight: bold;
     width: 1in;
+    transform: translateY(-3px);
 }
 
 h2 {

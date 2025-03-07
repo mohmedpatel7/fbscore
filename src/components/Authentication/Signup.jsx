@@ -407,6 +407,14 @@ export default function Signup() {
                   {isLoading ? "Submiting" : "Submit"}
                 </button>
               </form>
+
+              <hr />
+              <button
+                className="btn-signin w-100 mt-2"
+                onClick={() => navigate("/Signin")}
+              >
+                Already have an account!
+              </button>
             </div>
           </div>
         </div>

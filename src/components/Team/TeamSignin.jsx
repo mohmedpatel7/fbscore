@@ -167,9 +167,10 @@ export default function TeamSignin() {
                 </button>
               </form>
 
+              <hr />
               {/* Forgot Password Link */}
               <button
-                className="btn btn-link mt-3 text-muted text-dark"
+                className="btn btn-signin mt-3 w-100"
                 onClick={() => navigate("/TeamForgotPassword")}
               >
                 Forgot Password
