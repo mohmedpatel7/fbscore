@@ -401,6 +401,39 @@ export const forgotPassword = createAsyncThunk(
   }
 );
 
+// Api call for updating user details.
+export const updateUserDetails = createAsyncThunk(
+  "updateUserDetails",
+  async (payload, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("teamtoken");
+      if (!token) {
+        return rejectWithValue({
+          message: "Authentication token is missing. Please log in again.",
+        });
+      }
+
+      const response = await fetch(`${url}api/team/updateTeamDetails`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          "team-token": token,
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData);
+      }
+
+      return response.json();
+    } catch (error) {
+      return rejectWithValue({ message: "Failed to fethc player details!" });
+    }
+  }
+);
+
 // team Slice
 const teamSlice = createSlice({
   name: "team",
@@ -598,6 +631,21 @@ const teamSlice = createSlice({
       state.error = null;
     });
     builder.addCase(forgotPassword.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload?.message || "Unknown error occurred.";
+    });
+
+    //Handle update user profile cases.
+    builder.addCase(updateUserDetails.pending, (state) => {
+      state.isLoading = true;
+      state.error = null;
+    });
+    builder.addCase(updateUserDetails.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.updateUser = action.payload;
+      state.error = null;
+    });
+    builder.addCase(updateUserDetails.rejected, (state, action) => {
       state.isLoading = false;
       state.error = action.payload?.message || "Unknown error occurred.";
     });

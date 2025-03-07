@@ -28,9 +28,11 @@ import TeamMatchDetails from "./components/Team/TeamMatchDetails";
 import TeamProfile from "./components/Team/TeamProfile";
 import OtherTeamProfile from "./components/Team/OtherTeamProfile";
 import TeamForgotPassword from "./components/Team/TeamForgotPassword";
+import UpdateTeamProfile from "./components/Team/UpdateTeamProfile";
 import MatchOfficialSignup from "./components/Match/MatchOfficialSignup";
 import MatchOfficialSignin from "./components/Match/MatchOfficialSignin";
 import MatchOfficialOtpverify from "./components/Match/MatchOfficialOtpverify";
+import MatchOfficialForgotPassword from "./components/Match/MatchOfficialForgorPassword";
 
 function App() {
   const [showModal, setShowModal] = useState(false);
@@ -97,6 +99,11 @@ function App() {
         />
         <Route
           exact
+          path="/UpdateTeamProfile"
+          element={<UpdateTeamProfile />}
+        />
+        <Route
+          exact
           path="/Matchofficialsignup"
           element={<MatchOfficialSignup />}
         />
@@ -109,6 +116,11 @@ function App() {
           exact
           path="/Matchofficialotpverify"
           element={<MatchOfficialOtpverify />}
+        />
+        <Route
+          exact
+          path="/MatchOfficialForgotPassword"
+          element={<MatchOfficialForgotPassword />}
         />
         <Route exact path="/Matches" element={<Matches />} />
         <Route

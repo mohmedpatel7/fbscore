@@ -3,11 +3,13 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchTeamDetails } from "../../Redux/fetures/Teamslice";
+import { useNavigate } from "react-router-dom";
 
 export default function TeamProfile() {
   const isTeamOwner = localStorage.getItem("teamtoken");
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { teamData } = useSelector((state) => state.teamSlice);
 
   useEffect(() => {
@@ -21,6 +23,34 @@ export default function TeamProfile() {
   return (
     <div className="container mt-4">
       <div className="card p-4 shadow">
+        {/* Three Dots Dropdown Menu */}
+        <div className="position-absolute top-0 end-0 mt-2 me-2">
+          <div className="dropdown">
+            <button
+              className="btn btn-light border-0"
+              type="button"
+              id="dropdownMenuButton"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              <i className="fas fa-ellipsis-v"></i>
+            </button>
+            <ul
+              className="dropdown-menu dropdown-menu-end"
+              aria-labelledby="dropdownMenuButton"
+            >
+              <li>
+                <button
+                  className="dropdown-item "
+                  onClick={() => navigate("/UpdateTeamProfile")}
+                >
+                  Edit
+                </button>
+              </li>
+            </ul>
+          </div>
+        </div>
+
         <div className="row align-items-center">
           {/* Left Side - Team Image & Name */}
           <div className="col-md-4 text-center">

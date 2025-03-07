@@ -208,7 +208,7 @@ export default function Navbar({ setShowModal }) {
               ) : isMatchOfficial ? (
                 <>
                   <button
-                    className="btn btn-signout me-2"
+                    className="btn btn-signup me-2"
                     onClick={handleSignOut}
                   >
                     Sign Out
