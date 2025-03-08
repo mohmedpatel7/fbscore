@@ -33,6 +33,9 @@ import MatchOfficialSignup from "./components/Match/MatchOfficialSignup";
 import MatchOfficialSignin from "./components/Match/MatchOfficialSignin";
 import MatchOfficialOtpverify from "./components/Match/MatchOfficialOtpverify";
 import MatchOfficialForgotPassword from "./components/Match/MatchOfficialForgorPassword";
+import MatchCreate from "./components/Match/MatchCreate";
+import MatchOperations from "./components/Match/MatchOpration";
+import MatchList from "./components/Match/MatchLIst";
 
 function App() {
   const [showModal, setShowModal] = useState(false);
@@ -122,6 +125,10 @@ function App() {
           path="/MatchOfficialForgotPassword"
           element={<MatchOfficialForgotPassword />}
         />
+        <Route exact path="/MatchCreate" element={<MatchCreate />} />
+        <Route exact path="/MatchOperations" element={<MatchOperations />} />
+        <Route exact path="/MatchList" element={<MatchList />} />
+
         <Route exact path="/Matches" element={<Matches />} />
         <Route
           exact

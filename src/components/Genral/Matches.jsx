@@ -80,7 +80,6 @@ export default function Matches() {
 
   return (
     <div className="container mt-3">
-      
       {/* Navbar */}
       <ul className="nav nav-tabs mt-3 d-flex flex-nowrap overflow-auto">
         {[
@@ -349,9 +348,9 @@ export default function Matches() {
                             <div className="vr vr-match"></div>
                           </div>
                           <div className="col-md-4">
-                            <smal className="text-muted">
+                            <small className="text-muted">
                               {match.matchDate} | {match.matchTime}
-                            </smal>
+                            </small>
                           </div>
                         </div>
                       </li>

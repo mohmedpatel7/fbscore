@@ -124,22 +124,86 @@ export const fetchedTeamlist = createAsyncThunk(
       const token = localStorage.getItem("matchOfficialtoken");
       if (!token) return rejectWithValue({ message: "Authorization failed!" });
 
-      const response = await fetch(
-        "http://localhost:5000/api/match/getTeamNames",
-        {
-          method: "GET",
+      const response = await fetch(`${url}api/match/getTeamNames`, {
+        method: "GET",
+        headers: {
           "Content-Type": "application/json",
-        }
-      );
+          "matchofficial-token": token,
+        },
+      });
 
       if (!response.ok) {
         const errorData = await response.json();
         return rejectWithValue(errorData);
       }
 
-      return response.data.json();
+      const data = await response.json();
+      return data.response;
     } catch (error) {
       return rejectWithValue({ message: "Failed to fethc player details!" });
+    }
+  }
+);
+
+// Api call for creating match.
+export const createMatch = createAsyncThunk(
+  "createMatch",
+  async (payload, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("matchOfficialtoken");
+      if (!token) return rejectWithValue({ message: "Authorization failed!" });
+
+      const response = await fetch(`${url}api/match/createMatch`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "matchofficial-token": token,
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData);
+      }
+
+      return response.json();
+    } catch (error) {
+      return rejectWithValue({ message: "Failed to fethc player details!" });
+    }
+  }
+);
+
+// Fetching sign in official matches list.
+export const fetchMatches = createAsyncThunk(
+  "fetchMatches",
+  async (_, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("matchOfficialtoken");
+      if (!token) {
+        return rejectWithValue({
+          message: "Authentication token is missing. Please log in again.",
+        });
+      }
+
+      const response = await fetch(`${url}api/match/signinMatches`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "matchofficial-token": token,
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData);
+      }
+
+      return response.json();
+    } catch (error) {
+      return rejectWithValue({
+        message: "Failed to fetches matches list for team!",
+      });
     }
   }
 );
@@ -152,6 +216,8 @@ const matchofficialSlice = createSlice({
     matchData: null,
     updateUser: null,
     teamList: null,
+    matchCreation: null,
+    matchesList: null,
     error: null, // Error string or object from backend
   },
 
@@ -229,7 +295,37 @@ const matchofficialSlice = createSlice({
       state.teamList = action.payload;
       state.error = null;
     });
-    builder.addCase(forgotPfetchedTeamlistassword.rejected, (state, action) => {
+    builder.addCase(fetchedTeamlist.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload?.message || "Unknown error occurred.";
+    });
+
+    //Handle match create cases.
+    builder.addCase(createMatch.pending, (state) => {
+      state.isLoading = true;
+      state.error = null;
+    });
+    builder.addCase(createMatch.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.matchCreation = action.payload;
+      state.error = null;
+    });
+    builder.addCase(createMatch.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload?.message || "Unknown error occurred.";
+    });
+
+    //Handle fetching match list.
+    builder.addCase(fetchMatches.pending, (state) => {
+      state.isLoading = true;
+      state.error = null;
+    });
+    builder.addCase(fetchMatches.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.matchesList = action.payload;
+      state.error = null;
+    });
+    builder.addCase(fetchMatches.rejected, (state, action) => {
       state.isLoading = false;
       state.error = action.payload?.message || "Unknown error occurred.";
     });

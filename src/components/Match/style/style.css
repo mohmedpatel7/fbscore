@@ -1,0 +1,18 @@
+h3 {
+    color: #50C878;
+    font-weight: bolder;
+}
+
+/* Style selected option */
+select option:checked {
+    background-color: #50C878;
+    /* Green */
+    color: white;
+    font-weight: bold;
+}
+
+.operation-card {
+    height: 250px;
+    /* Set equal height */
+    transition: transform 0.2s ease-in-out;
+}

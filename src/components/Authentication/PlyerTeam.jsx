@@ -399,9 +399,9 @@ export default function PlyerTeam() {
                                   <div className="vr vr-match"></div>
                                 </div>
                                 <div className="col-md-4">
-                                  <smal className="text-muted">
+                                  <small className="text-muted">
                                     {match.date} | {match.time}
-                                  </smal>
+                                  </small>
                                 </div>
                               </div>
                             </li>

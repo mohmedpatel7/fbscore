@@ -94,6 +94,21 @@ export default function Navbar({ setShowModal }) {
                   </Link>
                 </li>
               )}
+
+              {isMatchOfficial && (
+                <>
+                  <li className="nav-item me-3 mt-2">
+                    <Link className="nav-link" to="/MatchCreate">
+                      Create Match
+                    </Link>
+                  </li>
+                  <li className="nav-item me-3 mt-2">
+                    <Link className="nav-link" to="/MatchList">
+                      Matches
+                    </Link>
+                  </li>
+                </>
+              )}
             </div>
 
             <div className="d-flex align-items-center">
