@@ -208,6 +208,41 @@ export const fetchMatches = createAsyncThunk(
   }
 );
 
+// Fetching match details.
+export const fetchMatchDetails = createAsyncThunk(
+  "matchDetails",
+  async (matchId, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("matchOfficialtoken");
+      if (!token) {
+        return rejectWithValue({
+          message: "Authentication token is missing. Please log in again.",
+        });
+      }
+
+      const response = await fetch(`${url}api/match/matchDetails/${matchId}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "matchofficial-token": token,
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData);
+      }
+
+      const responseData = await response.json();
+      return responseData.data;
+    } catch (error) {
+      return rejectWithValue({
+        message: "Failed to fetches matches list for team!",
+      });
+    }
+  }
+);
+
 // Matchofficial Slice
 const matchofficialSlice = createSlice({
   name: "matchofficial",
@@ -218,6 +253,7 @@ const matchofficialSlice = createSlice({
     teamList: null,
     matchCreation: null,
     matchesList: null,
+    matchDetails: null,
     error: null, // Error string or object from backend
   },
 
@@ -326,6 +362,21 @@ const matchofficialSlice = createSlice({
       state.error = null;
     });
     builder.addCase(fetchMatches.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload?.message || "Unknown error occurred.";
+    });
+
+    //Handle match details feching.
+    builder.addCase(fetchMatchDetails.pending, (state) => {
+      state.isLoading = true;
+      state.error = null;
+    });
+    builder.addCase(fetchMatchDetails.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.matchDetails = action.payload;
+      state.error = null;
+    });
+    builder.addCase(fetchMatchDetails.rejected, (state, action) => {
       state.isLoading = false;
       state.error = action.payload?.message || "Unknown error occurred.";
     });

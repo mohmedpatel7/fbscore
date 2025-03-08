@@ -1,10 +1,16 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { FaSyncAlt, FaChartBar, FaAward, FaInfoCircle } from "react-icons/fa";
+import { fetchMatchDetails } from "../../Redux/fetures/Matchofficial";
+import { useSelector, useDispatch } from "react-redux";
+import { useToast } from "../Genral/ToastContext";
 
 export default function MatchOperations() {
   const navigate = useNavigate();
+  const { matchId } = useParams();
+  const dispatch = useDispatch();
+  const { showToast } = useToast();
 
   const operations = [
     {
@@ -30,7 +36,14 @@ export default function MatchOperations() {
       title: "Match Details",
       description: "View complete details of the match.",
       icon: <FaInfoCircle size={40} className="text-danger" />,
-      path: "/match/details",
+      onClick: () => {
+        try {
+          dispatch(fetchMatchDetails(matchId));
+          navigate(`/MatchDetails/${matchId}`);
+        } catch (error) {
+          showToast(error.message || "Error while fetching match details!");
+        }
+      },
     },
   ];
 
@@ -42,7 +55,13 @@ export default function MatchOperations() {
           <div key={index} className="col-md-3">
             <div
               className="card text-center shadow operation-card"
-              onClick={() => navigate(op.path)}
+              onClick={() => {
+                if (op.onClick) {
+                  op.onClick(); // Call the function if `onClick` exists
+                } else {
+                  navigate(op.path); // Otherwise, navigate using `path`
+                }
+              }}
               style={{ cursor: "pointer" }}
             >
               <div className="card-body d-flex flex-column align-items-center justify-content-center">

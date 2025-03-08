@@ -1,7 +1,10 @@
 import React, { useState, useEffect, useTransition } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
-import { fetchMatches } from "../../Redux/fetures/Matchofficial";
+import {
+  fetchMatches,
+  fetchMatchDetails,
+} from "../../Redux/fetures/Matchofficial";
 import { useSelector, useDispatch } from "react-redux";
 import { useToast } from "../Genral/ToastContext";
 import "./style/style.css";
@@ -65,6 +68,16 @@ export default function MatchList() {
       setVisibleCompleted((prev) =>
         Math.min(prev + 2, remainingCompletedMatches.length)
       );
+    }
+  };
+
+  // Handle fetching match details.
+  const handleMatchDeatils = async (matchId) => {
+    try {
+      dispatch(fetchMatchDetails(matchId));
+      navigate(`/MatchOperations/${matchId}`);
+    } catch (error) {
+      showToast(error.message || "Error while fetching match details!");
     }
   };
 

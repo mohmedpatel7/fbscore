@@ -36,6 +36,7 @@ import MatchOfficialForgotPassword from "./components/Match/MatchOfficialForgorP
 import MatchCreate from "./components/Match/MatchCreate";
 import MatchOperations from "./components/Match/MatchOpration";
 import MatchList from "./components/Match/MatchLIst";
+import MatchDetails from "./components/Match/MatchDetails";
 
 function App() {
   const [showModal, setShowModal] = useState(false);
@@ -126,8 +127,13 @@ function App() {
           element={<MatchOfficialForgotPassword />}
         />
         <Route exact path="/MatchCreate" element={<MatchCreate />} />
-        <Route exact path="/MatchOperations" element={<MatchOperations />} />
+        <Route
+          exact
+          path="/MatchOperations/:matchId"
+          element={<MatchOperations />}
+        />
         <Route exact path="/MatchList" element={<MatchList />} />
+        <Route exact path="/MatchDetails/:matchId" element={<MatchDetails />} />
 
         <Route exact path="/Matches" element={<Matches />} />
         <Route
