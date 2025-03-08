@@ -18,7 +18,14 @@ export default function MatchOperations() {
       description:
         "Change the match status (Live,Half Time,Full Time,Delayed and Cancel).",
       icon: <FaSyncAlt size={40} className="text-primary" />,
-      path: "/match/update-status",
+      onClick: () => {
+        try {
+          dispatch(fetchMatchDetails(matchId));
+          navigate(`/MatchStatusUpdate/${matchId}`);
+        } catch (error) {
+          showToast(error.message || "Error while fetching match details!");
+        }
+      },
     },
     {
       title: "Update Stats",

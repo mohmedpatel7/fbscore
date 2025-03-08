@@ -243,6 +243,41 @@ export const fetchMatchDetails = createAsyncThunk(
   }
 );
 
+// Api call for updating match status.
+export const updateMatchStatus = createAsyncThunk(
+  "updateMatchStatus",
+  async ({ matchId, status }, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("matchOfficialtoken");
+      if (!token) {
+        return rejectWithValue({
+          message: "Authentication token is missing. Please log in again.",
+        });
+      }
+
+      const response = await fetch(`${url}api/match/updateStatus/${matchId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          "matchofficial-token": token,
+        },
+        body: JSON.stringify({ status }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData);
+      }
+
+      return response.json();
+    } catch (error) {
+      return rejectWithValue({
+        message: "Failed to fetches matches list for team!",
+      });
+    }
+  }
+);
+
 // Matchofficial Slice
 const matchofficialSlice = createSlice({
   name: "matchofficial",
@@ -254,6 +289,7 @@ const matchofficialSlice = createSlice({
     matchCreation: null,
     matchesList: null,
     matchDetails: null,
+    updateStatus: null,
     error: null, // Error string or object from backend
   },
 
@@ -377,6 +413,21 @@ const matchofficialSlice = createSlice({
       state.error = null;
     });
     builder.addCase(fetchMatchDetails.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload?.message || "Unknown error occurred.";
+    });
+
+    //Handle match status update.
+    builder.addCase(updateMatchStatus.pending, (state) => {
+      state.isLoading = true;
+      state.error = null;
+    });
+    builder.addCase(updateMatchStatus.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.updateStatus = action.payload;
+      state.error = null;
+    });
+    builder.addCase(updateMatchStatus.rejected, (state, action) => {
       state.isLoading = false;
       state.error = action.payload?.message || "Unknown error occurred.";
     });
