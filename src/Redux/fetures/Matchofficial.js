@@ -278,6 +278,44 @@ export const updateMatchStatus = createAsyncThunk(
   }
 );
 
+// Api call for updating match status.
+export const updateMatchStats = createAsyncThunk(
+  "updateMatchStats",
+  async ({ matchId, payload }, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("matchOfficialtoken");
+      if (!token) {
+        return rejectWithValue({
+          message: "Authentication token is missing. Please log in again.",
+        });
+      }
+
+      const response = await fetch(
+        `${url}api/match/updateMatchStats/${matchId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            "matchofficial-token": token,
+          },
+          body: JSON.stringify(payload),
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData);
+      }
+
+      return response.json();
+    } catch (error) {
+      return rejectWithValue({
+        message: "Failed to fetches matches list for team!",
+      });
+    }
+  }
+);
+
 // Matchofficial Slice
 const matchofficialSlice = createSlice({
   name: "matchofficial",
@@ -290,6 +328,7 @@ const matchofficialSlice = createSlice({
     matchesList: null,
     matchDetails: null,
     updateStatus: null,
+    updateStats: null,
     error: null, // Error string or object from backend
   },
 
@@ -428,6 +467,21 @@ const matchofficialSlice = createSlice({
       state.error = null;
     });
     builder.addCase(updateMatchStatus.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload?.message || "Unknown error occurred.";
+    });
+
+    //Handle match stats update cases.
+    builder.addCase(updateMatchStats.pending, (state) => {
+      state.isLoading = true;
+      state.error = null;
+    });
+    builder.addCase(updateMatchStats.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.updateStats = action.payload;
+      state.error = null;
+    });
+    builder.addCase(updateMatchStats.rejected, (state, action) => {
       state.isLoading = false;
       state.error = action.payload?.message || "Unknown error occurred.";
     });

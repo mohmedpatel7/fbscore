@@ -31,7 +31,14 @@ export default function MatchOperations() {
       title: "Update Stats",
       description: "Update scores, goals, and other match statistics.",
       icon: <FaChartBar size={40} className="text-success" />,
-      path: "/match/update-stats",
+      onClick: () => {
+        try {
+          dispatch(fetchMatchDetails(matchId));
+          navigate(`/MatchStatsUpdate/${matchId}`);
+        } catch (error) {
+          showToast(error.message || "Error while fetching match details!");
+        }
+      },
     },
     {
       title: "Assign MVP",
