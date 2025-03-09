@@ -39,6 +39,7 @@ import MatchList from "./components/Match/MatchLIst";
 import MatchDetails from "./components/Match/MatchDetails";
 import MatchStatusUpdate from "./components/Match/MatchStatusUpdate";
 import MatchStatsUpdate from "./components/Match/MatchStatsUpdate";
+import MatchMvp from "./components/Match/MatchMvp";
 
 function App() {
   const [showModal, setShowModal] = useState(false);
@@ -146,6 +147,7 @@ function App() {
           path="/MatchStatsUpdate/:matchId"
           element={<MatchStatsUpdate />}
         />
+        <Route exact path="/MatchMvp/:matchId" element={<MatchMvp />} />
 
         <Route exact path="/Matches" element={<Matches />} />
         <Route

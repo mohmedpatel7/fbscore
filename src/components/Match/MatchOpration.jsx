@@ -44,7 +44,14 @@ export default function MatchOperations() {
       title: "Assign MVP",
       description: "Select the Most Valuable Player of the match.",
       icon: <FaAward size={40} className="text-warning" />,
-      path: "/match/assign-mvp",
+      onClick: () => {
+        try {
+          dispatch(fetchMatchDetails(matchId));
+          navigate(`/MatchMvp/${matchId}`);
+        } catch (error) {
+          showToast(error.message || "Error while fetching match details!");
+        }
+      },
     },
     {
       title: "Match Details",

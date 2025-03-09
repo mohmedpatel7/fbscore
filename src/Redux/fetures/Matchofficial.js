@@ -316,6 +316,41 @@ export const updateMatchStats = createAsyncThunk(
   }
 );
 
+// Api call for updating match status.
+export const updateMatchMvp = createAsyncThunk(
+  "updateMatchMvp",
+  async ({ matchId, userId }, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("matchOfficialtoken");
+      if (!token) {
+        return rejectWithValue({
+          message: "Authentication token is missing. Please log in again.",
+        });
+      }
+
+      const response = await fetch(`${url}api/match/assignMVP/${matchId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          "matchofficial-token": token,
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData);
+      }
+
+      return response.json();
+    } catch (error) {
+      return rejectWithValue({
+        message: "Failed to fetches matches list for team!",
+      });
+    }
+  }
+);
+
 // Matchofficial Slice
 const matchofficialSlice = createSlice({
   name: "matchofficial",
@@ -482,6 +517,21 @@ const matchofficialSlice = createSlice({
       state.error = null;
     });
     builder.addCase(updateMatchStats.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload?.message || "Unknown error occurred.";
+    });
+
+    //Handle match mvp update cases.
+    builder.addCase(updateMatchMvp.pending, (state) => {
+      state.isLoading = true;
+      state.error = null;
+    });
+    builder.addCase(updateMatchMvp.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.updateStats = action.payload;
+      state.error = null;
+    });
+    builder.addCase(updateMatchMvp.rejected, (state, action) => {
       state.isLoading = false;
       state.error = action.payload?.message || "Unknown error occurred.";
     });

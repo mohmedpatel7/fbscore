@@ -319,151 +319,254 @@ export default function TeamMatchDetails() {
           </div>
         )}
 
-        {/* Tab2 Content */}
+        {/* Tab2 Content - Line Up (Improved UI) */}
         <div id="tab2" className="tab-pane fade">
           <div className="row">
-            {/* Team A Section */}
-            <div className="col-12 mt-3">
+            <div className="col-12 mt-3 mb-4">
               <h4
-                style={{
-                  color: "#50C878",
-                  fontWeight: "600",
-                  marginBottom: "20px",
-                }}
+                className="text-center"
+                style={{ color: "#50C878", fontWeight: "700" }}
               >
-                Line Up
+                <i className="bi bi-people-fill me-2"></i>
+                Match Line Up
               </h4>
-            </div>
-
-            <div className="col-12">
-              <div className="card linup-card-main p-3">
-                {/* Team A Header */}
-                <div className="d-flex align-items-center mb-3">
-                  <img
-                    src={matchDetails.teams.teamA.logo || "/placeholder.svg"}
-                    alt={matchDetails.teams.teamA.name}
-                    className="rounded-circle me-3"
-                    style={{
-                      width: "50px",
-                      height: "50px",
-                      objectFit: "cover",
-                      border: "2px solid #50C878",
-                    }}
-                  />
-                  <h5 className="mb-0 fw-semibold">
-                    {matchDetails.teams.teamA.name}
-                  </h5>
-                </div>
-
-                {/* Team A Players */}
-                <div className="mt-3">
-                  <h6 className="text-muted mb-3">
-                    {matchDetails.status === "Upcoming"
-                      ? `Possible ${matchDetails.teams.teamA.name} Playing 11`
-                      : `${matchDetails.teams.teamA.name} Playing 11`}
-                  </h6>
-                  <div className="row">
-                    {matchDetails.teams.teamA.players.map((player) => (
-                      <div
-                        key={player.id}
-                        className="col-12 col-md-6 mb-3"
-                        onClick={() => playerProfileClick(player.id)}
-                      >
-                        <div className="card card-squad-item p-2 d-flex flex-row align-items-center hover-effect">
-                          {/* Player Image */}
-                          <img
-                            src={player.pic || "default-pic.jpg"}
-                            alt={player.name}
-                            className="rounded-circle me-3"
-                            style={{
-                              width: "50px",
-                              height: "50px",
-                              objectFit: "cover",
-                            }}
-                          />
-
-                          {/* Player Details */}
-                          <div className="flex-grow-1">
-                            <h6 className="mb-1 fw-semibold">{player.name}</h6>
-                            <small className="text-muted">
-                              {player.position}
-                            </small>
-                          </div>
-
-                          {/* Player Number */}
-                          <span className="player-number bg-light  px-3 py-1 rounded-circle">
-                            {player.jeresyNo}
-                          </span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+              <div className="text-center">
+                <span className="badge bg-light text-dark px-3 py-2 shadow-sm">
+                  {matchDetails.status === "Upcoming"
+                    ? "Possible Playing XI"
+                    : "Official Playing XI"}
+                </span>
               </div>
             </div>
-          </div>
 
-          {/* Team B Section */}
-          <div className="row mt-4">
+            {/* Teams Container */}
             <div className="col-12">
-              <div className="card linup-card-main p-3">
-                {/* Team B Header */}
-                <div className="d-flex align-items-center mb-3">
-                  <img
-                    src={matchDetails.teams.teamB.logo || "/placeholder.svg"}
-                    alt={matchDetails.teams.teamB.name}
-                    className="rounded-circle me-3"
-                    style={{
-                      width: "50px",
-                      height: "50px",
-                      objectFit: "cover",
-                      border: "2px solid #50C878",
-                    }}
-                  />
-                  <h5 className="mb-0 fw-semibold">
-                    {matchDetails.teams.teamB.name}
-                  </h5>
-                </div>
-
-                {/* Team B Players */}
-                <div className="mt-3">
-                  <h6 className="text-muted mb-3">
-                    {matchDetails.status === "Upcoming"
-                      ? `Possible ${matchDetails.teams.teamB.name} Playing 11`
-                      : `${matchDetails.teams.teamB.name} Playing 11`}
-                  </h6>
-                  <div className="row">
-                    {matchDetails.teams.teamB.players.map((player) => (
-                      <div
-                        key={player.id}
-                        className="col-12 col-md-6 mb-3"
-                        onClick={() => playerProfileClick(player.id)}
-                      >
-                        <div className="card card-squad-item p-2 d-flex flex-row align-items-center hover-effect">
-                          {/* Player Image */}
+              <div className="row g-4">
+                {/* Team A Section */}
+                <div className="col-md-6">
+                  <div
+                    className="card h-100 shadow-sm border-0"
+                    style={{ borderRadius: "15px", overflow: "hidden" }}
+                  >
+                    {/* Team Header with Gradient */}
+                    <div
+                      className="card-header text-white p-3"
+                      style={{
+                        background:
+                          "linear-gradient(135deg, #50C878 0%, #3a9c5a 100%)",
+                        borderBottom: "none",
+                      }}
+                    >
+                      <div className="d-flex align-items-center">
+                        <div className="position-relative">
                           <img
-                            src={player.pic || "default-pic.jpg"}
-                            alt={player.name}
-                            className="rounded-circle me-3"
+                            src={
+                              matchDetails.teams.teamA.logo ||
+                              "/placeholder.svg"
+                            }
+                            alt={matchDetails.teams.teamA.name}
+                            className="rounded-circle bg-white p-1"
                             style={{
-                              width: "50px",
-                              height: "50px",
+                              width: "60px",
+                              height: "60px",
                               objectFit: "cover",
+                              border: "3px solid white",
+                              boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
                             }}
                           />
-
-                          {/* Player Details */}
-                          <div className="flex-grow-1">
-                            <h6 className="mb-1 fw-semibold">{player.name}</h6>
-                          </div>
-
-                          {/* Player Number */}
-                          <span className="player-number bg-light px-3 py-1 rounded-circle">
-                            {player.jeresyNo}
-                          </span>
+                        </div>
+                        <div className="ms-3">
+                          <h5 className="mb-0 fw-bold">
+                            {matchDetails.teams.teamA.name}
+                          </h5>
+                          <small>Home Team</small>
                         </div>
                       </div>
-                    ))}
+                    </div>
+
+                    {/* Team A Players */}
+                    <div className="card-body p-0">
+                      <div className="list-group list-group-flush">
+                        {matchDetails.teams.teamA.players.map(
+                          (player, index) => (
+                            <div
+                              key={player.id}
+                              className="list-group-item list-group-item-action border-0 py-3 px-4"
+                              style={{
+                                background:
+                                  index % 2 === 0 ? "#f8f9fa" : "white",
+                                transition: "all 0.2s ease",
+                                cursor: "pointer",
+                              }}
+                              onClick={() => playerProfileClick(player.id)}
+                            >
+                              <div className="d-flex align-items-center">
+                                <div className="position-relative">
+                                  <img
+                                    src={player.pic || "default-pic.jpg"}
+                                    alt={player.name}
+                                    className="rounded-circle"
+                                    style={{
+                                      width: "50px",
+                                      height: "50px",
+                                      objectFit: "cover",
+                                      border: "2px solid #e0e0e0",
+                                    }}
+                                  />
+                                  <span
+                                    className="position-absolute badge rounded-circle"
+                                    style={{
+                                      width: "28px",
+                                      height: "28px",
+                                      lineHeight: "20px",
+                                      background: "#50C878",
+                                      color: "white",
+                                      border: "2px solid white",
+                                      bottom: "-5px",
+                                      right: "-5px",
+                                      fontSize: "12px",
+                                      fontWeight: "bold",
+                                      display: "flex",
+                                      alignItems: "center",
+                                      justifyContent: "center",
+                                    }}
+                                  >
+                                    {player.jeresyNo}
+                                  </span>
+                                </div>
+
+                                <div className="ms-3 flex-grow-1">
+                                  <h6 className="mb-0 fw-semibold">
+                                    {player.name}
+                                  </h6>
+                                  <span className="badge bg-light text-dark mt-1">
+                                    {player.position}
+                                  </span>
+                                </div>
+
+                                <div className="ms-auto">
+                                  <i className="bi bi-chevron-right text-muted"></i>
+                                </div>
+                              </div>
+                            </div>
+                          )
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Team B Section */}
+                <div className="col-md-6">
+                  <div
+                    className="card h-100 shadow-sm border-0"
+                    style={{ borderRadius: "15px", overflow: "hidden" }}
+                  >
+                    {/* Team Header with Gradient */}
+                    <div
+                      className="card-header text-white p-3"
+                      style={{
+                        background:
+                          "linear-gradient(135deg, #4a90e2 0%, #3672b9 100%)",
+                        borderBottom: "none",
+                      }}
+                    >
+                      <div className="d-flex align-items-center">
+                        <div className="position-relative">
+                          <img
+                            src={
+                              matchDetails.teams.teamB.logo ||
+                              "/placeholder.svg"
+                            }
+                            alt={matchDetails.teams.teamB.name}
+                            className="rounded-circle bg-white p-1"
+                            style={{
+                              width: "60px",
+                              height: "60px",
+                              objectFit: "cover",
+                              border: "3px solid white",
+                              boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
+                            }}
+                          />
+                        </div>
+                        <div className="ms-3">
+                          <h5 className="mb-0 fw-bold">
+                            {matchDetails.teams.teamB.name}
+                          </h5>
+                          <small>Away Team</small>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Team B Players */}
+                    <div className="card-body p-0">
+                      <div className="list-group list-group-flush">
+                        {matchDetails.teams.teamB.players.map(
+                          (player, index) => (
+                            <div
+                              key={player.id}
+                              className="list-group-item list-group-item-action border-0 py-3 px-4"
+                              style={{
+                                background:
+                                  index % 2 === 0 ? "#f8f9fa" : "white",
+                                transition: "all 0.2s ease",
+                                cursor: "pointer",
+                              }}
+                              onClick={() => playerProfileClick(player.id)}
+                            >
+                              <div className="d-flex align-items-center">
+                                <div className="position-relative">
+                                  <img
+                                    src={player.pic || "default-pic.jpg"}
+                                    alt={player.name}
+                                    className="rounded-circle"
+                                    style={{
+                                      width: "50px",
+                                      height: "50px",
+                                      objectFit: "cover",
+                                      border: "2px solid #e0e0e0",
+                                    }}
+                                  />
+                                  <span
+                                    className="position-absolute badge rounded-circle"
+                                    style={{
+                                      width: "28px",
+                                      height: "28px",
+                                      lineHeight: "20px",
+                                      background: "#4a90e2",
+                                      color: "white",
+                                      border: "2px solid white",
+                                      bottom: "-5px",
+                                      right: "-5px",
+                                      fontSize: "12px",
+                                      fontWeight: "bold",
+                                      display: "flex",
+                                      alignItems: "center",
+                                      justifyContent: "center",
+                                    }}
+                                  >
+                                    {player.jeresyNo}
+                                  </span>
+                                </div>
+
+                                <div className="ms-3 flex-grow-1">
+                                  <h6 className="mb-0 fw-semibold">
+                                    {player.name}
+                                  </h6>
+                                  <span className="badge bg-light text-dark mt-1">
+                                    {player.position}
+                                  </span>
+                                </div>
+
+                                <div className="ms-auto">
+                                  <i className="bi bi-chevron-right text-muted"></i>
+                                </div>
+                              </div>
+                            </div>
+                          )
+                        )}
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
