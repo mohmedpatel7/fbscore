@@ -151,17 +151,29 @@ export const fetchOtherTeamDetails = createAsyncThunk(
   }
 );
 
-// Fetching search result api call.
 export const fetchSearchResults = createAsyncThunk(
   "search/fetchResults",
   async (searchquery, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`${url}/api/team/search`, {
-        params: { searchquery },
-      });
-      return response.data; // The response contains `team_response` and `user_response`
+      const response = await fetch(
+        `${url}api/team/search?searchquery=${encodeURIComponent(searchquery)}`,
+        {
+          method: "GET", // Ensure it's a GET request
+          headers: {
+            "Content-Type": "application/json", // Set correct headers
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const data = await response.json(); // Parse response as JSON
+      return data; // Contains `team_response` and `user_response`
     } catch (error) {
-      return rejectWithValue(error.response?.data || "Something went wrong");
+      console.error("API Error:", error); // Debugging
+      return rejectWithValue(error.message || "Something went wrong");
     }
   }
 );
@@ -257,15 +269,16 @@ const postSlice = createSlice({
     builder.addCase(fetchSearchResults.pending, (state) => {
       state.isLoading = true;
       state.error = null;
+      state.searchResult = null; // Reset search results on new request
     });
     builder.addCase(fetchSearchResults.fulfilled, (state, action) => {
       state.isLoading = false;
-      state.searchResult = action.payload;
+      state.searchResult = action.payload; // Correctly store API response
       state.error = null;
     });
     builder.addCase(fetchSearchResults.rejected, (state, action) => {
       state.isLoading = false;
-      state.error = action.payload?.message || "Unknown error occurred.";
+      state.error = action.payload; // Fix error handling
     });
   },
 });

@@ -156,8 +156,8 @@ function App() {
           path="/CommonMatchDetails/:matchId"
           element={<CommonMatchDetails />}
         />
-      </Routes>
       <Route exact path="/SearchData" element={<SearchData />} />
+      </Routes>
       <RequestModel showModal={showModal} setShowModal={setShowModal} />
 
       {/*<Footer />*/}
