@@ -70,14 +70,14 @@ export default function MatchMvp() {
       return;
     }
 
-    if (!selectedPlayer || !selectedPlayer.users) {
+    if (!selectedPlayer) {
       showToast("Please select a player first!", "warning");
       return;
     }
 
-    // Dispatch the update using the userId from the nested users object
+    // Dispatch the update using the player's ID directly
     startTransition(() => {
-      dispatch(updateMatchMvp({ matchId, userId: selectedPlayer.users.userId }))
+      dispatch(updateMatchMvp({ matchId, playerId: selectedPlayer.id }))
         .then(() => {
           showToast("Match MVP updated successfully!", "success");
           // Refresh match details to get the updated data from server

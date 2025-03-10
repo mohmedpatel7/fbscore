@@ -319,7 +319,7 @@ export const updateMatchStats = createAsyncThunk(
 // Api call for updating match status.
 export const updateMatchMvp = createAsyncThunk(
   "updateMatchMvp",
-  async ({ matchId, userId }, { rejectWithValue }) => {
+  async ({ matchId, playerId }, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem("matchOfficialtoken");
       if (!token) {
@@ -334,7 +334,7 @@ export const updateMatchMvp = createAsyncThunk(
           "Content-Type": "application/json",
           "matchofficial-token": token,
         },
-        body: JSON.stringify(payload),
+        body: JSON.stringify({playerId}),
       });
 
       if (!response.ok) {
