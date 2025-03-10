@@ -72,75 +72,128 @@ export default function MatchDetails() {
   return (
     <div className="container mt-4">
       <div
-        className="card shadow-sm text-center mx-auto"
-        style={{ maxWidth: "700px", width: "100%" }}
+        className="card border-0 shadow-sm text-center mx-auto mb-3"
+        style={{
+          maxWidth: "600px",
+          width: "100%",
+          borderRadius: "12px",
+          overflow: "hidden",
+        }}
       >
+        {/* Match Status Banner */}
+        <div
+          className={`py-1 text-white fw-bold ${
+            matchDetails.status === "Full Time"
+              ? "bg-success"
+              : matchDetails.status === "Live"
+              ? "bg-danger"
+              : "bg-warning"
+          }`}
+        >
+          <span className="d-flex align-items-center justify-content-center">
+            {matchDetails.status === "Live" && (
+              <span className="live-indicator me-1"></span>
+            )}
+            <i
+              className={`bi ${
+                matchDetails.status === "Full Time"
+                  ? "bi-flag-fill"
+                  : matchDetails.status === "Live"
+                  ? "bi-broadcast"
+                  : "bi-hourglass-split"
+              } me-1`}
+            ></i>
+            {matchDetails.status}
+          </span>
+        </div>
+
         <div className="card-body p-3">
+          {/* Match Date and Time */}
+          <div className="text-muted mb-2 small">
+            <i className="bi bi-calendar-event me-1"></i>
+            {matchDetails.matchDate} | <i className="bi bi-clock me-1"></i>
+            {matchDetails.matchTime}
+          </div>
+
           {/* Teams and Score */}
-          <div className="d-flex align-items-center justify-content-between flex-wrap">
+          <div className="row align-items-center">
             {/* Team A */}
-            <div
-              className="d-flex align-items-center flex-column flex-sm-row logo-click"
-              onClick={() =>
-                handleOtherTeamProfile(matchDetails.teams.teamA.id)
-              }
-            >
-              <img
-                src={matchDetails.teams.teamA.logo || "/placeholder.svg"}
-                alt={matchDetails.teams.teamA.name}
-                className="rounded-circle"
-                style={{ width: "50px", height: "50px", objectFit: "cover" }}
-              />
-              <span className="ms-sm-2 mt-2 mt-sm-0 fw-semibold">
-                {matchDetails.teams.teamA.name}
-              </span>
+            <div className="col-4 text-end">
+              <div
+                className="d-flex flex-column align-items-center align-items-md-end logo-click"
+                onClick={() =>
+                  handleOtherTeamProfile(matchDetails.teams.teamA.id)
+                }
+                style={{ cursor: "pointer" }}
+              >
+                <img
+                  src={matchDetails.teams.teamA.logo || "/placeholder.svg"}
+                  alt={matchDetails.teams.teamA.name}
+                  className="rounded-circle bg-light p-1 mb-1"
+                  style={{
+                    width: "50px",
+                    height: "50px",
+                    objectFit: "cover",
+                    border: "2px solid #f8f9fa",
+                    boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+                  }}
+                />
+                <h6 className="fw-bold mb-0">
+                  {matchDetails.teams.teamA.name}
+                </h6>
+              </div>
             </div>
 
             {/* Score */}
-            <div className="text-center my-2" style={{ fontWeight: "bolder" }}>
-              <span className="fs-4">
-                {matchDetails.score.teamA} : {matchDetails.score.teamB}
-              </span>
+            <div className="col-4">
+              <div
+                className="score-display py-2 px-3 mx-auto"
+                style={{
+                  background:
+                    "linear-gradient(135deg, rgba(80, 200, 120, 0.1), rgba(74, 144, 226, 0.1))",
+                  borderRadius: "12px",
+                  boxShadow: "0 2px 6px rgba(0,0,0,0.05)",
+                  maxWidth: "100px",
+                }}
+              >
+                <div className="d-flex justify-content-center align-items-center">
+                  <span className="fs-4 fw-bold" style={{ color: "#50C878" }}>
+                    {matchDetails.score.teamA}
+                  </span>
+                  <span className="fs-5 mx-1 text-muted">:</span>
+                  <span className="fs-4 fw-bold" style={{ color: "#4a90e2" }}>
+                    {matchDetails.score.teamB}
+                  </span>
+                </div>
+              </div>
             </div>
 
-            {/* Team B (Name Below Logo on Mobile) */}
-            <div
-              className="d-flex align-items-center flex-column flex-sm-row logo-click"
-              onClick={() =>
-                handleOtherTeamProfile(matchDetails.teams.teamB.id)
-              }
-            >
-              <img
-                src={matchDetails.teams.teamB.logo || "/placeholder.svg"}
-                alt={matchDetails.teams.teamB.name}
-                className="rounded-circle"
-                style={{ width: "50px", height: "50px", objectFit: "cover" }}
-              />
-              <span className="ms-sm-2 mt-2 mt-sm-0 fw-semibold">
-                {matchDetails.teams.teamB.name}
-              </span>
+            {/* Team B */}
+            <div className="col-4 text-start">
+              <div
+                className="d-flex flex-column align-items-center align-items-md-start logo-click"
+                onClick={() =>
+                  handleOtherTeamProfile(matchDetails.teams.teamB.id)
+                }
+                style={{ cursor: "pointer" }}
+              >
+                <img
+                  src={matchDetails.teams.teamB.logo || "/placeholder.svg"}
+                  alt={matchDetails.teams.teamB.name}
+                  className="rounded-circle bg-light p-1 mb-1"
+                  style={{
+                    width: "50px",
+                    height: "50px",
+                    objectFit: "cover",
+                    border: "2px solid #f8f9fa",
+                    boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+                  }}
+                />
+                <h6 className="fw-bold mb-0">
+                  {matchDetails.teams.teamB.name}
+                </h6>
+              </div>
             </div>
-          </div>
-
-          {/* Horizontal Line */}
-          <hr className="my-3" />
-
-          {/* Match Status and Date */}
-          <div className="d-flex justify-content-between flex-column flex-sm-row text-center">
-            <span
-              className={`badge ${
-                matchDetails.status === "Full Time"
-                  ? "bg-success"
-                  : matchDetails.status === "Live"
-                  ? "bg-danger"
-                  : "bg-warning"
-              } px-3 py-1`}
-            >
-              {matchDetails.status}
-            </span>
-            <span className="text-muted small mt-2 mt-sm-0">
-              {matchDetails.matchDate} | {matchDetails.matchTime}
-            </span>
           </div>
         </div>
       </div>
@@ -171,137 +224,378 @@ export default function MatchDetails() {
             {matchDetails.mvp &&
             Object.keys(matchDetails.mvp).length > 0 &&
             matchDetails.mvp.name ? (
-              <div className="mb-2">
-                <div className="col-12 mt-3">
+              <div className="mb-4">
+                <div className="col-12 mt-3 mb-3">
                   <h4
-                    style={{
-                      color: "#50C878",
-                      fontWeight: "600",
-                      marginBottom: "20px",
-                    }}
+                    className="d-flex align-items-center"
+                    style={{ color: "#50C878", fontWeight: "700" }}
                   >
+                    <i className="bi bi-trophy-fill me-2"></i>
                     Best Player of The Game
                   </h4>
                 </div>
                 <div className="row">
-                  <div className="card card-squad-item d-flex flex-row align-items-center p-2 position-relative mb-2">
-                    {/* Player Image */}
-                    <img
-                      src={matchDetails.mvp.pic || "default-pic.jpg"}
-                      alt={matchDetails.mvp.name || "Unknown Player"}
-                      className="rounded-circle"
+                  <div className="col-12">
+                    <div
+                      className="card border-0 shadow-sm"
                       style={{
-                        width: "50px",
-                        height: "50px",
-                        objectFit: "cover",
+                        borderRadius: "16px",
+                        background:
+                          "linear-gradient(135deg, rgba(80, 200, 120, 0.15), rgba(80, 200, 120, 0.05))",
+                        overflow: "hidden",
+                        border: "1px solid rgba(80, 200, 120, 0.2)",
                       }}
-                    />
-                    {/* Player Name & Position */}
-                    <div className="ms-3 flex-grow-1">
-                      <h6 className="mb-1">
-                        {matchDetails.mvp.name || "Unknown"}
-                      </h6>
-                      <small className="text-muted">
-                        {matchDetails.mvp.position || "Unknown"}
-                      </small>
+                    >
+                      <div className="card-body p-4">
+                        <div className="d-flex align-items-center">
+                          {/* MVP Badge */}
+                          <div className="position-relative me-4">
+                            <div
+                              style={{
+                                position: "absolute",
+                                top: "-10px",
+                                left: "-10px",
+                                background: "#FFD700",
+                                color: "#000",
+                                borderRadius: "50%",
+                                width: "32px",
+                                height: "32px",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                border: "2px solid white",
+                                boxShadow: "0 2px 5px rgba(0,0,0,0.2)",
+                                zIndex: 2,
+                              }}
+                            >
+                              <i className="bi bi-star-fill"></i>
+                            </div>
+
+                            {/* Player Image */}
+                            <img
+                              src={matchDetails.mvp.pic || "default-pic.jpg"}
+                              alt={matchDetails.mvp.name || "Unknown Player"}
+                              className="rounded-circle"
+                              style={{
+                                width: "90px",
+                                height: "90px",
+                                objectFit: "cover",
+                                border: "4px solid #50C878",
+                                boxShadow: "0 6px 12px rgba(0,0,0,0.15)",
+                                transition: "transform 0.3s ease",
+                              }}
+                              onMouseOver={(e) =>
+                                (e.target.style.transform = "scale(1.05)")
+                              }
+                              onMouseOut={(e) =>
+                                (e.target.style.transform = "scale(1)")
+                              }
+                            />
+                          </div>
+
+                          {/* Player Info */}
+                          <div className="flex-grow-1">
+                            <h5
+                              className="mb-2 fw-bold"
+                              style={{ color: "#2c3e50" }}
+                            >
+                              {matchDetails.mvp.name || "Unknown"}
+                            </h5>
+                            <div className="d-flex align-items-center flex-wrap">
+                              <span
+                                className="badge me-2 mb-1"
+                                style={{
+                                  background: "rgba(80, 200, 120, 0.2)",
+                                  color: "#2c7a44",
+                                  padding: "6px 12px",
+                                  borderRadius: "20px",
+                                  fontSize: "0.85rem",
+                                }}
+                              >
+                                <i className="bi bi-person-badge me-1"></i>
+                                {matchDetails.mvp.position || "Unknown"}
+                              </span>
+                              {matchDetails.mvp.teamName && (
+                                <span
+                                  className="badge mb-1"
+                                  style={{
+                                    background: "rgba(74, 144, 226, 0.2)",
+                                    color: "#2c5ca2",
+                                    padding: "6px 12px",
+                                    borderRadius: "20px",
+                                    fontSize: "0.85rem",
+                                  }}
+                                >
+                                  <i className="bi bi-people-fill me-1"></i>
+                                  {matchDetails.mvp.teamName}
+                                </span>
+                              )}
+                            </div>
+                            <p className="mt-2 mb-0 text-muted small">
+                              <i className="bi bi-award me-1"></i>
+                              Selected as the most valuable player of this match
+                            </p>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             ) : null}
-            <hr />
 
             {scorers.length > 0 && (
-              <>
-                <div className="mb-2">
-                  <div className="col-12 mt-3">
-                    <h4
-                      style={{
-                        color: "#50C878",
-                        fontWeight: "600",
-                        marginBottom: "20px",
-                      }}
-                    >
-                      Scorer
-                    </h4>
-                  </div>
-                  <div className="row">
-                    {scorers.map((scorer) => (
-                      <div
-                        key={scorer.id}
-                        className="card card-squad-item d-flex flex-row align-items-center p-2 position-relative mb-2"
-                      >
-                        <img
-                          src={scorer.pic || "default-pic.jpg"}
-                          alt={scorer.name || "Unknown Player"}
-                          className="rounded-circle"
-                          style={{
-                            width: "50px",
-                            height: "50px",
-                            objectFit: "cover",
-                          }}
-                        />
-                        <div className="ms-3 flex-grow-1">
-                          <h6 className="mb-1">{scorer.name || "Unknown"}</h6>
-                          <small className="text-muted">
-                            {scorer.position || "Unknown"}
-                          </small>
-                        </div>
-                        <span className="player-number px-3 py-1">
-                          ⚽ {scorer.goalsCount}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
+              <div className="mb-4">
+                <div className="col-12 mt-3 mb-3">
+                  <h4
+                    className="d-flex align-items-center"
+                    style={{ color: "#50C878", fontWeight: "700" }}
+                  >
+                    <i className="bi bi-bullseye me-2"></i>
+                    Goal Scorers
+                  </h4>
                 </div>
-              </>
+                <div className="row">
+                  {scorers.map((scorer, index) => (
+                    <div key={scorer.id} className="col-md-6 mb-3">
+                      <div
+                        className="card border-0 shadow-sm h-100"
+                        style={{
+                          borderRadius: "16px",
+                          overflow: "hidden",
+                          transition: "all 0.3s ease",
+                          border: "1px solid rgba(255, 157, 0, 0.1)",
+                        }}
+                        onMouseOver={(e) => {
+                          e.currentTarget.style.transform = "translateY(-5px)";
+                          e.currentTarget.style.boxShadow =
+                            "0 10px 20px rgba(255, 157, 0, 0.1)";
+                        }}
+                        onMouseOut={(e) => {
+                          e.currentTarget.style.transform = "translateY(0)";
+                          e.currentTarget.style.boxShadow =
+                            "0 4px 6px rgba(0, 0, 0, 0.06)";
+                        }}
+                      >
+                        {/* Goal Count Badge - Positioned Absolutely */}
+                        <div
+                          style={{
+                            position: "absolute",
+                            top: "12px",
+                            right: "12px",
+                            background:
+                              "linear-gradient(135deg, #ff9d00, #ff6a00)",
+                            color: "white",
+                            borderRadius: "30px",
+                            padding: "5px 12px",
+                            fontSize: "14px",
+                            fontWeight: "bold",
+                            boxShadow: "0 3px 6px rgba(255, 106, 0, 0.2)",
+                            display: "flex",
+                            alignItems: "center",
+                            zIndex: 1,
+                          }}
+                        >
+                          <span style={{ marginRight: "4px" }}>⚽</span>{" "}
+                          {scorer.goalsCount}
+                        </div>
+
+                        <div className="card-body p-4">
+                          <div className="d-flex align-items-center">
+                            {/* Player Image */}
+                            <div className="position-relative">
+                              <img
+                                src={scorer.pic || "default-pic.jpg"}
+                                alt={scorer.name || "Unknown Player"}
+                                className="rounded-circle"
+                                style={{
+                                  width: "70px",
+                                  height: "70px",
+                                  objectFit: "cover",
+                                  border: "3px solid rgba(255, 157, 0, 0.3)",
+                                  boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
+                                }}
+                              />
+                              <div
+                                style={{
+                                  position: "absolute",
+                                  bottom: "-5px",
+                                  right: "-5px",
+                                  background: "#fff",
+                                  borderRadius: "50%",
+                                  width: "24px",
+                                  height: "24px",
+                                  display: "flex",
+                                  alignItems: "center",
+                                  justifyContent: "center",
+                                  border: "2px solid #ff9d00",
+                                  boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+                                }}
+                              >
+                                <i
+                                  className="bi bi-dribbble"
+                                  style={{ color: "#ff9d00", fontSize: "12px" }}
+                                ></i>
+                              </div>
+                            </div>
+
+                            {/* Player Info */}
+                            <div className="ms-3 flex-grow-1">
+                              <h6
+                                className="mb-1 fw-bold"
+                                style={{ color: "#2c3e50" }}
+                              >
+                                {scorer.name || "Unknown"}
+                              </h6>
+                              <div className="d-flex align-items-center">
+                                <span
+                                  className="badge"
+                                  style={{
+                                    background: "rgba(255, 157, 0, 0.1)",
+                                    color: "#ff9d00",
+                                    padding: "4px 8px",
+                                    borderRadius: "12px",
+                                    fontSize: "0.75rem",
+                                  }}
+                                >
+                                  {scorer.position || "Unknown"}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
             )}
 
-            <hr />
             {assister.length > 0 && (
-              <>
-                <div className="mb-2">
-                  <div className="col-12 mt-3">
-                    <h4
-                      style={{
-                        color: "#50C878",
-                        fontWeight: "600",
-                        marginBottom: "20px",
-                      }}
-                    >
-                      Assist Provider
-                    </h4>
-                  </div>
-                  <div className="row">
-                    {assister.map((assist) => (
-                      <div
-                        key={assist.id}
-                        className="card card-squad-item d-flex flex-row align-items-center p-2 position-relative mb-2"
-                      >
-                        <img
-                          src={assist.pic || "default-pic.jpg"}
-                          alt={assist.name || "Unknown Player"}
-                          className="rounded-circle"
-                          style={{
-                            width: "50px",
-                            height: "50px",
-                            objectFit: "cover",
-                          }}
-                        />
-                        <div className="ms-3 flex-grow-1">
-                          <h6 className="mb-1">{assist.name || "Unknown"}</h6>
-                          <small className="text-muted">
-                            {assist.position || "Unknown"}
-                          </small>
-                        </div>
-                        <span className="player-number px-3 py-1">
-                          👟{assist.assistCount}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
+              <div className="mb-4">
+                <div className="col-12 mt-3 mb-3">
+                  <h4
+                    className="d-flex align-items-center"
+                    style={{ color: "#50C878", fontWeight: "700" }}
+                  >
+                    <i className="bi bi-hand-thumbs-up me-2"></i>
+                    Assist Providers
+                  </h4>
                 </div>
-              </>
+                <div className="row">
+                  {assister.map((assist, index) => (
+                    <div key={assist.id} className="col-md-6 mb-3">
+                      <div
+                        className="card border-0 shadow-sm h-100"
+                        style={{
+                          borderRadius: "16px",
+                          overflow: "hidden",
+                          transition: "all 0.3s ease",
+                          border: "1px solid rgba(74, 144, 226, 0.1)",
+                        }}
+                        onMouseOver={(e) => {
+                          e.currentTarget.style.transform = "translateY(-5px)";
+                          e.currentTarget.style.boxShadow =
+                            "0 10px 20px rgba(74, 144, 226, 0.1)";
+                        }}
+                        onMouseOut={(e) => {
+                          e.currentTarget.style.transform = "translateY(0)";
+                          e.currentTarget.style.boxShadow =
+                            "0 4px 6px rgba(0, 0, 0, 0.06)";
+                        }}
+                      >
+                        {/* Assist Count Badge - Positioned Absolutely */}
+                        <div
+                          style={{
+                            position: "absolute",
+                            top: "12px",
+                            right: "12px",
+                            background:
+                              "linear-gradient(135deg, #4a90e2, #3672b9)",
+                            color: "white",
+                            borderRadius: "30px",
+                            padding: "5px 12px",
+                            fontSize: "14px",
+                            fontWeight: "bold",
+                            boxShadow: "0 3px 6px rgba(54, 114, 185, 0.2)",
+                            display: "flex",
+                            alignItems: "center",
+                            zIndex: 1,
+                          }}
+                        >
+                          <span style={{ marginRight: "4px" }}>👟</span>{" "}
+                          {assist.assistCount}
+                        </div>
+
+                        <div className="card-body p-4">
+                          <div className="d-flex align-items-center">
+                            {/* Player Image */}
+                            <div className="position-relative">
+                              <img
+                                src={assist.pic || "default-pic.jpg"}
+                                alt={assist.name || "Unknown Player"}
+                                className="rounded-circle"
+                                style={{
+                                  width: "70px",
+                                  height: "70px",
+                                  objectFit: "cover",
+                                  border: "3px solid rgba(74, 144, 226, 0.3)",
+                                  boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
+                                }}
+                              />
+                              <div
+                                style={{
+                                  position: "absolute",
+                                  bottom: "-5px",
+                                  right: "-5px",
+                                  background: "#fff",
+                                  borderRadius: "50%",
+                                  width: "24px",
+                                  height: "24px",
+                                  display: "flex",
+                                  alignItems: "center",
+                                  justifyContent: "center",
+                                  border: "2px solid #4a90e2",
+                                  boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+                                }}
+                              >
+                                <i
+                                  className="bi bi-magic"
+                                  style={{ color: "#4a90e2", fontSize: "12px" }}
+                                ></i>
+                              </div>
+                            </div>
+
+                            {/* Player Info */}
+                            <div className="ms-3 flex-grow-1">
+                              <h6
+                                className="mb-1 fw-bold"
+                                style={{ color: "#2c3e50" }}
+                              >
+                                {assist.name || "Unknown"}
+                              </h6>
+                              <div className="d-flex align-items-center">
+                                <span
+                                  className="badge"
+                                  style={{
+                                    background: "rgba(74, 144, 226, 0.1)",
+                                    color: "#4a90e2",
+                                    padding: "4px 8px",
+                                    borderRadius: "12px",
+                                    fontSize: "0.75rem",
+                                  }}
+                                >
+                                  {assist.position || "Unknown"}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
             )}
           </div>
         ) : (
@@ -584,42 +878,274 @@ export default function MatchDetails() {
           </div>
         </div>
 
-        {/**tab3 */}
+        {/* Tab3 Content - About Match (Improved UI) */}
         <div id="tab3" className="tab-pane fade">
           <div className="row">
-            <div className="card card-squad-item mt-3">
-              <div className="col-12 mt-2">
-                <h4
+            <div className="col-12 mt-3 mb-4">
+              <h4
+                className="d-flex align-items-center"
+                style={{ color: "#50C878", fontWeight: "700" }}
+              >
+                <i className="bi bi-info-circle-fill me-2"></i>
+                About Match
+              </h4>
+            </div>
+
+            <div className="col-md-8 mx-auto">
+              <div
+                className="card border-0 shadow-sm"
+                style={{
+                  borderRadius: "16px",
+                  overflow: "hidden",
+                }}
+              >
+                {/* Card Header */}
+                <div
+                  className="card-header p-4 border-0"
                   style={{
-                    color: "#50C878",
-                    fontWeight: "600",
-                    marginBottom: "20px",
+                    background:
+                      "linear-gradient(135deg, rgba(80, 200, 120, 0.15), rgba(80, 200, 120, 0.05))",
+                    borderBottom: "1px solid rgba(0,0,0,0.05)",
                   }}
                 >
-                  About Match
-                </h4>
-              </div>
-              <div className="col-12">
-                <p className="text-muted">
-                  <strong>Match Official Name:</strong>
-                  {matchDetails.createdBy}
-                </p>
-                <p className="text-muted">
-                  <strong>Match Date:</strong>
-                  {matchDetails.matchDate}
-                </p>
-                <p className="text-muted">
-                  <strong>Match Time:</strong>
-                  {matchDetails.matchTime}
-                </p>
-                <p className="text-muted">
-                  <strong>Home Team:</strong>
-                  {matchDetails.teams?.teamA?.name}
-                </p>
-                <p className="text-muted">
-                  <strong>Away Team:</strong>
-                  {matchDetails.teams?.teamB?.name}
-                </p>
+                  <div className="d-flex align-items-center">
+                    <div
+                      className="rounded-circle d-flex align-items-center justify-content-center me-3"
+                      style={{
+                        width: "48px",
+                        height: "48px",
+                        background: "#50C878",
+                        boxShadow: "0 4px 8px rgba(80, 200, 120, 0.3)",
+                      }}
+                    >
+                      <i className="bi bi-calendar-check text-white fs-5"></i>
+                    </div>
+                    <div>
+                      <h5 className="mb-0 fw-bold">Match Information</h5>
+                      <p className="mb-0 text-muted small">
+                        Details about this match
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Card Body */}
+                <div className="card-body p-0">
+                  <div className="list-group list-group-flush">
+                    {/* Match Official */}
+                    <div className="list-group-item border-0 py-3 px-4">
+                      <div className="d-flex align-items-center">
+                        <div
+                          className="rounded-circle d-flex align-items-center justify-content-center"
+                          style={{
+                            width: "40px",
+                            height: "40px",
+                            background: "rgba(80, 200, 120, 0.1)",
+                            flexShrink: 0,
+                          }}
+                        >
+                          <i
+                            className="bi bi-person-badge"
+                            style={{ color: "#50C878" }}
+                          ></i>
+                        </div>
+                        <div className="ms-3">
+                          <p className="text-muted mb-0 small">
+                            Match Official
+                          </p>
+                          <p className="mb-0 fw-semibold">
+                            {matchDetails.createdBy || "Not specified"}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Match Date */}
+                    <div
+                      className="list-group-item border-0 py-3 px-4"
+                      style={{ background: "#f8f9fa" }}
+                    >
+                      <div className="d-flex align-items-center">
+                        <div
+                          className="rounded-circle d-flex align-items-center justify-content-center"
+                          style={{
+                            width: "40px",
+                            height: "40px",
+                            background: "rgba(80, 200, 120, 0.1)",
+                            flexShrink: 0,
+                          }}
+                        >
+                          <i
+                            className="bi bi-calendar-date"
+                            style={{ color: "#50C878" }}
+                          ></i>
+                        </div>
+                        <div className="ms-3">
+                          <p className="text-muted mb-0 small">Match Date</p>
+                          <p className="mb-0 fw-semibold">
+                            {matchDetails.matchDate || "Not specified"}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Match Time */}
+                    <div className="list-group-item border-0 py-3 px-4">
+                      <div className="d-flex align-items-center">
+                        <div
+                          className="rounded-circle d-flex align-items-center justify-content-center"
+                          style={{
+                            width: "40px",
+                            height: "40px",
+                            background: "rgba(80, 200, 120, 0.1)",
+                            flexShrink: 0,
+                          }}
+                        >
+                          <i
+                            className="bi bi-clock"
+                            style={{ color: "#50C878" }}
+                          ></i>
+                        </div>
+                        <div className="ms-3">
+                          <p className="text-muted mb-0 small">Match Time</p>
+                          <p className="mb-0 fw-semibold">
+                            {matchDetails.matchTime || "Not specified"}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Home Team */}
+                    <div
+                      className="list-group-item border-0 py-3 px-4"
+                      style={{ background: "#f8f9fa" }}
+                    >
+                      <div className="d-flex align-items-center">
+                        <div
+                          className="rounded-circle d-flex align-items-center justify-content-center"
+                          style={{
+                            width: "40px",
+                            height: "40px",
+                            background: "rgba(80, 200, 120, 0.1)",
+                            flexShrink: 0,
+                          }}
+                        >
+                          <i
+                            className="bi bi-house"
+                            style={{ color: "#50C878" }}
+                          ></i>
+                        </div>
+                        <div className="ms-3">
+                          <p className="text-muted mb-0 small">Home Team</p>
+                          <div className="d-flex align-items-center">
+                            {matchDetails.teams?.teamA?.logo && (
+                              <img
+                                src={matchDetails.teams.teamA.logo}
+                                alt={matchDetails.teams?.teamA?.name}
+                                className="rounded-circle me-2"
+                                style={{
+                                  width: "24px",
+                                  height: "24px",
+                                  objectFit: "cover",
+                                }}
+                              />
+                            )}
+                            <p className="mb-0 fw-semibold">
+                              {matchDetails.teams?.teamA?.name ||
+                                "Not specified"}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Away Team */}
+                    <div className="list-group-item border-0 py-3 px-4">
+                      <div className="d-flex align-items-center">
+                        <div
+                          className="rounded-circle d-flex align-items-center justify-content-center"
+                          style={{
+                            width: "40px",
+                            height: "40px",
+                            background: "rgba(74, 144, 226, 0.1)",
+                            flexShrink: 0,
+                          }}
+                        >
+                          <i
+                            className="bi bi-airplane"
+                            style={{ color: "#4a90e2" }}
+                          ></i>
+                        </div>
+                        <div className="ms-3">
+                          <p className="text-muted mb-0 small">Away Team</p>
+                          <div className="d-flex align-items-center">
+                            {matchDetails.teams?.teamB?.logo && (
+                              <img
+                                src={matchDetails.teams.teamB.logo}
+                                alt={matchDetails.teams?.teamB?.name}
+                                className="rounded-circle me-2"
+                                style={{
+                                  width: "24px",
+                                  height: "24px",
+                                  objectFit: "cover",
+                                }}
+                              />
+                            )}
+                            <p className="mb-0 fw-semibold">
+                              {matchDetails.teams?.teamB?.name ||
+                                "Not specified"}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Match Status */}
+                    <div
+                      className="list-group-item border-0 py-3 px-4"
+                      style={{ background: "#f8f9fa" }}
+                    >
+                      <div className="d-flex align-items-center">
+                        <div
+                          className="rounded-circle d-flex align-items-center justify-content-center"
+                          style={{
+                            width: "40px",
+                            height: "40px",
+                            background: "rgba(80, 200, 120, 0.1)",
+                            flexShrink: 0,
+                          }}
+                        >
+                          <i
+                            className="bi bi-flag"
+                            style={{ color: "#50C878" }}
+                          ></i>
+                        </div>
+                        <div className="ms-3">
+                          <p className="text-muted mb-0 small">Match Status</p>
+                          <span
+                            className={`badge ${
+                              matchDetails.status === "Full Time"
+                                ? "bg-success"
+                                : matchDetails.status === "Live"
+                                ? "bg-danger"
+                                : "bg-warning"
+                            } px-3 py-1`}
+                          >
+                            {matchDetails.status || "Not specified"}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Card Footer */}
+                <div className="card-footer p-3 text-center bg-light border-0">
+                  <p className="text-muted mb-0 small">
+                    <i className="bi bi-info-circle me-1"></i>
+                    Match information is provided by the match official
+                  </p>
+                </div>
               </div>
             </div>
           </div>

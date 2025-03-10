@@ -151,6 +151,21 @@ export const fetchOtherTeamDetails = createAsyncThunk(
   }
 );
 
+// Fetching search result api call.
+export const fetchSearchResults = createAsyncThunk(
+  "search/fetchResults",
+  async (searchquery, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(`${url}/api/team/search`, {
+        params: { searchquery },
+      });
+      return response.data; // The response contains `team_response` and `user_response`
+    } catch (error) {
+      return rejectWithValue(error.response?.data || "Something went wrong");
+    }
+  }
+);
+
 const postSlice = createSlice({
   name: "postSlice",
   initialState: {
@@ -159,6 +174,7 @@ const postSlice = createSlice({
     matches: null,
     matchDetails: null,
     otherTeamData: null,
+    searchResult: null,
     error: null,
   },
 
@@ -233,6 +249,21 @@ const postSlice = createSlice({
       state.error = null;
     });
     builder.addCase(fetchOtherTeamDetails.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload?.message || "Unknown error occurred.";
+    });
+
+    //handle fetch search result cases.
+    builder.addCase(fetchSearchResults.pending, (state) => {
+      state.isLoading = true;
+      state.error = null;
+    });
+    builder.addCase(fetchSearchResults.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.searchResult = action.payload;
+      state.error = null;
+    });
+    builder.addCase(fetchSearchResults.rejected, (state, action) => {
       state.isLoading = false;
       state.error = action.payload?.message || "Unknown error occurred.";
     });

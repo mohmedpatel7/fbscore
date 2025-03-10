@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import TeamMatch from "./TeamMatch";
 import PlayerMatch from "./PlayerMatch";
+import MatchList from "../Match/MatchList";
 import "./style/style.css";
 
 export default function Matches() {
@@ -19,6 +20,7 @@ export default function Matches() {
 
   const isUser = localStorage.getItem("usertoken");
   const isTeamOwner = localStorage.getItem("teamtoken");
+  const isMatchOfficial = localStorage.getItem("matchOfficialtoken");
 
   useEffect(() => {
     dispatch(fetchAllMatches());
@@ -86,6 +88,7 @@ export default function Matches() {
           "All",
           ...(isUser ? ["Your Match"] : []),
           ...(isTeamOwner ? ["Team Match"] : []),
+          ...(isMatchOfficial ? ["Your Matches"] : []),
         ].map((tab) => (
           <li key={tab} className="nav-item">
             <button
@@ -366,6 +369,8 @@ export default function Matches() {
       {activeTab === "Team Match" && <TeamMatch />}
       {/** Component for player matches */}
       {activeTab === "Your Match" && <PlayerMatch />}
+
+      {activeTab === "Your Matches" && <MatchList />}
     </div>
   );
 }

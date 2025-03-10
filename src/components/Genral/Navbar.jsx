@@ -112,7 +112,10 @@ export default function Navbar({ setShowModal }) {
             </div>
 
             <div className="d-flex align-items-center">
-              <button className="btn-search me-2">
+              <button
+                className="btn-search me-2"
+                onClick={() => navigate("/SearchData")}
+              >
                 <i className="fa-solid fa-magnifying-glass"></i>
               </button>
               <div className="vr me-3"></div>

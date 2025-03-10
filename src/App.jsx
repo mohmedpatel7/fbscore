@@ -17,6 +17,7 @@ import ForgotPassword from "./components/Authentication/ForgotPassword";
 import UploadPost from "./components/Post/UploadPost";
 import SignupLandPage from "./components/Genral/Signuplandpage";
 import SigninLandPage from "./components/Genral/Signinlandpage";
+import SearchData from "./components/Genral/SearchData";
 import Matches from "./components/Genral/Matches";
 import CommonMatchDetails from "./components/Genral/CommonMatchDetails";
 import TeamSignup from "./components/Team/TeamSignup";
@@ -35,7 +36,7 @@ import MatchOfficialOtpverify from "./components/Match/MatchOfficialOtpverify";
 import MatchOfficialForgotPassword from "./components/Match/MatchOfficialForgorPassword";
 import MatchCreate from "./components/Match/MatchCreate";
 import MatchOperations from "./components/Match/MatchOpration";
-import MatchList from "./components/Match/MatchLIst";
+import MatchList from "./components/Match/MatchList";
 import MatchDetails from "./components/Match/MatchDetails";
 import MatchStatusUpdate from "./components/Match/MatchStatusUpdate";
 import MatchStatsUpdate from "./components/Match/MatchStatsUpdate";
@@ -156,6 +157,7 @@ function App() {
           element={<CommonMatchDetails />}
         />
       </Routes>
+      <Route exact path="/SearchData" element={<SearchData />} />
       <RequestModel showModal={showModal} setShowModal={setShowModal} />
 
       {/*<Footer />*/}
