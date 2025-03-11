@@ -360,6 +360,33 @@ export const forgotPassword = createAsyncThunk(
   }
 );
 
+// Fetching squad player profile.
+export const fetchOtherUser = createAsyncThunk(
+  "fetchOtherUser",
+  async (userId, { rejectWithValue }) => {
+    try {
+      const response = await fetch(
+        `${url}api/auth/getPlayerDetailsByUserId/${userId}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData);
+      }
+
+      return response.json();
+    } catch (error) {
+      return rejectWithValue({ message: "Failed to fethc player details!" });
+    }
+  }
+);
+
 // Auth Slice
 const authSlice = createSlice({
   name: "auth",
@@ -371,6 +398,7 @@ const authSlice = createSlice({
     otherTeamData: null,
     playerProfile: null,
     updateUser: null,
+    userProfile: null,
     error: null,
   },
   extraReducers: (builder) => {
@@ -535,6 +563,21 @@ const authSlice = createSlice({
       state.error = null;
     });
     builder.addCase(forgotPassword.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload?.message || "Unknown error occurred.";
+    });
+
+    //Handle user profile feching.
+    builder.addCase(fetchOtherUser.pending, (state) => {
+      state.isLoading = true;
+      state.error = null;
+    });
+    builder.addCase(fetchOtherUser.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.userProfile = action.payload;
+      state.error = null;
+    });
+    builder.addCase(fetchOtherUser.rejected, (state, action) => {
       state.isLoading = false;
       state.error = action.payload?.message || "Unknown error occurred.";
     });

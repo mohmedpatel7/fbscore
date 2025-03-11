@@ -434,6 +434,36 @@ export const updateUserDetails = createAsyncThunk(
   }
 );
 
+// Api call for common team profile feching.
+export const fetchCommonTeams = createAsyncThunk(
+  "fetchCommonTeams",
+  async (teamid, { rejectWithValue }) => {
+    try {
+      const response = await fetch(
+        `${url}api/team/getCommonTeamDetails/${teamid}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData);
+      }
+
+      const responseData = await response.json();
+      return responseData;
+    } catch (error) {
+      return rejectWithValue({
+        message: "Failed to fetches matches list for team!",
+      });
+    }
+  }
+);
+
 // team Slice
 const teamSlice = createSlice({
   name: "team",
@@ -448,6 +478,7 @@ const teamSlice = createSlice({
     matchesList: null,
     matchDetails: null,
     updateUser: null,
+    CommonTeamDetails: null,
     error: null, // Error string or object from backend
   },
 
@@ -646,6 +677,21 @@ const teamSlice = createSlice({
       state.error = null;
     });
     builder.addCase(updateUserDetails.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload?.message || "Unknown error occurred.";
+    });
+
+    // Feching common team details.
+    builder.addCase(fetchCommonTeams.pending, (state) => {
+      state.isLoading = true;
+      state.error = null;
+    });
+    builder.addCase(fetchCommonTeams.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.CommonTeamDetails = action.payload;
+      state.error = null;
+    });
+    builder.addCase(fetchCommonTeams.rejected, (state, action) => {
       state.isLoading = false;
       state.error = action.payload?.message || "Unknown error occurred.";
     });

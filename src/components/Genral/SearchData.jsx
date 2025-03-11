@@ -1,9 +1,13 @@
 import React, { useState, useRef } from "react";
 import { fetchSearchResults } from "../../Redux/fetures/postslice";
+import { fetchCommonTeams } from "../../Redux/fetures/Teamslice";
+import { fetchOtherUser } from "../../Redux/fetures/authentication";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 export default function SearchData() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { searchResult } = useSelector((state) => state.postSlice);
   const [query, setQuery] = useState("");
   const typingTimeoutRef = useRef(null);
@@ -23,6 +27,24 @@ export default function SearchData() {
       typingTimeoutRef.current = setTimeout(() => {
         dispatch(fetchSearchResults(value));
       }, 500);
+    }
+  };
+
+  const handleOtherTeamProfile = async (teamid) => {
+    try {
+      dispatch(fetchCommonTeams(teamid));
+      navigate(`/CommonTeamProfile/${teamid}`);
+    } catch (error) {
+      showToast(error.message || "Error while fetching player profile!");
+    }
+  };
+
+  const handleOtherUserProfile = async (userid) => {
+    try {
+      dispatch(fetchOtherUser(userid));
+      navigate(`/CommonUser/${userid}`);
+    } catch (error) {
+      showToast(error.message || "Error while fetching player profile!");
     }
   };
 
@@ -73,6 +95,7 @@ export default function SearchData() {
                 onMouseOut={(e) =>
                   (e.currentTarget.style.transform = "translateY(0)")
                 }
+                onClick={() => handleOtherUserProfile(user.userId)}
               >
                 <img
                   src={user.pic}
@@ -152,6 +175,7 @@ export default function SearchData() {
                 onMouseOut={(e) =>
                   (e.currentTarget.style.transform = "translateY(0)")
                 }
+                onClick={() => handleOtherTeamProfile(team.teamId)}
               >
                 <img
                   src={team.teamlogo}

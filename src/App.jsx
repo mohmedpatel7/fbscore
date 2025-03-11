@@ -20,6 +20,8 @@ import SigninLandPage from "./components/Genral/Signinlandpage";
 import SearchData from "./components/Genral/SearchData";
 import Matches from "./components/Genral/Matches";
 import CommonMatchDetails from "./components/Genral/CommonMatchDetails";
+import CommonTeamProfile from "./components/Genral/CommonTeamProfile";
+import CommonUser from "./components/Genral/CommonUser";
 import TeamSignup from "./components/Team/TeamSignup";
 import TeamSignin from "./components/Team/TeamSignin";
 import TeamOtpverify from "./components/Team/TeamOtpverify";
@@ -156,7 +158,13 @@ function App() {
           path="/CommonMatchDetails/:matchId"
           element={<CommonMatchDetails />}
         />
-      <Route exact path="/SearchData" element={<SearchData />} />
+        <Route exact path="/SearchData" element={<SearchData />} />
+        <Route
+          exact
+          path="/CommonTeamProfile/:teamid"
+          element={<CommonTeamProfile />}
+        />
+        <Route exact path="/CommonUser/:userId" element={<CommonUser />} />
       </Routes>
       <RequestModel showModal={showModal} setShowModal={setShowModal} />
 
