@@ -52,12 +52,7 @@ export default function CommonUser() {
   // If userProfile is not loaded yet, show loading
   if (!userProfile) {
     return (
-      <div className="container mt-4 text-center">
-        <div className="spinner-border text-primary" role="status">
-          <span className="visually-hidden">Loading...</span>
-        </div>
-        <p className="mt-2">Loading user profile...</p>
-      </div>
+      <></>
     );
   }
 

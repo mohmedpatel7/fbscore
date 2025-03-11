@@ -33,7 +33,7 @@ export const fetchPosts = createAsyncThunk(
   }
 );
 
-//Api call for uploading post.
+//Api call for uploading post for user.
 export const uploadPost = createAsyncThunk(
   "uploadPost",
   async (payload, { rejectWithValue }) => {
@@ -41,7 +41,7 @@ export const uploadPost = createAsyncThunk(
       const response = await fetch(`${url}api/posts/uploadPost`, {
         method: "POST",
         headers: {
-          "auth-token": localStorage.getItem("token"), // Keep only the auth-token header
+          "auth-token": localStorage.getItem("usertoken"), // Keep only the auth-token header
         },
         body: payload, // Directly pass the FormData object
       });
@@ -58,6 +58,160 @@ export const uploadPost = createAsyncThunk(
     } catch (error) {
       return rejectWithValue({
         message: "Internal server error..! ",
+      });
+    }
+  }
+);
+
+//Api call for uploading post for team owner.
+export const uploadTeamPost = createAsyncThunk(
+  "uploadTeamPost",
+  async (payload, { rejectWithValue }) => {
+    try {
+      const response = await fetch(`${url}api/posts/uploadTeamPost`, {
+        method: "POST",
+        headers: {
+          "team-token": localStorage.getItem("teamtoken"), // Keep only the auth-token header
+        },
+        body: payload, // Directly pass the FormData object
+      });
+
+      // Handle non-OK responses
+      if (!response.ok) {
+        const errorData = await response
+          .json()
+          .catch(() => ({ message: "Unknown error occurred" }));
+        return rejectWithValue(errorData);
+      }
+
+      return await response.json(); // Return the response data
+    } catch (error) {
+      return rejectWithValue({
+        message: "Internal server error..! ",
+      });
+    }
+  }
+);
+
+// Api call for fetching all for signin team.
+export const fetchTeamPosts = createAsyncThunk(
+  "fetchTeamPosts",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await fetch(`${url}api/posts/signInTeamPost`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "team-token": localStorage.getItem("teamtoken"), // Keep only the auth-token header
+        },
+      });
+
+      // Handle non-OK responses
+      if (!response.ok) {
+        const errorData = await response
+          .json()
+          .catch(() => ({ message: "Unknown error occurred" }));
+        return rejectWithValue(errorData);
+      }
+
+      // Return the success response
+      const data = await response.json();
+      return data.posts;
+    } catch (error) {
+      return rejectWithValue({
+        message: "Internal server error..!",
+      });
+    }
+  }
+);
+
+// Api call for fetching all for signin team.
+export const deleteTeamPosts = createAsyncThunk(
+  "deleteTeamPosts",
+  async (id, { rejectWithValue }) => {
+    try {
+      const response = await fetch(`${url}api/posts/deleteTeamPost/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          "team-token": localStorage.getItem("teamtoken"), // Keep only the auth-token header
+        },
+      });
+
+      // Handle non-OK responses
+      if (!response.ok) {
+        const errorData = await response
+          .json()
+          .catch(() => ({ message: "Unknown error occurred" }));
+        return rejectWithValue(errorData);
+      }
+
+      return response.json();
+    } catch (error) {
+      return rejectWithValue({
+        message: "Internal server error..!",
+      });
+    }
+  }
+);
+
+// Api call for fetching all for signin team.
+export const fetchUserPosts = createAsyncThunk(
+  "fetchUserPosts",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await fetch(`${url}api/posts/siginUserPost`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "auth-token": localStorage.getItem("usertoken"), // Keep only the auth-token header
+        },
+      });
+
+      // Handle non-OK responses
+      if (!response.ok) {
+        const errorData = await response
+          .json()
+          .catch(() => ({ message: "Unknown error occurred" }));
+        return rejectWithValue(errorData);
+      }
+
+      // Return the success response
+      const data = await response.json();
+      return data.posts;
+    } catch (error) {
+      return rejectWithValue({
+        message: "Internal server error..!",
+      });
+    }
+  }
+);
+
+// Api call for fetching all for signin team.
+export const deleteUserPosts = createAsyncThunk(
+  "deleteUserPosts",
+  async (id, { rejectWithValue }) => {
+    try {
+      const response = await fetch(`${url}api/posts/deletePost/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          "auth-token": localStorage.getItem("usertoken"), // Keep only the auth-token header
+        },
+      });
+
+      // Handle non-OK responses
+      if (!response.ok) {
+        const errorData = await response
+          .json()
+          .catch(() => ({ message: "Unknown error occurred" }));
+        return rejectWithValue(errorData);
+      }
+
+      return response.json();
+    } catch (error) {
+      return rejectWithValue({
+        message: "Internal server error..!",
       });
     }
   }
@@ -172,7 +326,6 @@ export const fetchSearchResults = createAsyncThunk(
       const data = await response.json(); // Parse response as JSON
       return data; // Contains `team_response` and `user_response`
     } catch (error) {
-      console.error("API Error:", error); // Debugging
       return rejectWithValue(error.message || "Something went wrong");
     }
   }
@@ -187,6 +340,8 @@ const postSlice = createSlice({
     matchDetails: null,
     otherTeamData: null,
     searchResult: null,
+    teamPost: null,
+    userPost: null,
     error: null,
   },
 
@@ -206,6 +361,36 @@ const postSlice = createSlice({
       state.error = action.payload.message;
     });
 
+    // Handle fetching team posts cases
+    builder.addCase(fetchTeamPosts.pending, (state) => {
+      state.isLoading = true;
+      state.error = null;
+    });
+    builder.addCase(fetchTeamPosts.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.teamPost = action.payload;
+      state.error = null;
+    });
+    builder.addCase(fetchTeamPosts.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload.message;
+    });
+
+    // Handle fetching user posts cases
+    builder.addCase(fetchUserPosts.pending, (state) => {
+      state.isLoading = true;
+      state.error = null;
+    });
+    builder.addCase(fetchUserPosts.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.userPost = action.payload;
+      state.error = null;
+    });
+    builder.addCase(fetchUserPosts.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload.message;
+    });
+
     //Handle upload post cases
     builder.addCase(uploadPost.pending, (state) => {
       state.isLoading = true;
@@ -216,6 +401,20 @@ const postSlice = createSlice({
       state.posts = action.payload;
     });
     builder.addCase(uploadPost.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload?.message || "Unknown error occurred."; // Use backend error or fallback
+    });
+
+    //Handle upload team post cases
+    builder.addCase(uploadTeamPost.pending, (state) => {
+      state.isLoading = true;
+      state.error = null;
+    });
+    builder.addCase(uploadTeamPost.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.posts = action.payload;
+    });
+    builder.addCase(uploadTeamPost.rejected, (state, action) => {
       state.isLoading = false;
       state.error = action.payload?.message || "Unknown error occurred."; // Use backend error or fallback
     });

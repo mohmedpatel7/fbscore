@@ -81,18 +81,32 @@ export default function Navbar({ setShowModal }) {
                 </Link>
               </li>
               {isTeamOwner && (
-                <li className="nav-item me-3 mt-2">
-                  <Link className="nav-link" to="/TeamDashboard">
-                    Team
-                  </Link>
-                </li>
+                <>
+                  <li className="nav-item me-3 mt-2">
+                    <Link className="nav-link" to="/TeamDashboard">
+                      Team
+                    </Link>
+                  </li>
+                  <li className="nav-item me-3 mt-2">
+                    <Link className="nav-link" to="/TeamPosts">
+                      Your Posts
+                    </Link>
+                  </li>
+                </>
               )}
               {isUser && (
-                <li className="nav-item me-3 mt-2">
-                  <Link className="nav-link" to="/PlayerTeam">
-                    Team
-                  </Link>
-                </li>
+                <>
+                  <li className="nav-item me-3 mt-2">
+                    <Link className="nav-link" to="/PlayerTeam">
+                      Team
+                    </Link>
+                  </li>
+                  <li className="nav-item me-3 mt-2">
+                    <Link className="nav-link" to="/UserPosts">
+                      Your Posts
+                    </Link>
+                  </li>
+                </>
               )}
 
               {isMatchOfficial && (
@@ -181,7 +195,7 @@ export default function Navbar({ setShowModal }) {
                   {/* Upload Button for Team Owner */}
                   <button
                     className="btn btn-ps p-3 d-flex align-items-center justify-content-center ms-3 mt-1 me-1"
-                    onClick={() => navigate("/Upload")}
+                    onClick={() => navigate("/UploadTeamPost")}
                     style={{
                       width: "57px",
                       height: "43px",

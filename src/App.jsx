@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Genral/Navbar";
 //import Footer from "./components/Genral/Footer";
 import Posts from "./components/Post/Posts";
+import TeamPosts from "./components/Post/TeamPosts";
+import UserPosts from "./components/Post/UserPosts";
 import Signup from "./components/Authentication/Signup";
 import Signin from "./components/Authentication/Signin";
 import Otpverify from "./components/Authentication/Otpverify";
@@ -15,6 +17,7 @@ import OtherPlayerProfile from "./components/Authentication/OtherPlayerProfile";
 import UpdateUserProfile from "./components/Authentication/updateUserProfile";
 import ForgotPassword from "./components/Authentication/ForgotPassword";
 import UploadPost from "./components/Post/UploadPost";
+import UploadTeamPost from "./components/Post/UploadTeamPost";
 import SignupLandPage from "./components/Genral/Signuplandpage";
 import SigninLandPage from "./components/Genral/Signinlandpage";
 import SearchData from "./components/Genral/SearchData";
@@ -53,6 +56,8 @@ function App() {
 
       <Routes>
         <Route exact path="/" element={<Posts />} />
+        <Route exact path="/TeamPosts" element={<TeamPosts />} />
+        <Route exact path="/UserPosts" element={<UserPosts />} />
         <Route exact path="/Signup" element={<Signup />} />
         <Route exact path="/Signin" element={<Signin />} />
         <Route exact path="/OtpVerify" element={<Otpverify />} />
@@ -79,6 +84,7 @@ function App() {
         />
         <Route exact path="/ForgotPassword" element={<ForgotPassword />} />
         <Route exact path="/Upload" element={<UploadPost />} />
+        <Route exact path="/UploadTeamPost" element={<UploadTeamPost />} />
         <Route exact path="/SignupLandPage" element={<SignupLandPage />} />
         <Route exact path="/SigninLandPage" element={<SigninLandPage />} />
         <Route exact path="/Teamsignup" element={<TeamSignup />} />

@@ -3,10 +3,10 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./style/style.css";
 import { useToast } from "../Genral/ToastContext";
 import { useDispatch } from "react-redux";
-import { uploadPost } from "../../Redux/fetures/postslice";
+import { uploadTeamPost } from "../../Redux/fetures/postslice";
 import { useNavigate } from "react-router-dom";
 
-export default function UploadPost() {
+export default function UploadTeamPost() {
   const [validated, setValidated] = useState(false);
   const [formData, setFormData] = useState({
     description: "",
@@ -16,7 +16,6 @@ export default function UploadPost() {
   const [isPending, startTransition] = useTransition();
   const [preview, setPreview] = useState(null);
 
-  const isUser = localStorage.getItem("usertoken");
   const isTeamOwner = localStorage.getItem("teamtoken");
   const { showToast } = useToast();
   const dispatch = useDispatch();
@@ -66,7 +65,9 @@ export default function UploadPost() {
             submissionData.append("image", formData.image);
           }
 
-          const result = await dispatch(uploadPost(submissionData)).unwrap();
+          const result = await dispatch(
+            uploadTeamPost(submissionData)
+          ).unwrap();
           showToast("Posted successfully.", "success");
           setFormData({ description: "", image: null });
           setPreview(null);
@@ -86,7 +87,7 @@ export default function UploadPost() {
 
   return (
     <>
-      {isUser || isTeamOwner ? (
+      {isTeamOwner ? (
         <div className="container mt-5 mb-4">
           <div className="row">
             <div className="col-md-3"></div>
