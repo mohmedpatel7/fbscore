@@ -1,39 +1,67 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useTransition } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./style/style.css";
 import CommentsModel from "./CommentsModel";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchUserPosts } from "../../Redux/fetures/postslice";
+import { fetchUserPosts, deleteUserPosts } from "../../Redux/fetures/postslice";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { useToast } from "../Genral/ToastContext";
 
 export default function Posts() {
   const dispatch = useDispatch();
   const { userPost } = useSelector((state) => state.postSlice);
+  const { showToast } = useToast();
+  const [isPending, startTransition] = useTransition();
 
   // State for pagination
   const [visiblePosts, setVisiblePosts] = useState(5);
+  const [posts, setPosts] = useState([]);
 
   // Fetch initial posts
   useEffect(() => {
     dispatch(fetchUserPosts());
   }, [dispatch]);
 
+  // Update local posts when userPost changes
+  useEffect(() => {
+    setPosts(userPost);
+  }, [userPost]);
+
   // Load more posts when scrolling
   const fetchMoreData = () => {
     setTimeout(() => {
-      setVisiblePosts((prev) => Math.min(prev + 5, userPost.length));
+      setVisiblePosts((prev) => Math.min(prev + 5, posts.length));
     }, 500);
+  };
+
+  // Handle delete post
+  const handleDeletePost = async (postId) => {
+    // Show confirmation dialog
+    if (window.confirm("Are you sure you want to delete this post?")) {
+      try {
+        startTransition(async () => {
+          try {
+            // Dispatch the delete action
+            const result = await dispatch(deleteUserPosts(postId)).unwrap();
+            // Update local posts state
+            setPosts(posts.filter((post) => post.id !== postId));
+            showToast(
+              result?.message || "Post deleted successfully!",
+              "success"
+            );
+          } catch (error) {
+            showToast(error.message || "Failed to delete post!", "danger");
+          }
+        });
+      } catch (error) {
+        showToast("Error processing your request!", "danger");
+      }
+    }
   };
 
   // State for comment modal
   const [showModel, setShowModel] = useState(false);
   const [currentComments, setCurrentComments] = useState([]);
-
-  // Handle delete post
-  const handleDeletePost = (postId) => {
-    // Add your delete post logic here
-    console.log("Deleting post:", postId);
-  };
 
   // Open comments modal
   const openComments = (comments) => {
@@ -46,14 +74,14 @@ export default function Posts() {
 
   return (
     <div className="container mt-5">
-      {userPost && userPost.length > 0 ? (
+      {posts && posts.length > 0 ? (
         <div className="row justify-content-center">
           <div className="col-md-3"></div>
           <div className="col-md-6">
             <InfiniteScroll
               dataLength={visiblePosts}
               next={fetchMoreData}
-              hasMore={visiblePosts < userPost.length}
+              hasMore={visiblePosts < posts.length}
               loader={<h4 className="text-center">Loading more posts...</h4>}
               endMessage={
                 <p className="text-center">
@@ -61,8 +89,11 @@ export default function Posts() {
                 </p>
               }
             >
-              {userPost.slice(0, visiblePosts).map((post) => (
-                <div className="mb-4" key={post.id}>
+              {posts.slice(0, visiblePosts).map((post) => (
+                <div
+                  className={`mb-4 ${isPending ? "opacity-50" : ""}`}
+                  key={post.id}
+                >
                   <div className="card shadow-sm">
                     <div className="card-head d-flex align-items-center p-3 justify-content-between">
                       <div className="d-flex align-items-center">
@@ -91,9 +122,10 @@ export default function Posts() {
                             <button
                               className="dropdown-item text-danger"
                               onClick={() => handleDeletePost(post.id)}
+                              disabled={isPending}
                             >
                               <i className="fas fa-trash-alt me-2"></i>
-                              Delete
+                              {isPending ? "Deleting..." : "Delete"}
                             </button>
                           </li>
                         </ul>
@@ -116,7 +148,7 @@ export default function Posts() {
                       )}
                     </div>
                     <div className="card-footer d-flex justify-content-between align-items-center">
-                      {/*   <div className="d-flex">
+                      <div className="d-flex">
                         <i
                           className="fa-regular fa-heart post-like-btn"
                           title="Like"
@@ -127,11 +159,10 @@ export default function Posts() {
                           className="fa-regular fa-comment post-like-btn ms-3"
                           title="Comment"
                           onClick={() => openComments(post.comment)}
-                          style={{ border: "none", background: "none" }}
+                          style={{ cursor: "pointer" }}
                         ></i>
-
                         <span className="ms-1">{post.comment.length}</span>
-                      </div> */}
+                      </div>
                       <div className="text-end">
                         <small className="text-muted">{post.date}</small>
                       </div>
