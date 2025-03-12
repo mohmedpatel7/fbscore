@@ -30,7 +30,7 @@ export default function Matches() {
   const [visibleOngoing, setVisibleOngoing] = useState(10); // Show next match initially
 
   if (!matches) {
-    return <p>Loading matches...</p>;
+    return <>Loading matches...</>;
   }
 
   const match = matches || [];

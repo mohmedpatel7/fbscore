@@ -18,6 +18,7 @@ export default function Navbar({ setShowModal }) {
   const isUser = !!localStorage.getItem("usertoken");
   const isTeamOwner = !!localStorage.getItem("teamtoken");
   const isMatchOfficial = !!localStorage.getItem("matchOfficialtoken");
+  const isAmdin = !!localStorage.getItem("admintoken");
 
   const { data } = useSelector((state) => state.authSlice);
   const { teamData } = useSelector((state) => state.teamSlice);
@@ -42,6 +43,7 @@ export default function Navbar({ setShowModal }) {
       localStorage.removeItem("usertoken");
       localStorage.removeItem("teamtoken");
       localStorage.removeItem("matchOfficialtoken");
+      localStorage.removeItem("admintoken");
 
       navigate("/");
       showToast("Signout Successful", "success");
@@ -119,6 +121,16 @@ export default function Navbar({ setShowModal }) {
                   <li className="nav-item me-3 mt-2">
                     <Link className="nav-link" to="/MatchList">
                       Matches
+                    </Link>
+                  </li>
+                </>
+              )}
+
+              {isAmdin && (
+                <>
+                  <li className="nav-item me-3 mt-2">
+                    <Link className="nav-link" to="/Reports">
+                      Genral Reports
                     </Link>
                   </li>
                 </>
@@ -245,6 +257,50 @@ export default function Navbar({ setShowModal }) {
                   >
                     Sign Out
                   </button>
+                </>
+              ) : isAmdin ? (
+                <>
+                  {/* Upload Button for admin */}
+                  <button
+                    className="btn btn-ps p-3 d-flex align-items-center justify-content-center ms-3 mt-1 me-1"
+                    onClick={() => navigate("/")}
+                    style={{
+                      width: "57px",
+                      height: "43px",
+                      backgroundColor: "#eee",
+                      borderRadius: "5px",
+                    }}
+                  >
+                    <BsPlus style={{ fontSize: "30px", color: "#000" }} />
+                  </button>
+
+                  {/* Profile Dropdown for Amdin */}
+                  <Dropdown>
+                    <Dropdown.Toggle variant="light">
+                      <img
+                        src={teamData?.team?.teamlogo || Default_Pic}
+                        alt="Profile"
+                        style={{
+                          width: "40px",
+                          height: "40px",
+                          borderRadius: "50%",
+                          objectFit: "cover",
+                        }}
+                      />
+                    </Dropdown.Toggle>
+                    <Dropdown.Menu>
+                      <Dropdown.Item>
+                        <button className="btn" onClick={() => navigate("/")}>
+                          Profile
+                        </button>
+                      </Dropdown.Item>
+                      <Dropdown.Item>
+                        <button className="btn" onClick={handleSignOut}>
+                          Sign Out
+                        </button>
+                      </Dropdown.Item>
+                    </Dropdown.Menu>
+                  </Dropdown>
                 </>
               ) : (
                 <>

@@ -11,60 +11,62 @@ const SigninLandPage = () => {
     navigate(path);
   };
 
+  const roles = [
+    {
+      role: "Team Owner",
+      path: "/TeamSignin",
+      icon: "fa-solid fa-user-tie",
+      description: [
+        "Manage your team and players",
+        "Schedule and oversee team matches",
+        "Track team performance and stats",
+      ],
+    },
+    {
+      role: "Player",
+      path: "/Signin",
+      icon: "fa-solid fa-person-running",
+      description: [
+        "Access your team dashboard",
+        "View match schedules and stats",
+        "Update personal and performance info",
+      ],
+    },
+    {
+      role: "Match Official",
+      path: "/Matchofficialsignin",
+      icon: "fa-solid fa-users",
+      description: [
+        "Sign in to officiate matches",
+        "Update match results and reports",
+        "Ensure fair play and rule enforcement",
+      ],
+    },
+  ];
+
   return (
-    <div className="container mt-5">
-      <h2 className="text-center mb-4">Choose Your Role to Sign In</h2>
-      <div className="row justify-content-center">
-        {[
-          {
-            role: "Team Owner",
-            path: "/TeamSignin",
-            icon: "fa-solid fa-user-tie fa-roles",
-            description: [
-              "Manage your team and players.",
-              "Schedule and oversee team matches.",
-              "Track team performance and stats.",
-            ],
-          },
-          {
-            role: "Player",
-            path: "/Signin",
-            icon: "fa-solid fa-person-running fa-roles",
-            description: [
-              "Access your team dashboard.",
-              "View match schedules and stats.",
-              "Update personal and performance info.",
-            ],
-          },
-          {
-            role: "Match Official",
-            path: "/Matchofficialsignin",
-            icon: "fa-solid fa-users fa-roles",
-            description: [
-              "Sign in to officiate matches.",
-              "Update match results and reports.",
-              "Ensure fair play and rule enforcement.",
-            ],
-          },
-        ].map(({ role, path, icon, description }) => (
-          <div key={role} className="col-md-4">
-            <div
-              className="card text-center p-4 shadow-lg"
-              style={{ cursor: "pointer", height: "300px" }}
-              onClick={() => handleRoleSelect(path)}
-            >
-              <div className="card-body">
-                <i className={`${icon} fa-3x mb-3`}></i>
-                <h5 className="card-title">{role}</h5>
-                <ul className="text-start">
-                  {description.map((point, index) => (
-                    <li key={index}>{point}</li>
-                  ))}
-                </ul>
+    <div className="signin-container">
+      <div className="container">
+        <h1 className="signin-title">Choose Your Role to Sign In</h1>
+        <div className="row justify-content-center g-4">
+          {roles.map(({ role, path, icon, description }) => (
+            <div key={role} className="col-md-4">
+              <div className="role-card" onClick={() => handleRoleSelect(path)}>
+                <div className="card-body p-4">
+                  <div className="role-icon">
+                    <i className={`${icon} fa-roles`}></i>
+                  </div>
+                  <h3 className="role-title text-center">{role}</h3>
+                  <ul className="role-description">
+                    {description.map((point, index) => (
+                      <li key={index}>{point}</li>
+                    ))}
+                  </ul>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </div>
   );

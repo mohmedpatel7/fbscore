@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Genral/Navbar";
 //import Footer from "./components/Genral/Footer";
+import AdminSignin from "./components/Admin/AdminSignin";
+import Reports from "./components/Admin/Reports";
 import Posts from "./components/Post/Posts";
 import TeamPosts from "./components/Post/TeamPosts";
 import UserPosts from "./components/Post/UserPosts";
@@ -55,6 +57,10 @@ function App() {
       <Navbar setShowModal={setShowModal} />
 
       <Routes>
+        {/**Admin routes */}
+        <Route exact path="/AdminSignin" element={<AdminSignin />} />
+        <Route exact path="/Reports" element={<Reports />} />
+
         <Route exact path="/" element={<Posts />} />
         <Route exact path="/TeamPosts" element={<TeamPosts />} />
         <Route exact path="/UserPosts" element={<UserPosts />} />

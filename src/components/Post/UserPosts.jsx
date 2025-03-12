@@ -148,7 +148,7 @@ export default function Posts() {
                       )}
                     </div>
                     <div className="card-footer d-flex justify-content-between align-items-center">
-                      <div className="d-flex">
+                      {/*<div className="d-flex">
                         <i
                           className="fa-regular fa-heart post-like-btn"
                           title="Like"
@@ -162,7 +162,7 @@ export default function Posts() {
                           style={{ cursor: "pointer" }}
                         ></i>
                         <span className="ms-1">{post.comment.length}</span>
-                      </div>
+                      </div>*/}
                       <div className="text-end">
                         <small className="text-muted">{post.date}</small>
                       </div>
