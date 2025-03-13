@@ -4,6 +4,7 @@ import Navbar from "./components/Genral/Navbar";
 //import Footer from "./components/Genral/Footer";
 import AdminSignin from "./components/Admin/AdminSignin";
 import Reports from "./components/Admin/Reports";
+import Requests from "./components/Admin/Requests";
 import Posts from "./components/Post/Posts";
 import TeamPosts from "./components/Post/TeamPosts";
 import UserPosts from "./components/Post/UserPosts";
@@ -60,6 +61,7 @@ function App() {
         {/**Admin routes */}
         <Route exact path="/AdminSignin" element={<AdminSignin />} />
         <Route exact path="/Reports" element={<Reports />} />
+        <Route exact path="/Requests" element={<Requests />} />
 
         <Route exact path="/" element={<Posts />} />
         <Route exact path="/TeamPosts" element={<TeamPosts />} />

@@ -133,6 +133,11 @@ export default function Navbar({ setShowModal }) {
                       Genral Reports
                     </Link>
                   </li>
+                  <li className="nav-item me-3 mt-2">
+                    <Link className="nav-link" to="/Requests">
+                      Regestration Request
+                    </Link>
+                  </li>
                 </>
               )}
             </div>

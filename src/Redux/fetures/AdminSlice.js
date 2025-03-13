@@ -131,6 +131,153 @@ export const fetchMatchOfficials = createAsyncThunk(
   }
 );
 
+//Fetching team requests.
+export const fetchTeamRequests = createAsyncThunk(
+  "fetchTeamRequests",
+  async (_, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("admintoken");
+      if (!token) {
+        return rejectWithValue({
+          message: "Authentication token is missing. Please log in again.",
+        });
+      }
+
+      const response = await fetch(`${url}api/admin/fetchTeamRequests`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "admin-token": token,
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData);
+      }
+
+      const data = await response.json();
+      return data.response;
+    } catch (error) {
+      return rejectWithValue({
+        message: "Failed to fetch match officials. Please try again later.",
+      });
+    }
+  }
+);
+
+//Api call for action on team req.
+export const adminAcTeamReq = createAsyncThunk(
+  "adminAcTeamReq",
+  async ({ reqId, action }, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("admintoken");
+      if (!token) {
+        return rejectWithValue({
+          message: "Authentication token is missing. Please log in again.",
+        });
+      }
+
+      const response = await fetch(`${url}api/admin/adminAcTeam/${reqId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "admin-token": token,
+        },
+        body: JSON.stringify({ action }),
+      });
+
+      // Handle non-OK responses
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData);
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      return rejectWithValue({
+        message: "Failed . Please try again.",
+      });
+    }
+  }
+);
+
+//Fetching team requests.
+export const fetchMatchOfficialReq = createAsyncThunk(
+  "fetchMatchOfficialReq",
+  async (_, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("admintoken");
+      if (!token) {
+        return rejectWithValue({
+          message: "Authentication token is missing. Please log in again.",
+        });
+      }
+
+      const response = await fetch(`${url}api/admin/fetchMatchOfficialReq`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "admin-token": token,
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData);
+      }
+
+      const data = await response.json();
+      return data.response;
+    } catch (error) {
+      return rejectWithValue({
+        message: "Failed to fetch match officials. Please try again later.",
+      });
+    }
+  }
+);
+
+//Api call for action on team req.
+export const adminAcMatchOfficialReq = createAsyncThunk(
+  "adminAcMatchOfficialReq",
+  async ({ reqId, action }, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("admintoken");
+      if (!token) {
+        return rejectWithValue({
+          message: "Authentication token is missing. Please log in again.",
+        });
+      }
+
+      const response = await fetch(
+        `${url}api/admin/matchOfficialAction/${reqId}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "admin-token": token,
+          },
+          body: JSON.stringify({ action }),
+        }
+      );
+
+      // Handle non-OK responses
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData);
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      return rejectWithValue({
+        message: "Failed . Please try again.",
+      });
+    }
+  }
+);
+
 //admin slice.
 const AdminSlice = createSlice({
   name: "admin",
@@ -140,6 +287,8 @@ const AdminSlice = createSlice({
     teamsTable: null,
     allUsers: null,
     matchOfficials: null,
+    teamReq: null,
+    matchOfficialReq: null,
     error: null,
   },
 
@@ -200,6 +349,66 @@ const AdminSlice = createSlice({
       state.error = null;
     });
     builder.addCase(fetchMatchOfficials.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload?.message;
+    });
+
+    //Handle fetching team requests
+    builder.addCase(fetchTeamRequests.pending, (state) => {
+      state.isLoading = true;
+      state.error = null;
+    });
+    builder.addCase(fetchTeamRequests.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.teamReq = action.payload;
+      state.error = null;
+    });
+    builder.addCase(fetchTeamRequests.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload?.message;
+    });
+
+    //Handle action team requests
+    builder.addCase(adminAcTeamReq.pending, (state) => {
+      state.isLoading = true;
+      state.error = null;
+    });
+    builder.addCase(adminAcTeamReq.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.teamReq = action.payload;
+      state.error = null;
+    });
+    builder.addCase(adminAcTeamReq.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload?.message;
+    });
+
+    //Handle fetching match official requests
+    builder.addCase(fetchMatchOfficialReq.pending, (state) => {
+      state.isLoading = true;
+      state.error = null;
+    });
+    builder.addCase(fetchMatchOfficialReq.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.matchOfficialReq = action.payload;
+      state.error = null;
+    });
+    builder.addCase(fetchMatchOfficialReq.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload?.message;
+    });
+
+    //Handle action match official requests
+    builder.addCase(adminAcMatchOfficialReq.pending, (state) => {
+      state.isLoading = true;
+      state.error = null;
+    });
+    builder.addCase(adminAcMatchOfficialReq.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.matchOfficialReq = action.payload;
+      state.error = null;
+    });
+    builder.addCase(adminAcMatchOfficialReq.rejected, (state, action) => {
       state.isLoading = false;
       state.error = action.payload?.message;
     });
