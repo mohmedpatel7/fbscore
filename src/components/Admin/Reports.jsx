@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import {
   fetchTeamTable,
   fetchAllUsers,
   fetchMatchOfficials,
+  deleteEntity,
 } from "../../Redux/fetures/AdminSlice";
 import { fetchCommonTeams } from "../../Redux/fetures/Teamslice";
 import { fetchOtherUser } from "../../Redux/fetures/authentication";
@@ -53,13 +54,15 @@ export default function Reports() {
     status: "all", // all, active, inactive
   });
 
+  const [deletingIds, setDeletingIds] = useState(new Set());
+
   useEffect(() => {
     if (isAdmin) {
       if (activeTab === "Teams") {
         setIsLoadingTeams(true);
         dispatch(fetchTeamTable())
           .catch((error) => {
-            showToast(error.message || "Error while fetching teams table!");
+        showToast(error.message || "Error while fetching teams table!");
           })
           .finally(() => setIsLoadingTeams(false));
       } else if (activeTab === "Players") {
@@ -188,17 +191,143 @@ export default function Reports() {
     });
   };
 
-  // Handle delete team
-  const handleDeleteTeam = (teamId) => {
-    if (window.confirm("Are you sure you want to delete this team?")) {
-    }
-  };
+  // Optimistic delete handlers
+  const handleDeleteTeam = useCallback(
+    async (teamId) => {
+      if (
+        window.confirm(
+          "Are you sure you want to delete this team? This will also delete all associated player records and stats."
+        )
+      ) {
+        try {
+          setDeletingIds((prev) => new Set([...prev, teamId]));
+          await dispatch(deleteEntity({ type: "team", id: teamId })).unwrap();
+          showToast("Team deleted successfully", "success");
+          // Optimistically update local state
+          if (teamsTable?.teams) {
+            const updatedTeams = teamsTable.teams.filter(
+              (team) => team.teamId !== teamId
+            );
+            dispatch({
+              type: "admin/updateTeams",
+              payload: { ...teamsTable, teams: updatedTeams },
+            });
+          }
+        } catch (error) {
+          showToast(error.message || "Failed to delete team", "error");
+        } finally {
+          setDeletingIds((prev) => {
+            const newSet = new Set(prev);
+            newSet.delete(teamId);
+            return newSet;
+          });
+        }
+      }
+    },
+    [dispatch, teamsTable, showToast]
+  );
 
-  // Handle delete user
-  const handleDeleteUser = (userId) => {
-    if (window.confirm("Are you sure you want to delete this user?")) {
-    }
-  };
+  const handleDeleteUser = useCallback(
+    async (userId) => {
+      if (
+        window.confirm(
+          "Are you sure you want to delete this user? This will also delete their player profile and stats if they are a player."
+        )
+      ) {
+        try {
+          setDeletingIds((prev) => new Set([...prev, userId]));
+          await dispatch(deleteEntity({ type: "user", id: userId })).unwrap();
+          showToast("User deleted successfully", "success");
+          // Optimistically update local state
+          if (allUsers?.users) {
+            const updatedUsers = allUsers.users.filter(
+              (user) => user.userId !== userId
+            );
+            dispatch({
+              type: "admin/updateUsers",
+              payload: { ...allUsers, users: updatedUsers },
+            });
+          }
+        } catch (error) {
+          showToast(error.message || "Failed to delete user", "error");
+        } finally {
+          setDeletingIds((prev) => {
+            const newSet = new Set(prev);
+            newSet.delete(userId);
+            return newSet;
+          });
+        }
+      }
+    },
+    [dispatch, allUsers, showToast]
+  );
+
+  const handleDeleteOfficial = useCallback(
+    async (officialId) => {
+      if (
+        window.confirm(
+          "Are you sure you want to delete this match official? This will also affect match records."
+        )
+      ) {
+        try {
+          setDeletingIds((prev) => new Set([...prev, officialId]));
+          await dispatch(
+            deleteEntity({ type: "matchofficial", id: officialId })
+          ).unwrap();
+          showToast("Match official deleted successfully", "success");
+          // Optimistically update local state
+          if (matchOfficials?.matchofficial) {
+            const updatedOfficials = matchOfficials.matchofficial.filter(
+              (official) => official.officialId !== officialId
+            );
+            dispatch({
+              type: "admin/updateOfficials",
+              payload: { ...matchOfficials, matchofficial: updatedOfficials },
+            });
+          }
+        } catch (error) {
+          showToast(
+            error.message || "Failed to delete match official",
+            "error"
+          );
+        } finally {
+          setDeletingIds((prev) => {
+            const newSet = new Set(prev);
+            newSet.delete(officialId);
+            return newSet;
+          });
+        }
+      }
+    },
+    [dispatch, matchOfficials, showToast]
+  );
+
+  // Update the delete button rendering in the team table
+  const renderDeleteButton = (id, handleDelete, type) => (
+    <button
+      className={`dropdown-item text-danger ${
+        deletingIds.has(id) ? "disabled" : ""
+      }`}
+      onClick={() => handleDelete(id)}
+      disabled={deletingIds.has(id)}
+    >
+      {deletingIds.has(id) ? (
+        <>
+          <span
+            className="spinner-border spinner-border-sm me-2"
+            role="status"
+            aria-hidden="true"
+          ></span>
+          Deleting...
+        </>
+      ) : (
+        <>
+          <i className="fas fa-trash-alt me-2"></i>
+          Delete
+        </>
+      )}
+    </button>
+  );
 
   const handleOtherTeamProfile = async (teamid) => {
     try {
@@ -488,15 +617,11 @@ export default function Reports() {
                                       </button>
                                       <ul className="dropdown-menu dropdown-menu-end">
                                         <li>
-                                          <button
-                                            className="dropdown-item text-danger"
-                                            onClick={() =>
-                                              handleDeleteTeam(team.teamId)
-                                            }
-                                          >
-                                            <i className="fas fa-trash-alt me-2"></i>
-                                            Delete
-                                          </button>
+                                          {renderDeleteButton(
+                                            team.teamId,
+                                            handleDeleteTeam,
+                                            "team"
+                                          )}
                                         </li>
                                       </ul>
                                     </div>
@@ -792,15 +917,11 @@ export default function Reports() {
                                       </button>
                                       <ul className="dropdown-menu dropdown-menu-end">
                                         <li>
-                                          <button
-                                            className="dropdown-item text-danger"
-                                            onClick={() =>
-                                              handleDeleteUser(user.userId)
-                                            }
-                                          >
-                                            <i className="fas fa-trash-alt me-2"></i>
-                                            Delete
-                                          </button>
+                                          {renderDeleteButton(
+                                            user.userId,
+                                            handleDeleteUser,
+                                            "user"
+                                          )}
                                         </li>
                                       </ul>
                                     </div>
@@ -1029,17 +1150,11 @@ export default function Reports() {
                                       </button>
                                       <ul className="dropdown-menu dropdown-menu-end">
                                         <li>
-                                          <button
-                                            className="dropdown-item text-danger"
-                                            onClick={() =>
-                                              handleDeleteOfficial(
-                                                official.officialId
-                                              )
-                                            }
-                                          >
-                                            <i className="fas fa-trash-alt me-2"></i>
-                                            Delete
-                                          </button>
+                                          {renderDeleteButton(
+                                            official.officialId,
+                                            handleDeleteOfficial,
+                                            "official"
+                                          )}
                                         </li>
                                       </ul>
                                     </div>

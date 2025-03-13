@@ -278,6 +278,55 @@ export const adminAcMatchOfficialReq = createAsyncThunk(
   }
 );
 
+//Api call for deleting entities (User/Team/MatchOfficial)
+export const deleteEntity = createAsyncThunk(
+  "deleteEntity",
+  async ({ type, id }, { rejectWithValue, dispatch }) => {
+    try {
+      const token = localStorage.getItem("admintoken");
+      if (!token) {
+        return rejectWithValue({
+          message: "Authentication token is missing. Please log in again.",
+        });
+      }
+
+      const response = await fetch(`${url}api/admin/delete/${type}/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          "admin-token": token,
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData);
+      }
+
+      const data = await response.json();
+
+      // Refresh the corresponding data after successful deletion
+      switch (type.toLowerCase()) {
+        case "user":
+          dispatch(fetchAllUsers());
+          break;
+        case "team":
+          dispatch(fetchTeamTable());
+          break;
+        case "matchofficial":
+          dispatch(fetchMatchOfficials());
+          break;
+      }
+
+      return data;
+    } catch (error) {
+      return rejectWithValue({
+        message: "Failed to delete. Please try again.",
+      });
+    }
+  }
+);
+
 //admin slice.
 const AdminSlice = createSlice({
   name: "admin",
@@ -290,8 +339,20 @@ const AdminSlice = createSlice({
     teamReq: null,
     matchOfficialReq: null,
     error: null,
+    deleteStatus: null,
   },
-
+  reducers: {
+    // Add these reducers for optimistic updates
+    updateTeams: (state, action) => {
+      state.teamsTable = action.payload;
+    },
+    updateUsers: (state, action) => {
+      state.allUsers = action.payload;
+    },
+    updateOfficials: (state, action) => {
+      state.matchOfficials = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     //Handle Sign in cases.
     builder.addCase(Signin.pending, (state) => {
@@ -412,7 +473,27 @@ const AdminSlice = createSlice({
       state.isLoading = false;
       state.error = action.payload?.message;
     });
+
+    //Handle delete entity
+    builder.addCase(deleteEntity.pending, (state) => {
+      state.isLoading = true;
+      state.error = null;
+      state.deleteStatus = null;
+    });
+    builder.addCase(deleteEntity.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.deleteStatus = action.payload;
+      state.error = null;
+    });
+    builder.addCase(deleteEntity.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload?.message;
+      state.deleteStatus = null;
+    });
   },
 });
+
+// Export the new actions
+export const { updateTeams, updateUsers, updateOfficials } = AdminSlice.actions;
 
 export default AdminSlice.reducer;
