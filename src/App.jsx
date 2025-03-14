@@ -5,6 +5,8 @@ import Navbar from "./components/Genral/Navbar";
 import AdminSignin from "./components/Admin/AdminSignin";
 import Reports from "./components/Admin/Reports";
 import Requests from "./components/Admin/Requests";
+import Graph from "./components/Admin/Graph";
+import PostMaintain from "./components/Admin/PostsMaintian";
 import Posts from "./components/Post/Posts";
 import TeamPosts from "./components/Post/TeamPosts";
 import UserPosts from "./components/Post/UserPosts";
@@ -62,6 +64,8 @@ function App() {
         <Route exact path="/AdminSignin" element={<AdminSignin />} />
         <Route exact path="/Reports" element={<Reports />} />
         <Route exact path="/Requests" element={<Requests />} />
+        <Route exact path="/Graph" element={<Graph />} />
+        <Route exact path="/PostMaintain" element={<PostMaintain />} />
 
         <Route exact path="/" element={<Posts />} />
         <Route exact path="/TeamPosts" element={<TeamPosts />} />

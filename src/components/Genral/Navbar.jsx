@@ -129,6 +129,11 @@ export default function Navbar({ setShowModal }) {
               {isAmdin && (
                 <>
                   <li className="nav-item me-3 mt-2">
+                    <Link className="nav-link" to="/Graph">
+                      Analytics
+                    </Link>
+                  </li>
+                  <li className="nav-item me-3 mt-2">
                     <Link className="nav-link" to="/Reports">
                       Genral Reports
                     </Link>
@@ -136,6 +141,11 @@ export default function Navbar({ setShowModal }) {
                   <li className="nav-item me-3 mt-2">
                     <Link className="nav-link" to="/Requests">
                       Regestration Request
+                    </Link>
+                  </li>
+                  <li className="nav-item me-3 mt-2">
+                    <Link className="nav-link" to="/PostMaintain">
+                      Maintain Posts
                     </Link>
                   </li>
                 </>
@@ -266,7 +276,7 @@ export default function Navbar({ setShowModal }) {
               ) : isAmdin ? (
                 <>
                   {/* Upload Button for admin */}
-                  <button
+                  {/* <button
                     className="btn btn-ps p-3 d-flex align-items-center justify-content-center ms-3 mt-1 me-1"
                     onClick={() => navigate("/")}
                     style={{
@@ -277,7 +287,7 @@ export default function Navbar({ setShowModal }) {
                     }}
                   >
                     <BsPlus style={{ fontSize: "30px", color: "#000" }} />
-                  </button>
+                  </button> */}
 
                   {/* Profile Dropdown for Amdin */}
                   <Dropdown>

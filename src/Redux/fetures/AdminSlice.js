@@ -327,6 +327,70 @@ export const deleteEntity = createAsyncThunk(
   }
 );
 
+//Fetching totals.
+export const fetchTotals = createAsyncThunk(
+  "fetchTotals",
+  async (_, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("admintoken");
+      if (!token) {
+        return rejectWithValue({
+          message: "Authentication token is missing. Please log in again.",
+        });
+      }
+
+      const response = await fetch(`${url}api/admin/counts`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "admin-token": token,
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData);
+      }
+
+      return response.json();
+    } catch (error) {
+      return rejectWithValue({
+        message: "Failed to fetch match officials. Please try again later.",
+      });
+    }
+  }
+);
+
+// Api call for deleting all post.
+export const deletePost = createAsyncThunk(
+  "deletePost",
+  async (id, { rejectWithValue }) => {
+    try {
+      const response = await fetch(`${url}api/admin/deletePost/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          "admin-token": localStorage.getItem("admintoken"), // Keep only the auth-token header
+        },
+      });
+
+      // Handle non-OK responses
+      if (!response.ok) {
+        const errorData = await response
+          .json()
+          .catch(() => ({ message: "Unknown error occurred" }));
+        return rejectWithValue(errorData);
+      }
+
+      return response.json();
+    } catch (error) {
+      return rejectWithValue({
+        message: "Internal server error..!",
+      });
+    }
+  }
+);
+
 //admin slice.
 const AdminSlice = createSlice({
   name: "admin",
@@ -338,8 +402,9 @@ const AdminSlice = createSlice({
     matchOfficials: null,
     teamReq: null,
     matchOfficialReq: null,
-    error: null,
     deleteStatus: null,
+    totalUsers: null,
+    error: null,
   },
   reducers: {
     // Add these reducers for optimistic updates
@@ -490,10 +555,41 @@ const AdminSlice = createSlice({
       state.error = action.payload?.message;
       state.deleteStatus = null;
     });
+
+    //Handle delete entity
+    builder.addCase(fetchTotals.pending, (state) => {
+      state.isLoading = true;
+      state.error = null;
+      state.deleteStatus = null;
+    });
+    builder.addCase(fetchTotals.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.totalUsers = action.payload;
+      state.error = null;
+    });
+    builder.addCase(fetchTotals.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload?.message;
+      state.deleteStatus = null;
+    });
+
+    //Handle delete post
+    builder.addCase(deletePost.pending, (state) => {
+      state.isLoading = true;
+      state.error = null;
+      state.deleteStatus = null;
+    });
+    builder.addCase(deletePost.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.deleteStatus = action.payload;
+      state.error = null;
+    });
+    builder.addCase(deletePost.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload?.message;
+      state.deleteStatus = null;
+    });
   },
 });
-
-// Export the new actions
-export const { updateTeams, updateUsers, updateOfficials } = AdminSlice.actions;
 
 export default AdminSlice.reducer;

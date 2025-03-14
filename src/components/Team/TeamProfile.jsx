@@ -41,7 +41,7 @@ export default function TeamProfile() {
             >
               <li>
                 <button
-                  className="dropdown-item "
+                  className="dropdown-item"
                   onClick={() => navigate("/UpdateTeamProfile")}
                 >
                   Edit
@@ -101,6 +101,36 @@ export default function TeamProfile() {
                   <strong>Created At:</strong>{" "}
                   {new Date(teamData?.team?.createdAt).toLocaleDateString()}
                 </p>
+              </div>
+
+              {/* Horizontal Line */}
+              <div className="col-12 my-3">
+                <hr />
+              </div>
+
+              {/* Match Stats - Total Matches & Wins */}
+              <div className="col-md-6 text-center">
+                <h5 style={{ color: "#45b469" }}>Total Matches</h5>
+                <p className="fw-bold">
+                  {teamData?.matches?.totalMatches || 0}
+                </p>
+              </div>
+
+              {/* Vertical Line */}
+              <div className="col-md-1 d-none d-md-block">
+                <div
+                  className="vr"
+                  style={{
+                    height: "100%",
+                    width: "2px",
+                    backgroundColor: "#ddd",
+                  }}
+                ></div>
+              </div>
+
+              <div className="col-md-5 text-center">
+                <h5 style={{ color: "#45b469" }}>Wins</h5>
+                <p className="fw-bold">{teamData?.matches?.wins || 0}</p>
               </div>
             </div>
           </div>

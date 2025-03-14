@@ -68,7 +68,7 @@ export default function OtherTeamProfile() {
                 </div>
 
                 {/* Team Information */}
-                <div className="col-12">
+                <div className="col-12 mb-3">
                   <h5 style={{ color: "#45b469" }}>Team Information</h5>
                   <hr />
                   <p className="mb-1">
@@ -81,6 +81,19 @@ export default function OtherTeamProfile() {
                     ).toLocaleDateString()}
                   </p>
                 </div>
+
+                {/* Team Performance */}
+                <div className="col-12">
+                  <h5 style={{ color: "#45b469" }}>Team Performance</h5>
+                  <hr />
+                  <p className="mb-1">
+                    <strong>Matches Played:</strong>{" "}
+                    {otherTeamData?.team?.totalMatches || 0}
+                  </p>
+                  <p className="mb-1">
+                    <strong>Wins:</strong> {otherTeamData?.team?.wins || 0}
+                  </p>
+                </div>
               </div>
             </div>
           </div>
@@ -91,6 +104,7 @@ export default function OtherTeamProfile() {
           </div>
         </div>
 
+        {/* Squad Section */}
         {otherTeamData?.players?.length > 0 ? (
           <>
             <div className="col-12 mt-4">
