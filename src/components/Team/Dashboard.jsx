@@ -207,7 +207,7 @@ const TeamDashboard = () => {
             {activeTab === "overview" && (
               <>
                 {/* Last Completed Fixture */}
-                {lastCompletedMatch && (
+                {lastCompletedMatch ? (
                   <>
                     <h4 className="text-center mt-3">Last Completed Fixture</h4>
                     <hr className="w-50 mx-auto" />
@@ -277,10 +277,12 @@ const TeamDashboard = () => {
                       </div>
                     </div>
                   </>
+                ) : (
+                  <p>No matches available</p>
                 )}
 
                 {/* Next Upcoming/Ongoing Fixture */}
-                {nextMatch && (
+                {nextMatch ? (
                   <>
                     <h4 className="text-center mt-3">Next Fixture</h4>
                     <hr className="w-50 mx-auto" />
@@ -345,11 +347,13 @@ const TeamDashboard = () => {
                       </div>
                     </div>
                   </>
+                ) : (
+                  <p>No matches available</p>
                 )}
               </>
             )}
 
-            {activeTab === "squad" && (
+            {activeTab === "squad" ? (
               <>
                 <h5 className="mb-3">Squad List</h5>
                 <div className="d-flex flex-column gap-2">
@@ -387,6 +391,8 @@ const TeamDashboard = () => {
                   ))}
                 </div>
               </>
+            ) : (
+              <p>No squad available</p>
             )}
 
             {activeTab === "matches" && (
@@ -395,7 +401,7 @@ const TeamDashboard = () => {
                 onScroll={handleScroll}
               >
                 {/* Last Completed Match */}
-                {lastCompletedMatch && (
+                {lastCompletedMatch ? (
                   <>
                     <h4 className="text-center mt-3">Last Completed Fixture</h4>
                     <hr className="w-50 mx-auto" />
@@ -462,10 +468,12 @@ const TeamDashboard = () => {
                       </div>
                     </div>
                   </>
+                ) : (
+                  <p>No matches available</p>
                 )}
 
                 {/* Next Upcoming/Ongoing Match */}
-                {nextMatch && (
+                {nextMatch ? (
                   <>
                     <h4 className="text-center mt-3">Next Fixture</h4>
                     <hr className="w-50 mx-auto" />
@@ -525,10 +533,12 @@ const TeamDashboard = () => {
                       </div>
                     </div>
                   </>
+                ) : (
+                  <p>No matches available</p>
                 )}
 
                 {/* Remaining Completed Matches */}
-                {remainingCompletedMatches.length > 0 && (
+                {remainingCompletedMatches.length > 0 ? (
                   <>
                     <h4 className="text-center mt-3">Completed Fixtures</h4>
                     <hr className="w-50 mx-auto" />
@@ -596,10 +606,12 @@ const TeamDashboard = () => {
                         </div>
                       ))}
                   </>
+                ) : (
+                  <p>No matches available</p>
                 )}
 
                 {/* Ongoing Matches */}
-                {remainingOngoingMatches.length > 0 && (
+                {remainingOngoingMatches.length > 0 ? (
                   <>
                     <h4 className="text-center mt-3">Upcoming Fixtures</h4>
                     <hr className="w-50 mx-auto" />
@@ -658,11 +670,13 @@ const TeamDashboard = () => {
                         </div>
                       ))}
                   </>
+                ) : (
+                  <p>No matches available</p>
                 )}
               </div>
             )}
 
-            {activeTab === "recruitment" && (
+            {activeTab === "recruitment" ? (
               <div className="card p-3">
                 <h5 className="mb-3">Add New Player</h5>
 
@@ -791,6 +805,8 @@ const TeamDashboard = () => {
                   <p className="text-center text-muted">No players available</p>
                 )}
               </div>
+            ) : (
+              <p>No matches available</p>
             )}
           </div>
         </div>
