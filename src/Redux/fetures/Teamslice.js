@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
-const url = "http://localhost:5000/";
+const url = "https://fbscore-backend.vercel.app/";
 
 // Send OTP Async Thunk
 export const sendOtp = createAsyncThunk(
@@ -57,6 +57,7 @@ export const SignUp = createAsyncThunk(
       // Return the success response
       return await response.json();
     } catch (error) {
+      console.log(error);
       return rejectWithValue({
         message: "Failed to sign up. Please try again.",
       });

@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
-const url = "http://localhost:5000/";
+const url = "https://fbscore-backend.vercel.app/";
 
 //Api call for admin sign in.
 export const Signin = createAsyncThunk(

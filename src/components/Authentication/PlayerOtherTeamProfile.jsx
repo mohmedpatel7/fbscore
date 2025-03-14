@@ -11,7 +11,6 @@ export default function PlayerOtherTeamProfile() {
   const dispatch = useDispatch();
   const { teamid } = useParams();
   const { otherTeamData } = useSelector((state) => state.authSlice);
-  console.log(otherTeamData);
 
   useEffect(() => {
     if (isUser) {
@@ -69,7 +68,7 @@ export default function PlayerOtherTeamProfile() {
                 </div>
 
                 {/* Team Information */}
-                <div className="col-12">
+                <div className="col-12 mb-3">
                   <h5 style={{ color: "#45b469" }}>Team Information</h5>
                   <hr />
                   <p className="mb-1">
@@ -82,6 +81,19 @@ export default function PlayerOtherTeamProfile() {
                     ).toLocaleDateString()}
                   </p>
                 </div>
+
+                {/* Team Performance */}
+                <div className="col-12">
+                  <h5 style={{ color: "#45b469" }}>Team Performance</h5>
+                  <hr />
+                  <p className="mb-1">
+                    <strong>Matches Played:</strong>{" "}
+                    {otherTeamData?.team?.totalMatches || 0}
+                  </p>
+                  <p className="mb-1">
+                    <strong>Wins:</strong> {otherTeamData?.team?.wins || 0}
+                  </p>
+                </div>
               </div>
             </div>
           </div>
@@ -92,6 +104,7 @@ export default function PlayerOtherTeamProfile() {
           </div>
         </div>
 
+        {/* Squad Section */}
         {otherTeamData?.players?.length > 0 ? (
           <>
             <div className="col-12 mt-4">
