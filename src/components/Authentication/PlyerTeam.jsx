@@ -147,7 +147,7 @@ export default function PlyerTeam() {
               onScroll={handleScroll}
             >
               {/* Last Completed Match */}
-              {lastCompletedMatch && (
+              {lastCompletedMatch ? (
                 <>
                   <h4 className="text-center mt-3">Last Completed Fixture</h4>
                   <hr className="w-50 mx-auto" />
@@ -214,10 +214,12 @@ export default function PlyerTeam() {
                     </div>
                   </div>
                 </>
+              ) : (
+                <p>No matches available</p>
               )}
 
               {/* Next Upcoming/Ongoing Match */}
-              {nextMatch && (
+              {nextMatch ? (
                 <>
                   <h4 className="text-center mt-3">Next Fixture</h4>
                   <hr className="w-50 mx-auto" />
@@ -277,10 +279,12 @@ export default function PlyerTeam() {
                     </div>
                   </div>
                 </>
+              ) : (
+                <p>No matches available</p>
               )}
 
               {/* Remaining Completed Matches */}
-              {remainingCompletedMatches.length > 0 && (
+              {remainingCompletedMatches.length > 0 ? (
                 <>
                   <h4 className="text-center mt-3">Completed Fixtures</h4>
                   <hr className="w-50 mx-auto" />
@@ -348,10 +352,12 @@ export default function PlyerTeam() {
                       </div>
                     ))}
                 </>
+              ) : (
+                <p>No matches available</p>
               )}
 
               {/* Ongoing Matches */}
-              {remainingOngoingMatches.length > 0 && (
+              {remainingOngoingMatches.length > 0 ? (
                 <>
                   <h4 className="text-center mt-3">Upcoming Fixtures</h4>
                   <hr className="w-50 mx-auto" />
@@ -410,6 +416,8 @@ export default function PlyerTeam() {
                       </div>
                     ))}
                 </>
+              ) : (
+                <p>No matches available</p>
               )}
             </div>
           )}
@@ -418,36 +426,40 @@ export default function PlyerTeam() {
             <>
               <h5 className="mb-3 mt-3">Squad List</h5>
               <div className="d-flex flex-column gap-2">
-                {data.teammates.map((player) => (
-                  <div
-                    key={player.playerId}
-                    className="card card-squad-item d-flex flex-row align-items-center p-2 position-relative"
-                    onClick={() => playerProfileClick(player.playerId)}
-                  >
-                    {/* Player Image */}
-                    <img
-                      src={player?.pic || "default-pic.jpg"}
-                      alt={player?.name}
-                      className="rounded-circle"
-                      style={{
-                        width: "50px",
-                        height: "50px",
-                        objectFit: "cover",
-                      }}
-                    />
+                {data.teammates ? (
+                  data.teammates.map((player) => (
+                    <div
+                      key={player.playerId}
+                      className="card card-squad-item d-flex flex-row align-items-center p-2 position-relative"
+                      onClick={() => playerProfileClick(player.playerId)}
+                    >
+                      {/* Player Image */}
+                      <img
+                        src={player?.pic || "default-pic.jpg"}
+                        alt={player?.name}
+                        className="rounded-circle"
+                        style={{
+                          width: "50px",
+                          height: "50px",
+                          objectFit: "cover",
+                        }}
+                      />
 
-                    {/* Player Name & Position */}
-                    <div className="ms-3 flex-grow-1">
-                      <h6 className="mb-1">{player?.name}</h6>
-                      <small className="text-muted">{player?.position}</small>
+                      {/* Player Name & Position */}
+                      <div className="ms-3 flex-grow-1">
+                        <h6 className="mb-1">{player?.name}</h6>
+                        <small className="text-muted">{player?.position}</small>
+                      </div>
+
+                      {/* Player Number */}
+                      <span className="player-number px-3 py-1">
+                        {player?.jeresyNo}
+                      </span>
                     </div>
-
-                    {/* Player Number */}
-                    <span className="player-number px-3 py-1">
-                      {player?.jeresyNo}
-                    </span>
-                  </div>
-                ))}
+                  ))
+                ) : (
+                  <p>No matches available</p>
+                )}
               </div>
             </>
           )}

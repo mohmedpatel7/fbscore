@@ -534,7 +534,7 @@ const TeamDashboard = () => {
                     </div>
                   </>
                 ) : (
-                  <p>No matches available</p>
+                  <></>
                 )}
 
                 {/* Remaining Completed Matches */}
@@ -607,7 +607,7 @@ const TeamDashboard = () => {
                       ))}
                   </>
                 ) : (
-                  <p>No matches available</p>
+                  <></>
                 )}
 
                 {/* Ongoing Matches */}
@@ -671,12 +671,12 @@ const TeamDashboard = () => {
                       ))}
                   </>
                 ) : (
-                  <p>No matches available</p>
+                  <></>
                 )}
               </div>
             )}
 
-            {activeTab === "recruitment" ? (
+            {activeTab === "recruitment" && (
               <div className="card p-3">
                 <h5 className="mb-3">Add New Player</h5>
 
@@ -805,8 +805,6 @@ const TeamDashboard = () => {
                   <p className="text-center text-muted">No players available</p>
                 )}
               </div>
-            ) : (
-              <p>No matches available</p>
             )}
           </div>
         </div>
