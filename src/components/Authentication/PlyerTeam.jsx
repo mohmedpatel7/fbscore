@@ -215,7 +215,7 @@ export default function PlyerTeam() {
                   </div>
                 </>
               ) : (
-                <p>No matches available</p>
+                <>No matches available</>
               )}
 
               {/* Next Upcoming/Ongoing Match */}
@@ -280,7 +280,7 @@ export default function PlyerTeam() {
                   </div>
                 </>
               ) : (
-                <p>No matches available</p>
+                <></>
               )}
 
               {/* Remaining Completed Matches */}
@@ -353,7 +353,7 @@ export default function PlyerTeam() {
                     ))}
                 </>
               ) : (
-                <p>No matches available</p>
+                <></>
               )}
 
               {/* Ongoing Matches */}
@@ -417,7 +417,7 @@ export default function PlyerTeam() {
                     ))}
                 </>
               ) : (
-                <p>No matches available</p>
+                <></>
               )}
             </div>
           )}
@@ -458,7 +458,7 @@ export default function PlyerTeam() {
                     </div>
                   ))
                 ) : (
-                  <p>No matches available</p>
+                  <></>
                 )}
               </div>
             </>

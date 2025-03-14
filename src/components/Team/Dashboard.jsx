@@ -348,7 +348,7 @@ const TeamDashboard = () => {
                     </div>
                   </>
                 ) : (
-                  <p>No matches available</p>
+                  <></>
                 )}
               </>
             )}
@@ -392,7 +392,7 @@ const TeamDashboard = () => {
                 </div>
               </>
             ) : (
-              <p>No squad available</p>
+              <></>
             )}
 
             {activeTab === "matches" && (
