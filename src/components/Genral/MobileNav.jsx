@@ -14,11 +14,13 @@ import Default_Pic from "./style/pic.jpg";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchUserDetails } from "../../Redux/fetures/authentication";
 import { fetchTeamDetails } from "../../Redux/fetures/Teamslice";
+import { useToast } from "./ToastContext";
 
 const MobileNavbar = ({ setShowModal }) => {
   const [show, setShow] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { showToast } = useToast();
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -41,6 +43,7 @@ const MobileNavbar = ({ setShowModal }) => {
       localStorage.removeItem("admintoken");
 
       navigate("/");
+      showToast("Signout Successful", "success");
     }
   };
 
@@ -248,6 +251,18 @@ const MobileNavbar = ({ setShowModal }) => {
                   onClick={handleClose}
                 >
                   Matches
+                </Nav.Link>
+
+                <Nav.Link
+                  as={Link}
+                  style={navLinkStyle}
+                  onClick={() => {
+                    handleSignOut();
+                    handleClose();
+                  }}
+                  className="mt-1"
+                >
+                  Sign Out
                 </Nav.Link>
               </>
             )}
