@@ -51,9 +51,7 @@ export default function CommonUser() {
 
   // If userProfile is not loaded yet, show loading
   if (!userProfile) {
-    return (
-      <></>
-    );
+    return <></>;
   }
 
   // Get user data from either player.user or directly from user
@@ -146,11 +144,11 @@ export default function CommonUser() {
       {userProfile.player ? (
         userProfile.player.team ? (
           <>
-            <div className="card p-3 d-flex flex-row align-items-center mt-3 mb-3 team-profile">
+            <div className="card p-3 d-flex flex-column flex-md-row align-items-center text-center text-md-start mt-3 mb-3 team-profile">
               <img
                 src={userProfile.player.team.teamlogo}
                 alt="Team Logo"
-                className="rounded-circle me-3"
+                className="rounded-circle me-md-3 mb-3 mb-md-0 img-fluid"
                 style={{ height: "150px", width: "150px", objectFit: "cover" }}
               />
               <div>
