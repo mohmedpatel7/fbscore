@@ -59,7 +59,7 @@ function App() {
   const isMobile = useMediaQuery({ maxWidth: 768 });
 
   return (
-    <Router>
+    <div>
       {/* Conditional Navbar Rendering */}
       {isMobile ? (
         <MobileNavbar setShowModal={setShowModal} />
@@ -195,7 +195,7 @@ function App() {
       <RequestModel showModal={showModal} setShowModal={setShowModal} />
 
       {/*<Footer />*/}
-    </Router>
+    </div>
   );
 }
 
