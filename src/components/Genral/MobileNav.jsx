@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   Navbar,
@@ -11,10 +11,14 @@ import {
 } from "react-bootstrap";
 import { BsPlus, BsSearch, BsX } from "react-icons/bs";
 import Default_Pic from "./style/pic.jpg";
+import { useSelector, useDispatch } from "react-redux";
+import { fetchUserDetails } from "../../Redux/fetures/authentication";
+import { fetchTeamDetails } from "../../Redux/fetures/Teamslice";
 
 const MobileNavbar = ({ setShowModal }) => {
   const [show, setShow] = useState(false);
   const navigate = useNavigate();
+   const dispatch = useDispatch();
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -25,9 +29,8 @@ const MobileNavbar = ({ setShowModal }) => {
   const isMatchOfficial = !!localStorage.getItem("matchOfficialtoken");
   const isAdmin = !!localStorage.getItem("admintoken");
 
-  // These would come from Redux in a real app
-  const userData = { pic: Default_Pic };
-  const teamData = { team: { teamlogo: Default_Pic } };
+  const { data } = useSelector((state) => state.authSlice);
+  const { teamData } = useSelector((state) => state.teamSlice);
 
   const handleSignOut = () => {
     const ask = window.confirm("Are you sure?");
@@ -40,6 +43,20 @@ const MobileNavbar = ({ setShowModal }) => {
       navigate("/");
     }
   };
+
+  useEffect(() => {
+    if (isUser) {
+      dispatch(fetchUserDetails()).catch((error) => {
+        console.error("Error fetching user details:", error);
+      });
+    }
+
+    if (isTeamOwner) {
+      dispatch(fetchTeamDetails()).catch((error) => {
+        console.error("Error fetching team details:", error);
+      });
+    }
+  }, [dispatch, isUser, isTeamOwner]);
 
   // Custom styles
   const sidebarStyle = {
@@ -94,7 +111,11 @@ const MobileNavbar = ({ setShowModal }) => {
               <Dropdown align="end">
                 <Dropdown.Toggle variant="light" className="border-0 p-0">
                   <Image
-                    src={isUser ? userData.pic : teamData.team.teamlogo}
+                    src={
+                      isUser
+                        ? data?.pic
+                        : teamData?.team?.teamlogo || Default_Pic
+                    }
                     alt="Profile"
                     style={{
                       width: "35px",

@@ -162,19 +162,32 @@ const TeamDashboard = () => {
       {isTeamOwner && (
         <div className="container mt-4">
           {/* Profile Section */}
-          <div className="card p-3 d-flex flex-row align-items-center team-profile">
+          {/* Profile Section */}
+          <div
+            className="card p-3 team-profile"
+            style={{
+              display: "flex",
+              flexDirection: window.innerWidth < 768 ? "column" : "row",
+              alignItems: "center",
+            }}
+          >
             <img
               src={teamDatas.logo}
               alt="Team Logo"
-              className="rounded-circle me-3"
+              className="rounded-circle"
               style={{
-                height: "150px",
-                width: "150px",
-                borderRadius: "50%",
+                height: window.innerWidth < 576 ? "100px" : "150px",
+                width: window.innerWidth < 576 ? "100px" : "150px",
                 objectFit: "cover",
+                marginBottom: window.innerWidth < 768 ? "10px" : "0",
               }}
             />
-            <div>
+            <div
+              style={{
+                textAlign: window.innerWidth < 768 ? "center" : "start",
+                marginLeft: window.innerWidth >= 768 ? "15px" : "0",
+              }}
+            >
               <h4>{teamDatas.name}</h4>
               <p className="text-muted mb-1">
                 <strong>Owner:</strong> {teamDatas.owner}

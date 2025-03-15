@@ -101,19 +101,31 @@ export default function PlyerTeam() {
     <div>
       {isUser && data?.playerDetails?.teamname && (
         <div className="container">
-          <div className="card p-3 d-flex flex-row align-items-center mt-3 mb-3 team-profile">
+          <div
+            className="card p-3 mt-3 mb-3 team-profile"
+            style={{
+              display: "flex",
+              flexDirection: window.innerWidth < 768 ? "column" : "row",
+              alignItems: "center",
+            }}
+          >
             <img
               src={data.playerDetails?.teamlogo}
               alt={data.playerDetails?.teamname}
-              className="rounded-circle me-3"
+              className="rounded-circle"
               style={{
-                height: "150px",
-                width: "150px",
-                borderRadius: "50%",
+                height: window.innerWidth < 576 ? "100px" : "150px",
+                width: window.innerWidth < 576 ? "100px" : "150px",
                 objectFit: "cover",
+                marginBottom: window.innerWidth < 768 ? "10px" : "0",
               }}
             />
-            <div>
+            <div
+              style={{
+                textAlign: window.innerWidth < 768 ? "center" : "start",
+                marginLeft: window.innerWidth >= 768 ? "15px" : "0",
+              }}
+            >
               <h4>{data.playerDetails?.teamname}</h4>
               <p className="text-muted mb-1">
                 <strong>Owner:</strong> {data.playerDetails?.teamowner}
