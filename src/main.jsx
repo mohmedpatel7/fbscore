@@ -1,5 +1,6 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
+import { BrowserRouter } from "react-router-dom"; // ✅ Import BrowserRouter
 import App from "./App.jsx";
 import { ToastProvider } from "./components/Genral/ToastContext.jsx";
 import { Provider } from "react-redux";
@@ -9,7 +10,9 @@ createRoot(document.getElementById("root")).render(
   <Provider store={store}>
     <ToastProvider>
       <StrictMode>
-        <App />
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
       </StrictMode>
     </ToastProvider>
   </Provider>
