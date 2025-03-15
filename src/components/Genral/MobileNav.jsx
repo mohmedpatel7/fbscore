@@ -1,4 +1,4 @@
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   Navbar,
@@ -18,7 +18,7 @@ import { fetchTeamDetails } from "../../Redux/fetures/Teamslice";
 const MobileNavbar = ({ setShowModal }) => {
   const [show, setShow] = useState(false);
   const navigate = useNavigate();
-   const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -330,7 +330,7 @@ const MobileNavbar = ({ setShowModal }) => {
       </Offcanvas>
 
       {/* Spacer to prevent content from hiding under fixed navbar */}
-      <div style={{ height: "56px" }}></div>
+      <div style={{ height: "56px", marginBottom: "35px" }}></div>
     </div>
   );
 };

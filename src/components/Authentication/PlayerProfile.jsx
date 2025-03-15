@@ -136,27 +136,47 @@ export default function PlayerProfile() {
       {/*team part*/}
       {data?.playerDetails?.teamname ? (
         <>
-          <div className="card p-3 d-flex flex-row align-items-center mt-3 mb-3 team-profile">
+          <div
+            className="card p-3 d-flex flex-row align-items-center mt-3 mb-3 team-profile"
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              textAlign: "left",
+              gap: "15px",
+              ...(window.innerWidth <= 576 && {
+                flexDirection: "column",
+                textAlign: "center",
+              }),
+            }}
+          >
             <img
               src={data.playerDetails?.teamlogo}
               alt={data.playerDetails?.teamname}
-              className="rounded-circle me-3"
+              className="rounded-circle"
               style={{
                 height: "150px",
                 width: "150px",
                 borderRadius: "50%",
                 objectFit: "cover",
+                ...(window.innerWidth <= 576 && {
+                  height: "120px",
+                  width: "120px",
+                  marginBottom: "10px",
+                }),
               }}
             />
             <div>
-              <h4>{data.playerDetails?.teamname}</h4>
-              <p className="text-muted mb-1">
+              <h4 style={{ fontSize: "18px", marginBottom: "5px" }}>
+                {data.playerDetails?.teamname}
+              </h4>
+              <p className="text-muted mb-1" style={{ fontSize: "14px" }}>
                 <strong>Owner:</strong> {data.playerDetails?.teamowner}
               </p>
-              <p className="text-muted mb-1">
+              <p className="text-muted mb-1" style={{ fontSize: "14px" }}>
                 <strong>Email:</strong> {data.playerDetails?.teamemail}
               </p>
-              <p className="text-muted">
+              <p className="text-muted" style={{ fontSize: "14px" }}>
                 <strong>Country:</strong> {data.playerDetails?.teamcountry}
               </p>
             </div>

@@ -95,23 +95,39 @@ export default function OtherPlayerProfile() {
           </div>
         </div>
       </div>
-
-      <div className="card p-3 d-flex flex-row align-items-center mt-3 mb-3 team-profile">
+      
+      <div
+        className="card p-3 d-flex flex-row align-items-center mt-3 mb-3 team-profile"
+        style={{
+          display: "flex",
+          flexDirection: window.innerWidth <= 576 ? "column" : "row",
+          alignItems: "center",
+          textAlign: window.innerWidth <= 576 ? "center" : "left",
+          gap: "15px",
+        }}
+      >
         <img
           src={playerProfile?.player?.team?.teamlogo}
           alt="Team Logo"
-          className="rounded-circle me-3"
-          style={{ height: "150px", width: "150px", objectFit: "cover" }}
+          className="rounded-circle"
+          style={{
+            height: window.innerWidth <= 576 ? "120px" : "150px",
+            width: window.innerWidth <= 576 ? "120px" : "150px",
+            objectFit: "cover",
+            marginBottom: window.innerWidth <= 576 ? "10px" : "0",
+          }}
         />
         <div>
-          <h4>{playerProfile?.player?.team?.teamname}</h4>
-          <p>
+          <h4 style={{ fontSize: "18px", marginBottom: "5px" }}>
+            {playerProfile?.player?.team?.teamname}
+          </h4>
+          <p style={{ fontSize: "14px" }}>
             <strong>Owner:</strong> {playerProfile?.player?.team?.owner}
           </p>
-          <p>
+          <p style={{ fontSize: "14px" }}>
             <strong>Email:</strong> {playerProfile?.player?.team?.teamemail}
           </p>
-          <p>
+          <p style={{ fontSize: "14px" }}>
             <strong>Country:</strong> {playerProfile?.player?.team?.country}
           </p>
         </div>
