@@ -21,7 +21,7 @@ import PlayerTeam from "./components/Authentication/PlyerTeam";
 import PlayerMatchDetails from "./components/Authentication/PlayerMatchDetails";
 import PlayerOtherTeamProfile from "./components/Authentication/PlayerOtherTeamProfile";
 import OtherPlayerProfile from "./components/Authentication/OtherPlayerProfile";
-import UpdateUserProfile from "./components/Authentication/updateUserProfile";
+import UpdateUserProfile from "./components/Authentication/UpdateUserProfile";
 import ForgotPassword from "./components/Authentication/ForgotPassword";
 import UploadPost from "./components/Post/UploadPost";
 import UploadTeamPost from "./components/Post/UploadTeamPost";
