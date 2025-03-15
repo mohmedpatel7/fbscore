@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { useMediaQuery } from "react-responsive";
 import Navbar from "./components/Genral/Navbar";
+import MobileNavbar from "./components/Genral/MobileNav";
 //import Footer from "./components/Genral/Footer";
 import AdminSignin from "./components/Admin/AdminSignin";
 import Reports from "./components/Admin/Reports";
@@ -54,10 +56,16 @@ import MatchMvp from "./components/Match/MatchMvp";
 
 function App() {
   const [showModal, setShowModal] = useState(false);
+  const isMobile = useMediaQuery({ maxWidth: 768 });
 
   return (
     <Router>
-      <Navbar setShowModal={setShowModal} />
+      {/* Conditional Navbar Rendering */}
+      {isMobile ? (
+        <MobileNavbar setShowModal={setShowModal} />
+      ) : (
+        <Navbar setShowModal={setShowModal} />
+      )}
 
       <Routes>
         {/**Admin routes */}

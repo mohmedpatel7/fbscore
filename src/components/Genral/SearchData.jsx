@@ -49,7 +49,10 @@ export default function SearchData() {
   };
 
   return (
-    <div style={{ maxWidth: "800px", margin: "0 auto", padding: "20px" }}>
+    <div
+      style={{ maxWidth: "800px", margin: "0 auto", padding: "20px" }}
+      className="mt-4"
+    >
       {/* Search Box */}
       <input
         type="text"
@@ -124,7 +127,7 @@ export default function SearchData() {
                       }}
                     >
                       <img
-                        src={user.playerData.teamlogo}
+                        src={user.playerData.teamlogo.teamlogo}
                         alt={user.playerData.teamname}
                         style={{
                           width: "30px",

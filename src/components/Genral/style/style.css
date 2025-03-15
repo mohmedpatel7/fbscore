@@ -355,4 +355,48 @@ hr {
     .role-description li {
         font-size: 0.9rem;
     }
+
+    /* Mobile Navbar Animations */
+    @keyframes slideIn {
+        from {
+            transform: translateX(-100%);
+            opacity: 0;
+        }
+
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+
+    .offcanvas.show {
+        animation: slideIn 0.3s ease-out;
+    }
+
+    .navbar-toggler-icon {
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .navbar-toggler-icon:hover {
+        transform: rotate(90deg);
+    }
+
+    .dropdown-menu {
+        animation: fadeIn 0.3s ease-in-out;
+    }
+
+    button:hover {
+        transform: scale(1.05);
+        transition: transform 0.2s ease-in-out;
+    }
 }
