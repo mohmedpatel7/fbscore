@@ -278,10 +278,10 @@ export const adminAcMatchOfficialReq = createAsyncThunk(
   }
 );
 
-//Api call for deleting entities (User/Team/MatchOfficial)
-export const deleteEntity = createAsyncThunk(
-  "deleteEntity",
-  async ({ type, id }, { rejectWithValue, dispatch }) => {
+// API call for changing status (User/Team)
+export const changeStatus = createAsyncThunk(
+  "changeStatus",
+  async ({ type, id, }, { rejectWithValue, dispatch }) => {
     try {
       const token = localStorage.getItem("admintoken");
       if (!token) {
@@ -290,12 +290,13 @@ export const deleteEntity = createAsyncThunk(
         });
       }
 
-      const response = await fetch(`${url}api/admin/delete/${type}/${id}`, {
-        method: "DELETE",
+      const response = await fetch(`${url}api/admin/changeStatus`, {
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
           "admin-token": token,
         },
+        body: JSON.stringify({ id, type }),
       });
 
       if (!response.ok) {
@@ -305,7 +306,7 @@ export const deleteEntity = createAsyncThunk(
 
       const data = await response.json();
 
-      // Refresh the corresponding data after successful deletion
+      // Refresh data after status update
       switch (type.toLowerCase()) {
         case "user":
           dispatch(fetchAllUsers());
@@ -313,15 +314,12 @@ export const deleteEntity = createAsyncThunk(
         case "team":
           dispatch(fetchTeamTable());
           break;
-        case "matchofficial":
-          dispatch(fetchMatchOfficials());
-          break;
       }
 
       return data;
     } catch (error) {
       return rejectWithValue({
-        message: "Failed to delete. Please try again.",
+        message: "Failed to update status. Please try again.",
       });
     }
   }
@@ -540,17 +538,17 @@ const AdminSlice = createSlice({
     });
 
     //Handle delete entity
-    builder.addCase(deleteEntity.pending, (state) => {
+    builder.addCase(changeStatus.pending, (state) => {
       state.isLoading = true;
       state.error = null;
       state.deleteStatus = null;
     });
-    builder.addCase(deleteEntity.fulfilled, (state, action) => {
+    builder.addCase(changeStatus.fulfilled, (state, action) => {
       state.isLoading = false;
       state.deleteStatus = action.payload;
       state.error = null;
     });
-    builder.addCase(deleteEntity.rejected, (state, action) => {
+    builder.addCase(changeStatus.rejected, (state, action) => {
       state.isLoading = false;
       state.error = action.payload?.message;
       state.deleteStatus = null;

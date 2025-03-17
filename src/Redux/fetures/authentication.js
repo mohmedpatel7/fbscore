@@ -155,7 +155,7 @@ export const fetchTeamReq = createAsyncThunk(
       }
 
       const data = await response.json();
-      return data.response;
+      return data;
     } catch (error) {
       return rejectWithValue({
         message: "Failed to fetch user details. Please try again later.",

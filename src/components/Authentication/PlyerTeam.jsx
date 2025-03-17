@@ -34,7 +34,7 @@ export default function PlyerTeam() {
   const [visibleOngoing, setVisibleOngoing] = useState(10); // Show next match initially
 
   if (!data || !data.matches) {
-    return <p>Loading matches...</p>;
+    return <></>;
   }
 
   const matches = data.matches || [];

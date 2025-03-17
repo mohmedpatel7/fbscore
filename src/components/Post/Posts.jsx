@@ -1,45 +1,65 @@
 import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./style/style.css";
-import CommentsModel from "./CommentsModel";
+//import CommentsModel from "./CommentsModel";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchPosts } from "../../Redux/fetures/postslice";
+import { fetchTeamReq } from "../../Redux/fetures/authentication";
 import InfiniteScroll from "react-infinite-scroll-component";
 
-export default function Posts() {
+export default function Posts({ setShowModal }) {
   const dispatch = useDispatch();
   const { posts } = useSelector((state) => state.postSlice);
-
-  // State for pagination
+  const { teamReq } = useSelector((state) => state.authSlice);
   const [visiblePosts, setVisiblePosts] = useState(5);
+  const [showAlert, setShowAlert] = useState(true); // State to control alert visibility
 
-  // Fetch initial posts
   useEffect(() => {
     dispatch(fetchPosts());
+    dispatch(fetchTeamReq());
   }, [dispatch]);
 
-  // Load more posts when scrolling
   const fetchMoreData = () => {
     setTimeout(() => {
       setVisiblePosts((prev) => Math.min(prev + 5, posts.length));
     }, 500);
   };
 
-  // State for comment modal
-  const [showModel, setShowModel] = useState(false);
+  {
+    /*  const [showModel, setShowModel] = useState(false);
   const [currentComments, setCurrentComments] = useState([]);
 
-  // Open comments modal
   const openComments = (comments) => {
     setCurrentComments(comments);
     setShowModel(true);
   };
 
-  // Close comments modal
-  const closeComments = () => setShowModel(false);
+  const closeComments = () => setShowModel(false); */
+  }
+
+  const isUser = localStorage.getItem("usertoken");
 
   return (
     <div className="container mt-5">
+      {/* Bootstrap Alert with Close Button */}
+      {isUser && teamReq?.totalRequests > 0 && showAlert && (
+        <div
+          className="alert alert-warning alert-dismissible fade show text-center"
+          role="alert"
+          onClick={() => setShowModal(true)}
+        >
+          <strong>
+            You have {teamReq.totalRequests} pending team requests!
+          </strong>
+          <button
+            type="button"
+            className="btn-close"
+            onClick={() => setShowAlert(false)}
+            aria-label="Close"
+          ></button>
+        </div>
+      )}
+
       {posts && posts.length > 0 ? (
         <div className="row justify-content-center">
           <div className="col-md-3"></div>
@@ -85,22 +105,6 @@ export default function Posts() {
                       />
                     </div>
                     <div className="card-footer d-flex justify-content-between align-items-center">
-                      {/*   <div className="d-flex">
-                        <i
-                          className="fa-regular fa-heart post-like-btn"
-                          title="Like"
-                        ></i>
-                        <span className="ms-1">{post.likes}</span>
-
-                        <i
-                          className="fa-regular fa-comment post-like-btn ms-3"
-                          title="Comment"
-                          onClick={() => openComments(post.comment)}
-                          style={{ border: "none", background: "none" }}
-                        ></i>
-
-                        <span className="ms-1">{post.comment.length}</span>
-                      </div> */}
                       <div className="text-end">
                         <small className="text-muted">{post.date}</small>
                       </div>
@@ -116,11 +120,11 @@ export default function Posts() {
         <h1 className="text-center">No posts available!</h1>
       )}
 
-      <CommentsModel
+      {/* <CommentsModel
         comments={currentComments}
         showModel={showModel}
         closeModel={closeComments}
-      />
+      />*/}
     </div>
   );
 }

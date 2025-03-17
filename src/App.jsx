@@ -75,7 +75,7 @@ function App() {
         <Route exact path="/Graph" element={<Graph />} />
         <Route exact path="/PostMaintain" element={<PostMaintain />} />
 
-        <Route exact path="/" element={<Posts />} />
+        <Route exact path="/" element={<Posts setShowModal={setShowModal} />} />
         <Route exact path="/TeamPosts" element={<TeamPosts />} />
         <Route exact path="/UserPosts" element={<UserPosts />} />
         <Route exact path="/Signup" element={<Signup />} />

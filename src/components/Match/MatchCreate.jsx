@@ -32,7 +32,7 @@ export default function MatchCreate() {
     if (isMatchOfficial) {
       dispatch(fetchedTeamlist());
     }
-  }, [dispatch]);
+  }, [dispatch, isMatchOfficial]);
 
   const handleChange = (e) => {
     startTransition(() => {
@@ -46,8 +46,8 @@ export default function MatchCreate() {
 
     if (form.checkValidity() === false) {
       e.stopPropagation();
-      setValidated(true); // Ensure validation class is applied
-      return; // Stop further execution
+      setValidated(true);
+      return;
     }
 
     if (formData.teamA === formData.teamB) {
@@ -56,7 +56,7 @@ export default function MatchCreate() {
       return;
     }
 
-    setValidated(true); // Ensure validation class is applied
+    setValidated(true);
 
     startTransition(() => {
       dispatch(createMatch(formData))
@@ -94,11 +94,13 @@ export default function MatchCreate() {
                   >
                     <option value="">Select Home Team</option>
                     {teamList?.data?.length > 0 ? (
-                      teamList.data.map((team) => (
-                        <option key={team.teamId} value={team.teamId}>
-                          {team.teamname}
-                        </option>
-                      ))
+                      teamList.data
+                        .filter((team) => team.teamId !== formData.teamB) // Exclude selected teamB from teamA
+                        .map((team) => (
+                          <option key={team.teamId} value={team.teamId}>
+                            {team.teamname}
+                          </option>
+                        ))
                     ) : (
                       <option disabled>Loading teams...</option>
                     )}
@@ -121,11 +123,13 @@ export default function MatchCreate() {
                   >
                     <option value="">Select Away Team</option>
                     {teamList?.data?.length > 0 ? (
-                      teamList.data.map((team) => (
-                        <option key={team.teamId} value={team.teamId}>
-                          {team.teamname}
-                        </option>
-                      ))
+                      teamList.data
+                        .filter((team) => team.teamId !== formData.teamA) // Exclude selected teamA from teamB
+                        .map((team) => (
+                          <option key={team.teamId} value={team.teamId}>
+                            {team.teamname}
+                          </option>
+                        ))
                     ) : (
                       <option disabled>Loading teams...</option>
                     )}

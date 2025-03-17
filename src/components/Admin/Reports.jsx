@@ -3,7 +3,7 @@ import {
   fetchTeamTable,
   fetchAllUsers,
   fetchMatchOfficials,
-  deleteEntity,
+  changeStatus,
 } from "../../Redux/fetures/AdminSlice";
 import { fetchCommonTeams } from "../../Redux/fetures/Teamslice";
 import { fetchOtherUser } from "../../Redux/fetures/authentication";
@@ -62,7 +62,7 @@ export default function Reports() {
         setIsLoadingTeams(true);
         dispatch(fetchTeamTable())
           .catch((error) => {
-        showToast(error.message || "Error while fetching teams table!");
+            showToast(error.message || "Error while fetching teams table!");
           })
           .finally(() => setIsLoadingTeams(false));
       } else if (activeTab === "Players") {
@@ -191,22 +191,32 @@ export default function Reports() {
     });
   };
 
-  // Optimistic delete handlers
-  const handleDeleteTeam = useCallback(
-    async (teamId) => {
+  // chnage the team account status.
+  const handleChangeTeamStatus = useCallback(
+    async (teamId, currentStatus) => {
       if (
         window.confirm(
-          "Are you sure you want to delete this team? This will also delete all associated player records and stats."
+          `Are you sure you want to ${
+            currentStatus ? "deactivate" : "activate"
+          } this team?`
         )
       ) {
         try {
           setDeletingIds((prev) => new Set([...prev, teamId]));
-          await dispatch(deleteEntity({ type: "team", id: teamId })).unwrap();
-          showToast("Team deleted successfully", "success");
+          await dispatch(
+            changeStatus({ type: "team", id: teamId, status: !currentStatus })
+          ).unwrap();
+          showToast(
+            `Team ${currentStatus ? "deactivated" : "activated"} successfully`,
+            "success"
+          );
+
           // Optimistically update local state
           if (teamsTable?.teams) {
-            const updatedTeams = teamsTable.teams.filter(
-              (team) => team.teamId !== teamId
+            const updatedTeams = teamsTable.teams.map((team) =>
+              team.teamId === teamId
+                ? { ...team, active: !currentStatus }
+                : team
             );
             dispatch({
               type: "admin/updateTeams",
@@ -214,7 +224,7 @@ export default function Reports() {
             });
           }
         } catch (error) {
-          showToast(error.message || "Failed to delete team", "error");
+          showToast(error.message || "Failed to update status", "danger");
         } finally {
           setDeletingIds((prev) => {
             const newSet = new Set(prev);
@@ -227,21 +237,27 @@ export default function Reports() {
     [dispatch, teamsTable, showToast]
   );
 
-  const handleDeleteUser = useCallback(
-    async (userId) => {
+  const handleChangeUserStatus = useCallback(
+    async (userId, isActive) => {
+      const action = isActive ? "deactivate" : "activate";
       if (
         window.confirm(
-          "Are you sure you want to delete this user? This will also delete their player profile and stats if they are a player."
+          `Are you sure you want to ${action} this user? They will ${
+            isActive ? "lose access" : "gain access"
+          } to their account.`
         )
       ) {
         try {
           setDeletingIds((prev) => new Set([...prev, userId]));
-          await dispatch(deleteEntity({ type: "user", id: userId })).unwrap();
-          showToast("User deleted successfully", "success");
+          await dispatch(
+            changeStatus({ type: "user", id: userId, status: !isActive })
+          ).unwrap();
+          showToast(`User ${action}d successfully`, "success");
+
           // Optimistically update local state
           if (allUsers?.users) {
-            const updatedUsers = allUsers.users.filter(
-              (user) => user.userId !== userId
+            const updatedUsers = allUsers.users.map((user) =>
+              user.userId === userId ? { ...user, active: !isActive } : user
             );
             dispatch({
               type: "admin/updateUsers",
@@ -249,7 +265,7 @@ export default function Reports() {
             });
           }
         } catch (error) {
-          showToast(error.message || "Failed to delete user", "error");
+          showToast(error.message || `Failed to ${action} user`, "danger");
         } finally {
           setDeletingIds((prev) => {
             const newSet = new Set(prev);
@@ -262,7 +278,8 @@ export default function Reports() {
     [dispatch, allUsers, showToast]
   );
 
-  const handleDeleteOfficial = useCallback(
+  {
+    /*const handleDeleteOfficial = useCallback(
     async (officialId) => {
       if (
         window.confirm(
@@ -300,15 +317,16 @@ export default function Reports() {
       }
     },
     [dispatch, matchOfficials, showToast]
-  );
+  );*/
+  }
 
-  // Update the delete button rendering in the team table
-  const renderDeleteButton = (id, handleDelete, type) => (
+  // Update the status button rendering in the team table and user
+  const renderStatusButton = (id, currentStatus, handleChange) => (
     <button
-      className={`dropdown-item text-danger ${
-        deletingIds.has(id) ? "disabled" : ""
-      }`}
-      onClick={() => handleDelete(id)}
+      className={`dropdown-item ${
+        currentStatus ? "text-danger" : "text-success"
+      } ${deletingIds.has(id) ? "disabled" : ""}`}
+      onClick={() => handleChange(id, currentStatus)}
       disabled={deletingIds.has(id)}
     >
       {deletingIds.has(id) ? (
@@ -318,12 +336,16 @@ export default function Reports() {
             role="status"
             aria-hidden="true"
           ></span>
-          Deleting...
+          Updating...
         </>
       ) : (
         <>
-          <i className="fas fa-trash-alt me-2"></i>
-          Delete
+          <i
+            className={`fas fa-${
+              currentStatus ? "ban text-danger" : "check text-success"
+            } me-2`}
+          ></i>
+          {currentStatus ? "Suspend" : "Remove Suspension"}
         </>
       )}
     </button>
@@ -475,6 +497,9 @@ export default function Reports() {
                               Created On
                             </th>
                             <th className="px-4 py-3 text-center text-muted">
+                              Account status
+                            </th>
+                            <th className="px-4 py-3 text-center text-muted">
                               Actions
                             </th>
                           </tr>
@@ -602,6 +627,11 @@ export default function Reports() {
                                       {formatDate(team.createdAt)}
                                     </span>
                                   </td>
+                                  <td className="px-4 py-3 text-center">
+                                    <span className="d-block">
+                                      {team.active ? "Active" : "Inactive"}
+                                    </span>
+                                  </td>
                                   <td
                                     className="px-4 py-3 text-center"
                                     onClick={(e) => e.stopPropagation()}
@@ -617,10 +647,10 @@ export default function Reports() {
                                       </button>
                                       <ul className="dropdown-menu dropdown-menu-end">
                                         <li>
-                                          {renderDeleteButton(
+                                          {renderStatusButton(
                                             team.teamId,
-                                            handleDeleteTeam,
-                                            "team"
+                                            team.active,
+                                            handleChangeTeamStatus
                                           )}
                                         </li>
                                       </ul>
@@ -752,6 +782,9 @@ export default function Reports() {
                             </th>
                             <th className="px-4 py-3 text-center text-muted">
                               Joined On
+                            </th>
+                            <th className="px-4 py-3 text-center text-muted">
+                              Account Status
                             </th>
                             <th className="px-4 py-3 text-center text-muted">
                               Actions
@@ -902,6 +935,11 @@ export default function Reports() {
                                       {formatDate(user.createdAt)}
                                     </span>
                                   </td>
+                                  <td className="px-4 py-3 text-center">
+                                    <span className="d-block">
+                                      {user.active ? "Active" : "Inactive"}
+                                    </span>
+                                  </td>
                                   <td
                                     className="px-4 py-3 text-center"
                                     onClick={(e) => e.stopPropagation()}
@@ -917,10 +955,10 @@ export default function Reports() {
                                       </button>
                                       <ul className="dropdown-menu dropdown-menu-end">
                                         <li>
-                                          {renderDeleteButton(
+                                          {renderStatusButton(
                                             user.userId,
-                                            handleDeleteUser,
-                                            "user"
+                                            user.active,
+                                            handleChangeUserStatus
                                           )}
                                         </li>
                                       </ul>
@@ -1044,9 +1082,9 @@ export default function Reports() {
                             <th className="px-4 py-3 text-center text-muted">
                               Joined On
                             </th>
-                            <th className="px-4 py-3 text-center text-muted">
+                            {/* <th className="px-4 py-3 text-center text-muted">
                               Actions
-                            </th>
+                            </th>*/}
                           </tr>
                         </thead>
                         <tbody>
@@ -1138,7 +1176,7 @@ export default function Reports() {
                                       {formatDate(official.createdAt)}
                                     </span>
                                   </td>
-                                  <td className="px-4 py-3 text-center">
+                                  {/*<td className="px-4 py-3 text-center">
                                     <div className="dropdown">
                                       <button
                                         className="btn btn-link text-dark p-0"
@@ -1158,7 +1196,7 @@ export default function Reports() {
                                         </li>
                                       </ul>
                                     </div>
-                                  </td>
+                                  </td>*/}
                                 </tr>
                               ))
                           )}
